@@ -12,16 +12,15 @@ DROP TABLE IF exists reaction CASCADE;
 DROP TABLE IF exists post_tag_not CASCADE;
 DROP TABLE IF exists group_request_not CASCADE;
 DROP TABLE IF exists friend_request_not CASCADE;
+DROP TABLE IF exists post_tag CASCADE;
 DROP TABLE IF exists comment_not CASCADE;
 DROP TABLE IF exists reaction_not CASCADE;
-
 
 -----------------------------------------
 -- Types
 -----------------------------------------
 
 DROP TYPE if exists reaction_types;
-
 CREATE TYPE reaction_types AS ENUM ('LIKE', 'DISLIKE', 'HEART', 'STAR');
 
 -----------------------------------------
@@ -38,6 +37,8 @@ CREATE TABLE users (
     is_private BOOLEAN DEFAULT true NOT NULL,
     role INTEGER NOT NULL
 );
+DROP INDEX IF EXISTS user_index;
+CREATE INDEX user_index ON users USING hash(id);
 
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
@@ -47,10 +48,12 @@ CREATE TABLE post (
     is_private BOOLEAN NOT NULL,
     date TIMESTAMP WITH TIME ZONE NOT NULL
 );
+DROP INDEX IF EXISTS author_post;
+CREATE INDEX author_post ON post USING btree(author);
 
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL CONSTRAINT unique_group_name UNIQUE,
     is_private BOOLEAN DEFAULT true NOT NULL,
     description TEXT NOT NULL
 );
@@ -105,6 +108,12 @@ CREATE TABLE post_tag_not(
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
+CREATE TABLE post_tag(
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER REFERENCES post(id) ON UPDATE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
+);
+
 CREATE TABLE group_request_not(
     id SERIAL PRIMARY KEY, 
     group_request_id INTEGER REFERENCES group_request(id) ON UPDATE CASCADE,
@@ -125,6 +134,6 @@ CREATE TABLE comment_not(
 
 CREATE TABLE reaction_not(
     id SERIAL PRIMARY KEY, 
-    id_reaction_not INTEGER REFERENCES reaction(id) ON UPDATE CASCADE,
+    reaction_id INTEGER REFERENCES reaction(id) ON UPDATE CASCADE,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
