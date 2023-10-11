@@ -111,7 +111,7 @@ CREATE TABLE post_tag_not(
 CREATE TABLE post_tag(
     id SERIAL PRIMARY KEY,
     post_id INTEGER REFERENCES post(id) ON UPDATE CASCADE,
-    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE
 );
 
 CREATE TABLE group_request_not(
