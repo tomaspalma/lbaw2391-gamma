@@ -18,7 +18,6 @@ DROP TABLE IF exists reaction_not CASCADE;
 DROP TABLE IF exists group_ban CASCADE;
 DROP TABLE IF exists app_ban CASCADE;
 
-
 -----------------------------------------
 -- Types
 -----------------------------------------
@@ -49,7 +48,7 @@ CREATE TABLE post (
     content TEXT NOT NULL,
     attachment TEXT,
     is_private BOOLEAN NOT NULL,
-    date TIMESTAMP WITH TIME ZONE NOT NULL
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
 DROP INDEX IF EXISTS author_post;
 CREATE INDEX author_post ON post USING btree(author);
@@ -72,7 +71,7 @@ CREATE TABLE group_request(
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE,
     is_accepted BOOLEAN DEFAULT false NOT NULL,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
 
 CREATE TABLE group_user(
@@ -85,14 +84,14 @@ CREATE TABLE friend_request(
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     friend_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     is_accepted BOOLEAN DEFAULT false,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
 
 CREATE TABLE comment(
     id SERIAL PRIMARY KEY,
     post_id INTEGER REFERENCES post(id) ON UPDATE CASCADE,
     author INTEGER REFERENCES users(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now()),
     content TEXT NOT NULL
 );
 
@@ -108,7 +107,7 @@ CREATE TABLE reaction (
 CREATE TABLE post_tag_not(
     id SERIAL PRIMARY KEY, 
     post_id INTEGER REFERENCES post(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
 
 CREATE TABLE post_tag(
@@ -120,25 +119,25 @@ CREATE TABLE post_tag(
 CREATE TABLE group_request_not(
     id SERIAL PRIMARY KEY, 
     group_request_id INTEGER REFERENCES group_request(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
 CREATE TABLE friend_request_not(
     id SERIAL PRIMARY KEY, 
     friend_request INTEGER REFERENCES friend_request(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
 CREATE TABLE comment_not(
     id SERIAL PRIMARY KEY, 
     comment_id INTEGER REFERENCES comment(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
 CREATE TABLE reaction_not(
     id SERIAL PRIMARY KEY, 
     reaction_id INTEGER REFERENCES reaction(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
 CREATE TABLE group_ban(
@@ -147,7 +146,7 @@ CREATE TABLE group_ban(
     group_owner_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     banned_user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
 CREATE TABLE app_ban(
@@ -155,5 +154,5 @@ CREATE TABLE app_ban(
     reason TEXT NOT NULL,
     admin_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     banned_user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
