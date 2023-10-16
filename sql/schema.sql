@@ -1,4 +1,4 @@
-create schema if not exists lbaw2391;
+CREATE SCHEMA IF not exists lbaw2391;
 
 DROP TABLE IF exists users CASCADE;
 DROP TABLE IF exists post CASCADE;
@@ -15,6 +15,9 @@ DROP TABLE IF exists friend_request_not CASCADE;
 DROP TABLE IF exists post_tag CASCADE;
 DROP TABLE IF exists comment_not CASCADE;
 DROP TABLE IF exists reaction_not CASCADE;
+DROP TABLE IF exists group_ban CASCADE;
+DROP TABLE IF exists app_ban CASCADE;
+
 
 -----------------------------------------
 -- Types
@@ -135,5 +138,22 @@ CREATE TABLE comment_not(
 CREATE TABLE reaction_not(
     id SERIAL PRIMARY KEY, 
     reaction_id INTEGER REFERENCES reaction(id) ON UPDATE CASCADE,
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+);
+
+CREATE TABLE group_ban(
+    id SERIAL PRIMARY KEY,
+    reason TEXT NOT NULL,
+    group_owner_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
+    banned_user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
+    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE,
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+);
+
+CREATE TABLE app_ban(
+    id SERIAL PRIMARY KEY,
+    reason TEXT NOT NULL,
+    admin_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
+    banned_user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
