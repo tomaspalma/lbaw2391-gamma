@@ -1,4 +1,4 @@
- CREATE SCHEMA IF not exists lbaw2391;
+CREATE SCHEMA IF not exists lbaw2391;
 
 DROP TABLE IF exists users CASCADE;
 DROP TABLE IF exists post CASCADE;
@@ -17,6 +17,8 @@ DROP TABLE IF exists comment_not CASCADE;
 DROP TABLE IF exists reaction_not CASCADE;
 DROP TABLE IF exists group_ban CASCADE;
 DROP TABLE IF exists app_ban CASCADE;
+DROP TABLE IF exists friends CASCADE;
+DROP TABLE IF exists appeal CASCADE;
 
 -----------------------------------------
 -- Types
@@ -34,13 +36,12 @@ CREATE TABLE users (
     username TEXT NOT NULL CONSTRAINT unique_username UNIQUE,
     email TEXT NOT NULL CONSTRAINT unique_email UNIQUE,
     password TEXT NOT NULL,
+    image TEXT NOT NULL,
     academic_status TEXT,
     display_name TEXT,
     is_private BOOLEAN DEFAULT true NOT NULL,
     role INTEGER NOT NULL
 );
-DROP INDEX IF EXISTS user_index;
-CREATE INDEX user_index ON users USING hash(id);
 
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
@@ -50,8 +51,12 @@ CREATE TABLE post (
     is_private BOOLEAN NOT NULL,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
-DROP INDEX IF EXISTS author_post;
-CREATE INDEX author_post ON post USING btree(author);
+
+CREATE TABLE friends (
+    friend1 INTEGER REFERENCES users(id),
+    friend2 INTEGER REFERENCES users(id),
+    PRIMARY KEY (friend1, friend2)
+);
 
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
@@ -76,7 +81,8 @@ CREATE TABLE group_request(
 
 CREATE TABLE group_user(
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
-    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE
+    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE,
+    PRIMARY KEY (user_id, group_id)
 );
 
 CREATE TABLE friend_request(
@@ -140,12 +146,18 @@ CREATE TABLE reaction_not(
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
+CREATE TABLE appeal(
+    id SERIAL PRIMARY KEY,
+    reason TEXT NOT NULL
+);
+
 CREATE TABLE group_ban(
     id SERIAL PRIMARY KEY,
     reason TEXT NOT NULL,
     group_owner_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     banned_user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE,
+    appeal INTEGER REFERENCES appeal(id) ON UPDATE CASCADE,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
@@ -154,8 +166,16 @@ CREATE TABLE app_ban(
     reason TEXT NOT NULL,
     admin_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     banned_user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
+
+    appeal INTEGER REFERENCES appeal(id) ON UPDATE CASCADE,
+
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
+
+
+CREATE INDEX user_index ON users USING hash(id);
+CREATE INDEX post_comment ON comment USING btree(post_id);
+CREATE INDEX author_post ON post USING btree(author);
 
 -----------------------------------------
 -- Full-text search
@@ -393,7 +413,7 @@ CREATE OR REPLACE FUNCTION check_belongs_group() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF NOT EXISTS (SELECT * FROM group_user where group_user.user_id = NEW.author and group_user.group_id = NEW.group_id) THEN
-        RAISE EXCEPTION 'The user must belong to the group.';
+        RAISE EXCEPTION 'The user must belong to the group to add a post';
 	END IF;
 END;
 $BODY$
@@ -411,7 +431,7 @@ CREATE OR REPLACE FUNCTION check_friend_himself() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF (NEW.user_id == NEW.friend_id) THEN
-        RAISE EXCEPTION 'A user cannot be friend of himself.';
+        RAISE EXCEPTION 'A user cannot send friend request to himself.';
 	END IF;
 END
 $BODY$
@@ -428,8 +448,9 @@ CREATE TRIGGER check_friend_of_himself
 CREATE OR REPLACE FUNCTION check_friendship_exists() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM friend_request where user_id = NEW.user_id and friend_id = NEW.friend_id) THEN
-        RAISE EXCEPTION 'The friend request already exist';
+    IF EXISTS (SELECT * FROM friends where (friend1 = NEW.user_id and friend2 = NEW.friend_id) or 
+                                           (friend2 = NEW.user_id and friend1 = NEW.friend_id)) THEN
+        RAISE EXCEPTION 'The users are already friends';
     END IF;
 END
 $BODY$
@@ -483,7 +504,7 @@ CREATE TRIGGER check_group_request
 CREATE OR REPLACE FUNCTION add_user_to_group() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.isAccepted = true THEN
+    IF NEW.is_accepted = true THEN
         INSERT INTO group_user (user_id, group_id) VALUES (NEW.user_id, NEW.group_id);
     END IF;
     RETURN NEW;
@@ -496,3 +517,24 @@ CREATE TRIGGER add_user_to_group
     FOR EACH ROW
     WHEN (NEW.is_accepted = true)
     EXECUTE FUNCTION add_user_to_group();
+
+-----------------------------------------
+    
+-- (TRIGGER13) When a friend request is accepted, the users are now friends
+
+CREATE OR REPLACE FUNCTION add_friend() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NEW.is_accepted = true THEN
+        INSERT INTO friends (friend1, friend2) VALUES (NEW.user_id, NEW.friend_id);
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER add_friend
+    AFTER INSERT OR UPDATE ON friend_request
+    FOR EACH ROW
+    WHEN (NEW.is_accepted = true)
+    EXECUTE FUNCTION add_friend();
