@@ -36,18 +36,27 @@ CREATE TABLE users (
     username TEXT NOT NULL CONSTRAINT unique_username UNIQUE,
     email TEXT NOT NULL CONSTRAINT unique_email UNIQUE,
     password TEXT NOT NULL,
-    image TEXT NOT NULL,
+    image TEXT,
     academic_status TEXT,
     display_name TEXT,
     is_private BOOLEAN DEFAULT true NOT NULL,
     role INTEGER NOT NULL
 );
 
+CREATE TABLE groups (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL CONSTRAINT unique_group_name UNIQUE,
+    is_private BOOLEAN DEFAULT true NOT NULL,
+    description TEXT NOT NULL
+);
+
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     author INTEGER REFERENCES users(id),
+    title TEXT NOT NULL,
     content TEXT NOT NULL,
     attachment TEXT,
+    group_id INTEGER REFERENCES groups(id),
     is_private BOOLEAN NOT NULL,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
@@ -58,12 +67,6 @@ CREATE TABLE friends (
     PRIMARY KEY (friend1, friend2)
 );
 
-CREATE TABLE groups (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL CONSTRAINT unique_group_name UNIQUE,
-    is_private BOOLEAN DEFAULT true NOT NULL,
-    description TEXT NOT NULL
-);
 
 CREATE TABLE group_owner(
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
@@ -107,7 +110,7 @@ CREATE TABLE reaction (
     comment_id INTEGER REFERENCES comment(id) ON UPDATE CASCADE,
     author INTEGER REFERENCES users(id),
     type reaction_types NOT NULL,
-    CONSTRAINT valid_post_or_comment_ck CHECK(post_id IS NOT NULL or comment_id IS NOT NULL)
+    CONSTRAINT valid_post_and_comment_ck CHECK((post_id IS NULL and comment_id IS NOT NULL) or (post_id IS NOT NULL and comment_id IS NULL))
 );
 
 CREATE TABLE post_tag_not(
@@ -187,11 +190,13 @@ ALTER TABLE users ADD COLUMN tsvectors TSVECTOR;
 CREATE OR REPLACE FUNCTION update_users_search() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        NEW.tsvectors = to_tsvector('english', NEW.username);
+        NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A') ||
+            setweight(to_tsvector('english', NEW.display_name), 'B');
     END IF;
     IF TG_OP = 'UPDATE' THEN
-        IF (NEW.username <> OLD.username) THEN
-            NEW.tsvectors = to_tsvector('english', NEW.username);
+        IF (NEW.username <> OLD.username OR NEW.display_name <> OLD.display_name) THEN
+        NEW.tsvectors = setweight(to_tsvector('english', NEW.username), 'A') ||
+            setweight(to_tsvector('english', NEW.display_name), 'B');
         END IF;
     END IF;
     RETURN NEW;
@@ -213,15 +218,16 @@ ALTER TABLE post ADD COLUMN tsvectors TSVECTOR;
 CREATE OR REPLACE FUNCTION update_post_search() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        NEW.tsvectors = setweight(to_tsvector('english', NEW.content), 'A') ||
-            setweight(to_tsvector('english', NEW.username), 'B');
+        NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A') 
+            || setweight(to_tsvector('english', NEW.content), 'B');
     END IF;
     IF TG_OP = 'UPDATE' THEN
-        IF (NEW.content <> OLD.content OR NEW.username <> OLD.username) THEN
-            NEW.tsvectors = setweight(to_tsvector('english', NEW.content), 'A') ||
-                setweight(to_tsvector('english', NEW.username), 'B');
+        IF (OLD.title <> NEW.title OR NEW.content <> OLD.content) THEN
+            NEW.tsvectors = setweight(to_tsvector('english', NEW.title), 'A') 
+            || setweight(to_tsvector('english', NEW.content), 'B');
         END IF;
     END IF;
+    RETURN NEW;
 END$$
 LANGUAGE plpgsql;
 
@@ -247,6 +253,7 @@ BEGIN
                 setweight(to_tsvector('english', NEW.description), 'B');
         END IF;
     END IF;
+    RETURN NEW;
 END$$
 LANGUAGE plpgsql;
 
@@ -394,7 +401,7 @@ CREATE TRIGGER update_group_request_not_trigger
 CREATE OR REPLACE FUNCTION update_friend_request_not() RETURNS TRIGGER AS
 $BODY$
 BEGIN 
-    INSERT INTO friend_request_not (friend_request_id, date) 
+    INSERT INTO friend_request_not (friend_request, date) 
     VALUES (NEW.id, now());
     RETURN NEW;
 END
@@ -412,9 +419,11 @@ CREATE TRIGGER update_friend_request_not_trigger
 CREATE OR REPLACE FUNCTION check_belongs_group() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NOT EXISTS (SELECT * FROM group_user where group_user.user_id = NEW.author and group_user.group_id = NEW.group_id) THEN
+    IF (NOT EXISTS (SELECT * FROM group_user where group_user.user_id = NEW.author and group_user.group_id = NEW.group_id)
+        AND (NEW.group_id <> null)) THEN
         RAISE EXCEPTION 'The user must belong to the group to add a post';
 	END IF;
+    RETURN NEW;
 END;
 $BODY$
 LANGUAGE plpgsql;
@@ -430,9 +439,10 @@ CREATE TRIGGER check_belongs_group_trigger
 CREATE OR REPLACE FUNCTION check_friend_himself() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF (NEW.user_id == NEW.friend_id) THEN
+    IF (NEW.user_id = NEW.friend_id) THEN
         RAISE EXCEPTION 'A user cannot send friend request to himself.';
 	END IF;
+    RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
@@ -452,6 +462,7 @@ BEGIN
                                            (friend2 = NEW.user_id and friend1 = NEW.friend_id)) THEN
         RAISE EXCEPTION 'The users are already friends';
     END IF;
+    RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
@@ -460,36 +471,16 @@ CREATE TRIGGER check_friendship_exists
     BEFORE INSERT ON friend_request
     EXECUTE FUNCTION check_friendship_exists();
 
-
 -----------------------------------------
 
--- (TRIGGER10) A rection must have a relaton to a post or a comment, not both
-CREATE OR REPLACE FUNCTION check_reaction() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF (NEW.post_id IS NOT NULL AND NEW.comment_id IS NOT NULL) THEN
-        RAISE EXCEPTION 'A reaction must have a relation to a post or a comment, not both';
-    END IF;
-    IF (NEW.post_id IS NULL AND NEW.comment_id IS NULL) THEN
-        RAISE EXCEPTION 'A reaction must have a relation to a post or a comment';
-    END IF;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER check_reaction
-    BEFORE INSERT ON reaction
-    EXECUTE FUNCTION check_reaction();
-
------------------------------------------
-
--- (TRIGGER11) A group request must only be sent to non-members of group
+-- (TRIGGER10) A group request must only be sent to non-members of group
 CREATE OR REPLACE FUNCTION check_group_request() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF EXISTS (SELECT * FROM group_user where user_id = NEW.user_id and group_id = NEW.group_id) THEN
         RAISE EXCEPTION 'The user is already a member of the group';
     END IF;
+    RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
@@ -500,7 +491,7 @@ CREATE TRIGGER check_group_request
 
 -----------------------------------------
     
--- (TRIGGER12) When a group request is accepted, the user is added to the groupr
+-- (TRIGGER11) When a group request is accepted, the user is added to the groupr
 CREATE OR REPLACE FUNCTION add_user_to_group() RETURNS TRIGGER AS
 $BODY$
 BEGIN
@@ -518,9 +509,9 @@ CREATE TRIGGER add_user_to_group
     WHEN (NEW.is_accepted = true)
     EXECUTE FUNCTION add_user_to_group();
 
------------------------------------------
+----------------------------------------
     
--- (TRIGGER13) When a friend request is accepted, the users are now friends
+-- (TRIGGER12) When a friend request is accepted, the users are now friends
 
 CREATE OR REPLACE FUNCTION add_friend() RETURNS TRIGGER AS
 $BODY$
