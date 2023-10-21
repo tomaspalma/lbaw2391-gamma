@@ -51,4 +51,4 @@
         (3, NULL, 2, 'HEART'), 
         (NULL, 5, 4, 'STAR'),
         (6, NULL, 3, 'DISLIKE'),
-        (NULL, 7, 2, 'DISLIKE');
+    (NULL, 7, 2, 'DISLIKE');
