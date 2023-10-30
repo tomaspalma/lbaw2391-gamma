@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\FeedController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -39,6 +40,11 @@ Route::controller(ItemController::class)->group(function () {
     Route::put('/api/cards/{card_id}', 'create');
     Route::post('/api/item/{id}', 'update');
     Route::delete('/api/item/{id}', 'delete');
+});
+
+Route::controller(FeedController::class)->group(function() {
+    Route::get('/feed', 'show_popular');
+    Route::get('/feed/personal', 'show_personal');
 });
 
 
