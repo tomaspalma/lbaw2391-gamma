@@ -269,7 +269,7 @@ paths:
       summary: 'R501: Profile Action'
       description: 'Get the page view for a user profile'
       tags:
-        - 'M05: Profile'
+        - 'M05: User Profile'
       responses:
         '200':
           description: 'OK. Show User Profile'
@@ -281,7 +281,7 @@ paths:
       summary: 'R502: Edit Profile Form'
       description: 'Provide edit profile form. Access: ATH'
       tags:
-        - 'M05: Profile'
+        - 'M05: User Profile'
       responses:
         '200':
           description: 'Get the view of the edit post form'
@@ -292,7 +292,7 @@ paths:
       summary: 'R503: Edit Profile Action'
       description: 'Processes the edit profile form submission. Access: ATH'
       tags:
-        - 'M05: Profile'
+        - 'M05: User Profile'
       requestBody:
         required: true
         content:
@@ -441,8 +441,8 @@ paths:
   /search/{query}:
 
     get: 
-      operationId: R606
-      summary: 'R606: Users Search Action'
+      operationId: R601
+      summary: 'R601: Users Search Action'
       description: 'Allows the search for users'
       tags:
         - 'M06: Posts'  
@@ -454,11 +454,11 @@ paths:
   /api/search/users:
 
     get:
-      operationId: R504
-      summary: 'R504: Previews the users search result to use for AJAX'
+      operationId: R602
+      summary: 'R602: Previews the users search result to use for AJAX'
       description: 'Allows the search for users'
       tags:
-        - 'M05: Search'
+        - 'M06: Search'
       
       parameters:
       - in: query
@@ -512,11 +512,11 @@ paths:
   /api/search/posts:
 
     get: 
-      operationId: R505
-      summary: 'R505: Posts Search Action'
+      operationId: R603
+      summary: 'R603: Posts Search Action'
       description: 'Allows the search for posts'
       tags:
-        - 'M05: Search'
+        - 'M06: Search'
           
       parameters:
         - in: query
@@ -554,11 +554,11 @@ paths:
   /api/search/groups:
 
     get:
-      operationId: R701
-      summary: 'R702: Previews the groups search result to use for AJAX'
+      operationId: R604
+      summary: 'R604: Previews the groups search result to use for AJAX'
       description: 'Allows the search for groups'
       tags:
-        - 'M07: Groups'
+        - 'M06: Search'
       
       parameters:
       - in: query
