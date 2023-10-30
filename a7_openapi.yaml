@@ -18,10 +18,10 @@ tags:
   - name: 'M02: Feed'
   - name: 'M03: User Administration'
   - name: 'M04: Static Pages'
-  - name: 'M04: User Profile'
-  - name: 'M05: Search'
-  - name: 'M06: Posts'
-  - name: 'M07: Groups'
+  - name: 'M05: User Profile'
+  - name: 'M06: Search'
+  - name: 'M07: Posts'
+  - name: 'M08: Groups'
 
 paths:
   /login:
@@ -255,11 +255,11 @@ paths:
           description: 'OK. Email verified.'
   /feed/{type}:
     get:
-      operationId: R301
-      summary: 'R301: Provide feed form'
+      operationId: R201
+      summary: 'R201: Provide feed form'
       description: 'Get the page with the feed. Access: USR, ADM'
       tags:
-        - 'M03: Feed'
+        - 'M02: Feed'
       responses:
         '200':
           description: 'OK. Show feed UI'
@@ -327,11 +327,11 @@ paths:
                   value: '/users/{id}/edit'
   /post:
     post:
-      operationId: R601
-      summary: 'R601: Create Post Action'
+      operationId: R701
+      summary: 'R701: Create Post Action'
       description: 'Processes the create post form submission. Access: ATH'
       tags:
-        - 'M06: Posts'
+        - 'M07: Posts'
       requestBody:
         required: true
         content:
@@ -370,11 +370,11 @@ paths:
                   value: '/post'
   /api/post/{id}:
     get:
-      operationId: R602
-      summary: 'R602: Get post from id as JSON'
+      operationId: R702
+      summary: 'R702: Get post from id as JSON'
       description: 'Get post from id. Access: ATH'
       tags:
-        - 'M06: Posts'
+        - 'M07: Posts'
       responses:
         '200':
           description: 'OK.'
@@ -406,22 +406,22 @@ paths:
           description: 'Forbidden. User doesnt own this post.'
   /post/{id}:
     get:
-      operationId: R603
-      summary: 'R603: Edit Profile Form'
+      operationId: R703
+      summary: 'R703: Edit Profile Form'
       description: 'Provide edit profile form. Access: ATH'
       tags:
-        - 'M06: Posts'
+        - 'M07: Posts'
       responses:
         '200':
           description: 'OK. Show Post'
         '403':
           description: 'Forbidden. User doesnt own this post.'
     put:
-      operationId: R604
-      summary: 'R604: Edit Post Action'
+      operationId: R704
+      summary: 'R704: Edit Post Action'
       description: 'Processes the edit post form submission. Access: ATH'
       tags:
-        - 'M06: Posts'
+        - 'M07: Posts'
       requestBody:
         required: true
         content:
