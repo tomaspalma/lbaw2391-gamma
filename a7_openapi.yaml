@@ -275,7 +275,7 @@ paths:
           description: 'OK. Show User Profile'
         '403':
           description: 'Forbidden. User doesnt have access to this profile.'
-  /users/{id}/edit:
+  /users/{username}/edit:
     get:
       operationId: R502
       summary: 'R502: Edit Profile Form'
