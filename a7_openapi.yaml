@@ -442,14 +442,14 @@ paths:
 
     get: 
       operationId: R601
-      summary: 'R601: Users Search Action'
-      description: 'Allows the search for users'
+      summary: 'R601: Search Action'
+      description: 'Allows the search for users, posts and groups'
       tags:
-        - 'M06: Posts'  
+        - 'M06: Search'  
       
       responses:
         '200':
-          description: 'OK. Show Search Users UI'
+          description: 'OK. Show Search UI'
     
   /api/search/users:
 
