@@ -438,3 +438,161 @@ paths:
                   type: string
                 is_private:
                   type: boolean
+  /search/{query}:
+
+    get: 
+      operationId: R606
+      summary: 'R606: Users Search Action'
+      description: 'Allows the search for users'
+      tags:
+        - 'M06: Posts'  
+      
+      responses:
+        '200':
+          description: 'OK. Show Search Users UI'
+    
+  /api/search/users:
+
+    get:
+      operationId: R504
+      summary: 'R504: Previews the users search result to use for AJAX'
+      description: 'Allows the search for users'
+      tags:
+        - 'M05: Search'
+      
+      parameters:
+      - in: query
+        name: query
+        description: String to use for full-text search
+        schema:
+          type: string
+        required: false
+      
+        
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    image:
+                      type: string
+                    username:
+                      type: string
+                    e-mail:
+                      type: string
+                    academic_status:
+                      type: string
+                    display_name:
+                      type: string
+                    is_private:
+                      type: boolean
+                example:
+                  - id: 1
+                    image: url/of/the/image.jpg
+                    username: john_doe
+                    e-mail: johndoe@trigger.com
+                    academic_status: Student 
+                    display_name: John Doe
+                    is_private: False
+                  - id: 28
+                    image: url/of/the/image2.jpg
+                    username: carlosbarbossa
+                    e-mail: carlosbarbossa@carlosbarbossa.com
+                    academic_status: Student 
+                    display_name: Carlos Barbossa
+                    is_private: False
+
+  /api/search/posts:
+
+    get: 
+      operationId: R505
+      summary: 'R505: Posts Search Action'
+      description: 'Allows the search for posts'
+      tags:
+        - 'M05: Search'
+          
+      parameters:
+        - in: query
+          name: query
+          description: String to use for full-text search
+          schema:
+            type: string
+          required: false
+      
+          responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      author:
+                        type: integer
+                      title:
+                        type: string
+                      content:
+                        type: string
+                      attachement:
+                        type: string
+                      group_id:
+                        type: integer
+                      is_private:
+                        type: boolean
+
+  /api/search/groups:
+
+    get:
+      operationId: R701
+      summary: 'R702: Previews the groups search result to use for AJAX'
+      description: 'Allows the search for groups'
+      tags:
+        - 'M07: Groups'
+      
+      parameters:
+      - in: query
+        name: query
+        description: String to use for full-text search
+        schema:
+          type: string
+        required: false
+      
+        
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    is_private:
+                      type: boolean
+                example:
+                  - id: 1
+                    name: Prolog Enthusiasts
+                    description: A community for discussing Prolog programming language and related topics
+                    is_private: False
+                  - id: 2
+                    name: Tech Enthusiasts
+                    description: A group dedicated to discussing the latest technology trends and innovations
+                    is_private: True
