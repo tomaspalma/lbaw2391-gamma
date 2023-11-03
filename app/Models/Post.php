@@ -26,7 +26,7 @@ class Post extends Model
     ];
 
     protected $hidden = [
-        'author'
+        'tsvectors',
     ];
 
     public function authors(): BelongsTo {

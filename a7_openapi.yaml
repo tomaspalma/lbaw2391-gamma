@@ -536,7 +536,7 @@ paths:
         responses:
           '200':
             description: 'OK. Show Search Users UI'
-    
+
   /api/search/users:
 
     get:
