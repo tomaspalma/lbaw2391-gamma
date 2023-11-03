@@ -1,5 +1,5 @@
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/search_input_preview.js'])
 </head>
 
 <nav class="bg-white border-black border-b mb-5 p-1.5">
@@ -32,20 +32,14 @@
                         placeholder="Search...">
                 </form>
             </div>
-            <div id="search-preview-results" class="absolute hidden mt-10 border w-1/3 bg-white rounded-4 p-4 shadow-xl">
-                <ul id="preview-results" class="center justify-center flex border border-black rounded shadow my-4 cursor-pointer">
-                    <li data-id="selected" id="users-preview-results" class="preview-results-option flex w-1/2 p-2 justify-center">
-                        Users
-                    </li>
-                    <li id="posts-preview-results" class="preview-results-option flex w-1/2 p-2 justify-center border-t-4 border-black">
-                        Posts
-                    </li>
-                    <li id="groups-preview-results" class="preview-results-option flex w-1/2 p-2 justify-center">
-                        Groups
-                    </li>
-                </ul>
-                <div id="search-preview-content"></div>
-            </div>
+
+            @include('partials.search.search_preview', [
+                'hidden' => true,
+                'previewMenuShadow' => true,
+                'previewMenuWidth' => 'w-1/3',
+                'previewMenuPosAbs' => true,
+                'previewMenuName' => 'search-input'
+            ])
         </div>
         <div class="items-center w-full md:flex md:w-auto md:order-1">
             <ul

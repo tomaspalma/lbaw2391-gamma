@@ -12,7 +12,12 @@ class SearchController extends Controller
 {
     public function showSearch(string $query=null) {
         return view('pages.search', [
-            'query' => $query
+            'query' => $query,
+            'hidden' => false,
+            'previewMenuShadow' => false,
+            'previewMenuWidth' => 'w-full',
+            'previewMenuPosAbs' => false,
+            'previewMenuName' => 'main-search'
         ]);
     }
 
