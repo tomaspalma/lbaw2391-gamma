@@ -2,15 +2,23 @@ import { getSearchResults } from "./search";
 
 const searchMenuName = 'main-search';
 
-let currentSearchPreview = `${searchMenuName}-users-preview-results`;
+const toggledParameter = {
+    "users": "users-preview-results",
+    "posts": "posts-preview-results",
+    "groups": "groups-preview-results",
+};
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const toggled = urlParams.get('toggled');
+
+let currentSearchPreview = `${searchMenuName}-${toggledParameter[toggled] ?? "users-preview-results"}`;
 
 const searchPreviewContent = document.getElementById(`${searchMenuName}-search-preview-content`);
 
 const searchPreviewResults = document.getElementById(`${searchMenuName}-search-results`);
 
 function showSearchPreview(searchPreviewResults, searchValue) {
-    // searchPreviewResults.style.display = 'block';
-
     const borderType = "border-t-4";
     const borderColor = "border-black";
 
