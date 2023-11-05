@@ -18,13 +18,13 @@
             <a href="/feed/personal" class="hover:underline">Personalized</a>
         </li>
     </ul>
-    
-    @if(count($posts) == 0) 
-        <p class="text-center">No posts found.</p>
+
+
+    @if(count($posts) == 0)
+    <p class="text-center">No posts found.</p>
     @else
-        @for($i = 0; $i < count($posts); $i++)
-            @include('partials.post_card', ['post' => $posts[$i]])
+    @for($i = 0; $i < count($posts); $i++) @include('partials.post_card', ['post'=> $posts[$i]])
         @endfor
-    @endif
+        @endif
 
 </main>

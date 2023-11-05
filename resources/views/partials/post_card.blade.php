@@ -7,6 +7,9 @@
         <div class="flex space-x-4">
             <img src="{{ $post->authors->image ?? 'hello'}}" class="rounded-full w-10 h-10">
             <a class="hover:underline" href="">{{ $post->authors->username ?? 'hello' }}</a>
+            @if($post->group)
+            <a class="hover:underline">@ {{ $post->group->name }}</a>
+            @endif
         </div>
         <span>
             <time>{{ $post->date }}</time>

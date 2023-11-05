@@ -29,11 +29,18 @@ class Post extends Model
         'tsvectors',
     ];
 
-    public function authors(): BelongsTo {
+    public function authors(): BelongsTo
+    {
         return $this->belongsTo(User::class, "author");
     }
 
-    public function reactions(): HasMany {
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
+    }
+
+    public function reactions(): HasMany
+    {
         return $this->hasMany(Reaction::class);
     }
 }
