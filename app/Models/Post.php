@@ -29,7 +29,7 @@ class Post extends Model
         'tsvectors',
     ];
 
-    public function authors(): BelongsTo
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, "author");
     }
