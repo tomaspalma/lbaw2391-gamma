@@ -1,10 +1,11 @@
-export async function searchUsers(query, searchPreviewContent) {
+const csrfMeta = document.querySelector("meta[name='csrf-token']");
+
+export async function searchUsers(query, searchPreviewContent, admin) {
     fetch(`/api/search/users/${query}`, {
         method: "GET",
     }).then(async (res) => {
 
         const users = await res.json();
-        console.log("Users: ", users);
 
         if (users.length == 0) {
             searchPreviewContent.innerHTML = getNoneFoundText("users");
@@ -22,6 +23,13 @@ export async function searchUsers(query, searchPreviewContent) {
                             ${user.username}
                         </a>
                     </h1>
+                    ${admin ? `<form class="delete-user-form" action="/users/${user.username}" method="POST" >
+                        <input name="_token" value="${csrfMeta.getAttribute('content')}" hidden>
+                        <button type="submit">
+                            Delete
+                        </button>
+
+</form>` : ''}
                 </article>`;
                 // searchPreviewContent.innerHTML += `<h1>${user.username}</h1>`
             }
@@ -37,8 +45,6 @@ export async function searchPosts(query, searchPreviewContent) {
         method: "GET",
     }).then(async (res) => {
         const posts = await res.json();
-
-        console.log("Posts: ", posts);
 
         if (posts.length == 0) {
             searchPreviewContent.innerHTML = getNoneFoundText("posts");
@@ -80,7 +86,6 @@ export async function searchGroups(query, searchPreviewContent) {
     }).then(async (res) => {
 
         const groups = await res.json();
-        console.log("Groups are: ", groups);
 
         if (groups.length == 0) {
             searchPreviewContent.innerHTML = getNoneFoundText("groups");
@@ -114,5 +119,5 @@ export async function getSearchResults(type, query, searchPreviewContent) {
         "groups-preview-results": searchGroups,
     };
 
-    actions[type](query, searchPreviewContent);
+    actions[type](query, searchPreviewContent, false);
 }

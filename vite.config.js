@@ -10,6 +10,9 @@ export default defineConfig({
                 'resources/js/search/search_input_preview.js',
                 'resources/js/search/search.js',
                 'resources/js/search/main_search_preview.js',
+                'resources/components/confirmation_modal.js',
+                'resources/js/admin/user/delete.js',
+                'resources/js/admin/user/unblock.js'
             ],
             refresh: true,
         }),

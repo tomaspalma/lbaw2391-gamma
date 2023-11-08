@@ -100,6 +100,7 @@ CREATE TABLE comment(
     id SERIAL PRIMARY KEY,
     post_id INTEGER REFERENCES post(id) ON UPDATE CASCADE,
     author INTEGER REFERENCES users(id) ON UPDATE CASCADE,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now()),
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now()),
     content TEXT NOT NULL
 );

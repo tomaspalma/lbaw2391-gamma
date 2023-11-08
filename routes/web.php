@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CardController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\GroupController;
@@ -31,6 +33,10 @@ Route::redirect('/', '/login');
 Route::controller(CardController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');
     Route::get('/cards/{id}', 'show');
+});
+
+Route::controller(UserController::class)->group(function () {
+    Route::post('/users/{username}', 'delete_user');
 });
 
 
@@ -79,7 +85,14 @@ Route::controller(SearchController::class)->group(function () {
     Route::get("/search/{query?}", 'showSearch');
 });
 
-Route::prefix('/api')->group(function () {
+Route::controller(AdminController::class)->group(function () {
+    Route::prefix('/admin')->name('admin')->group(function () {
+        Route::get("/user", 'show_admin_user');
+        Route::get("/user/create", 'show_create_user');
+    });
+});
+
+Route::prefix('/api')->name('api')->group(function () {
     // Route::get('/search/users/{query}', ['searchUsers']);
     Route::controller(SearchController::class)->group(function () {
         Route::get('/search/groups/{query}', 'fullTextGroups');

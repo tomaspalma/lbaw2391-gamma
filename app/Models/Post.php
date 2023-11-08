@@ -18,12 +18,15 @@ class Post extends Model
     protected $table = 'post';
     public $timestamps  = false;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'id',
         'author',
         'title',
         'content',
         'attachment',
+        'author',
         'group_id',
         'is_private'
     ];
