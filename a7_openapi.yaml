@@ -1,54 +1,49 @@
 openapi: 3.0.0
 
 info:
- version: '0.1'
- title: 'Gamma Public API'
- description: 'Web Resources Specification (A7) for Gamma'
+  version: '0.1'
+  title: 'Gamma Public API'
+  description: 'Web Resources Specification (A7) for Gamma'
 
 servers:
-- url: htts://lbaw2391.lbaw.fe.up.pt
-  description: Production server
+  - url: https://lbaw2391.lbaw.fe.up.pt
+    description: Production server
 
 externalDocs:
- description: Find more info here.
- url: https://git.fe.up.pt/lbaw/lbaw2324/lbaw2391/-/wikis/eap
+  description: Find more info here.
+  url: https://git.fe.up.pt/lbaw/lbaw2324/lbaw2391/-/wikis/eap
 
 tags:
- - name: 'M01: Authentication'
- - name: 'M02: Feed'
- - name: 'M03: User Admnistration'
- - name: 'M04: Static Pages'
- - name: 'M04: User Profile'
- - name: 'M05: Search'
- - name: 'M06: Posts'
- - name: 'M07: Groups'
+  - name: 'M01: Authentication'
+  - name: 'M02: Feed'
+  - name: 'M03: User Administration'
+  - name: 'M04: Static Pages'
+  - name: 'M05: User Profile'
+  - name: 'M06: Search'
+  - name: 'M07: Posts'
+  - name: 'M08: Groups'
 
 paths:
-
   /login:
-
     get:
       operationId: R101
       summary: 'R101: Login Form'
       description: 'Provide login form. Access: VST'
       tags:
         - 'M01: Authentication'
-
       responses:
         '200':
           description: 'Get login form view.'
-
     post:
       operationId: R102
       summary: 'R102: Login Action'
       description: 'Processes the login form submission. Access: VST'
       tags:
         - 'M01: Authentication'
-
       requestBody:
         required: true
         content:
-          application/x-www-form-urllencoded:
+          application/x-www-form-urlencoded:
             schema:
               properties:
                 email:
@@ -58,9 +53,8 @@ paths:
                   type: string
                   format: password
               required:
-                  - email
-                  - password
-
+                - email
+                - password
       responses:
         '302':
           description: 'Redirect after processing the new user information.'
@@ -76,7 +70,7 @@ paths:
                   description: 'NOT OK. Redirect again to login form.'
                   value: '/login'
             Set-Cookie:
-              cookie-name: 
+              cookie-name:
                 type: string
               cookie-value:
                 type: string
@@ -84,14 +78,12 @@ paths:
                 type: string
 
   /logout:
-
     post:
       operationId: R103
-      summary: 'R103 : Logout Action'
+      summary: 'R103: Logout Action'
       description: 'Logout the current logged user. Access: USR, ADM'
       tags:
         - 'M01: Authentication'
-
       responses:
         '302':
           description: 'Redirect after processing logout.'
@@ -103,55 +95,49 @@ paths:
                 '302 Success':
                   description: 'OK. Redirect to public feed.'
                   value: '/'
-
   /register:
-
-      get:
-        operationId: R104
-        summary: 'R104: Register Form'
-        description: 'Register a new user. Access: VST'
-        tags:
-          - 'M01: Authentication'
-
-        responses:
-          '200':
-            description: 'Sign-up is ready'
-      
-      post:
-        operationId: R105
-        summary: 'R105: Register Action'
-        description: 'Processes a new registration request. Access: VST'
-        tags:
-          - 'M01: Authentication'
-        
-        requestBody:
-          required: true
-          content:
-            multipart/form-data:
-              schema:
-                type: object
-                properties:
-                  image:
-                    type: text
-                    format: binary
-                  username:
-                    type: string
-                  email:
-                    type: string
-                  academic_status:
-                    type: string
-                  display_name:
-                    type: string
-                  is_private:
-                    type: boolean
-                required:
-                      - email
-                      - password
-                      - username
-          
-        responses:
-          '302': 
-            description: 'Redirect after the register'
+    get:
+      operationId: R104
+      summary: 'R104: Register Form'
+      description: 'Register a new user. Access: VST'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Sign-up is ready'
+    post:
+      operationId: R105
+      summary: 'R105: Register Action'
+      description: 'Processes a new registration request. Access: VST'
+      tags:
+        - 'M01: Authentication'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: text
+                  format: binary
+                username:
+                  type: string
+                email:
+                  type: string
+                academic_status:
+                  type: string
+                display_name:
+                  type: string
+                is_private:
+                  type: boolean
+              required:
+                - email
+                - password
+                - username
+      responses:
+        '302':
+          description: 'Redirect after the register'
           headers:
             Location:
               schema:
@@ -163,16 +149,13 @@ paths:
                 '302 Failure':
                   description: 'The user was not registered with success. Redirect to the login form'
                   value: '/login'
-
-  api/sendResetPassword:
-
+  /api/sendResetPassword:
     post:
       operationId: R106
-      summary: 'R106 : Send Email Action'
+      summary: 'R106: Send Email Action'
       description: 'Sends an email with a certain type. Access: VST'
       tags:
         - 'M01: Authentication'
-
       requestBody:
         required: true
         content:
@@ -180,73 +163,35 @@ paths:
             schema:
               type: object
               properties:
-                e-mail:
+                email:
                   type: string
               required:
                 - email
-               
       responses:
         '200':
-          description: 'OK. An e-mail with a password link was sent.'
-
+          description: 'OK. An email with a password link was sent.'
   /resetPassword/{token}:
-
     get:
       operationId: R107
       summary: 'R107: Register Form'
       description: 'Get the view for the form to reset the password. Access: VST'
       tags:
         - 'M01: Authentication'
-
       responses:
         '200':
           description: 'Reset the password form returned'
-
     post:
       operationId: R108
-      summary: 'R108 : Reset Password'
+      summary: 'R108: Reset Password'
       description: 'Sends a reset password request. Access: VST'
       tags:
         - 'M01: Authentication'
-
       parameters:
         - in: path
           name: token
           schema:
             type: string
-          required: True
-
-      requestBody:
-        required: True
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                new_passsword:
-                  type: string
-                confirm_new_password:
-                  type: string
-              required:
-                - new_password
-                - confirm_new_password
-               
-      responses:
-        '200':
-          description: 'OK. You received a token on your email.'
-        '404':
-          description: 'Error. Email doesnt exists.'
-
-
-  api/sendVerifyEmail:
-
-    post:
-      operationId: R108
-      summary: 'R108 : Send Email Action'
-      description: 'Sends an email with a certain type. Access: VST'
-      tags:
-        - 'M01: Authentication'
-
+          required: true
       requestBody:
         required: true
         content:
@@ -254,135 +199,139 @@ paths:
             schema:
               type: object
               properties:
-                e-mail:
+                new_password:
+                  type: string
+                confirm_new_password:
                   type: string
               required:
-                - email
-                
+                - new_password
+                - confirm_new_password
       responses:
         '200':
           description: 'OK. You received a token on your email.'
         '404':
-          description: 'Error. Email doesnt exists.'
-
-  /verifyEmail/{token}:
-
-    get:
+          description: 'Error. Email doesnt exist.'
+  /api/sendVerifyEmail:
+    post:
       operationId: R109
-      summary: 'R109: Verify Email Form'
+      summary: 'R109: Send Email Action'
+      description: 'Sends an email with a certain type. Access: VST'
+      tags:
+        - 'M01: Authentication'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+      responses:
+        '200':
+          description: 'OK. You received a token on your email.'
+        '404':
+          description: 'Error. Email doesnt exist.'
+  /verifyEmail/{token}:
+    get:
+      operationId: R110
+      summary: 'R110: Verify Email Form'
       description: 'Get the view for the form to reset the password. Access: VST'
       tags:
         - 'M01: Authentication'
-
       responses:
         '200':
           description: 'Reset the verify email form returned'
-
     post:
-      operationId: R110
-      summary: 'R110 : Send Verify Email Request'
+      operationId: R111
+      summary: 'R111: Send Verify Email Request'
       description: 'Sends a verify email request to the server'
       tags:
         - 'M01: Authentication'
-
       responses:
         '200':
           description: 'OK. Email verified.'
-
   /feed/{type}:
-
-      get:
-        operationId: R301
-        summary: 'R301: Provide feed form'
-        description: 'Get the page with the feed. Access: USR, ADM'
-        tags:
-          - 'M03: Feed'
-
-        responses:
-          '200':
-            description: 'OK. Show feed UI'
-
+    get:
+      operationId: R201
+      summary: 'R201: Provide feed form'
+      description: 'Get the page with the feed. Access: USR, ADM'
+      tags:
+        - 'M02: Feed'
+      responses:
+        '200':
+          description: 'OK. Show feed UI'
   /users/{username}:
-
-      get:
-        operationId: R501
-        summary: 'R501 : Profile Action'
-        description: 'Get the page view for a user profile'
-        tags:
-          - 'M05: Profile'
-
-        responses:
-          '200':
-            description: 'OK. Show User Profile'
-          '403':
-            description: 'Forbidden. User doesn't have access to this profile.'
-
-  /users/{id}/edit:
-
-      get:
-        operationId: R502
-        summary: 'R502 : Edit Profile Form.'
-        description: 'Provide edit profile form. Access: ATH'
-        tags:
-          - 'M05: Profile'
-
-        responses:
-          '200':
-            description: 'Get the view of the edit post form'
-          '403':
-            description: 'Forbidden. User doesn't own this profile.'
-
-      put:
-        operationId: R503
-        summary: 'R503 : Edit Profile Action.'
-        description: 'Processes the edit profile form submission. Access: ATH'
-        tags:
-          - 'M05: Profile'
-        
-        requestBody:
-          required: true
-          content:
-            multipart/form-data:
-              schema:
-                type: object
-                properties:
-                  image:
-                    type: text
-                    format: binary
-                  username:
-                    type: string
-                  academic_status:
-                    type: string
-                  display_name:
-                    type: string
-                  is_private:
-                    type: boolean
-                required:
-        
-        responses:
-          '302':
-            description: 'Redirect after processing the new user information.'
-            headers:
-              Location:
-                schema:
+    get:
+      operationId: R501
+      summary: 'R501: Profile Action'
+      description: 'Get the page view for a user profile'
+      tags:
+        - 'M05: User Profile'
+      responses:
+        '200':
+          description: 'OK. Show User Profile'
+        '403':
+          description: 'Forbidden. User doesnt have access to this profile.'
+  /users/{username}/edit:
+    get:
+      operationId: R502
+      summary: 'R502: Edit Profile Form'
+      description: 'Provide edit profile form. Access: ATH'
+      tags:
+        - 'M05: User Profile'
+      responses:
+        '200':
+          description: 'Get the view of the edit post form'
+        '403':
+          description: 'Forbidden. User doesnt own this profile.'
+    put:
+      operationId: R503
+      summary: 'R503: Edit Profile Action'
+      description: 'Processes the edit profile form submission. Access: ATH'
+      tags:
+        - 'M05: User Profile'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: text
+                  format: binary
+                username:
                   type: string
-                examples:
-                  '302 Success':
-                    description: 'OK. Redirect to profile page.'
-                    value: '/users/{id}'
-                  '302 Failure':
-                    description: 'NOT OK. Redirect again to edit profile form.'
-                    value: '/users/{id}/edit'
-
+                academic_status:
+                  type: string
+                display_name:
+                  type: string
+                is_private:
+                  type: boolean
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                '302 Success':
+                  description: 'OK. Redirect to profile page.'
+                  value: '/users/{id}'
+                '302 Failure':
+                  description: 'NOT OK. Redirect again to edit profile form.'
+                  value: '/users/{id}/edit'
   /post:
-
     post:
-      operationId: R601
-      summary: 'R601 : Create Post Action'
+      operationId: R701
+      summary: 'R701: Create Post Action'
       description: 'Processes the create post form submission. Access: ATH'
       tags:
-        - 'M06: Posts'
-      
+        - 'M07: Posts'
       requestBody:
         required: true
         content:
@@ -405,7 +354,6 @@ paths:
                 - title
                 - content
                 - is_private
-
       responses:
         '302':
           description: 'Redirect after processing the new post information.'
@@ -420,70 +368,60 @@ paths:
                 '302 Failure':
                   description: 'NOT OK. Redirect again to create post form.'
                   value: '/post'
-
   /api/post/{id}:
-    get: 
-      operationId: R602
-      summary: 'R602: Get post from id as JSON'
-        description: 'Get post from id. Access: ATH'
-        tags:
-          - 'M06: Posts'
-
-        responses:
-          '200':
-            description: 'OK.'
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    type: object
-                 properties:
-                   author:
+    get:
+      operationId: R702
+      summary: 'R702: Get post from id as JSON'
+      description: 'Get post from id. Access: ATH'
+      tags:
+        - 'M07: Posts'
+      responses:
+        '200':
+          description: 'OK.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  author:
                     type: string
-                   title:
-                     type: string
-                   content:
-                     type: string
-                   date:
-                     type: string
-                   attachment:
-                     type: string
-                   group:
-                     type: string
-               example:
-                 - author: killme
-                   title: MongoDB vs ScyllaDB 
-                   content: Can you provide with explanation as to which one of those are better?
-                   date: 2023-10-29,
-                   attachment: null,
-                   group: null
-          '403':
-            description: 'Forbidden. User doesn't own this post.' 
-
-                
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  date:
+                    type: string
+                  attachment:
+                    type: string
+                  group:
+                    type: string
+              example:
+                author: killme
+                title: MongoDB vs ScyllaDB
+                content: Can you provide with an explanation as to which one of those is better?
+                date: 2023-10-29
+                attachment: null
+                group: null
+        '403':
+          description: 'Forbidden. User doesnt own this post.'
   /post/{id}:
-
-    get: 
-      operationId: R603
-      summary: 'R603: Edit Profile Form.'
-        description: 'Provide edit profile form. Access: ATH'
-        tags:
-          - 'M06: Posts'
-
-        responses:
-          '200':
-            description: 'OK. Show Post'
-          '403':
-            description: 'Forbidden. User doesn't own this post.' 
-
+    get:
+      operationId: R703
+      summary: 'R703: Edit Profile Form'
+      description: 'Provide edit profile form. Access: ATH'
+      tags:
+        - 'M07: Posts'
+      responses:
+        '200':
+          description: 'OK. Show Post'
+        '403':
+          description: 'Forbidden. User doesnt own this post.'
     put:
-      operationId: R604
-      summary: 'R604: Edit Post Action'
+      operationId: R704
+      summary: 'R704: Edit Post Action'
       description: 'Processes the edit post form submission. Access: ATH'
       tags:
-        - 'M06: Posts'
-      
+        - 'M07: Posts'
       requestBody:
         required: true
         content:
@@ -500,33 +438,10 @@ paths:
                   type: string
                 is_private:
                   type: boolean
-                required:
-
-  delete:
-    operationId: R605
-    summary: 'R605: Delete Post Action'
-    description: 'Processes the delete post form submission. Access: ATH'
-    tags:
-      - 'M06: Posts'
-
-    responses:
-      '302':
-        description: 'Redirect after processing the delete post information.'
-        headers:
-          Location:
-            schema:
-              type: string
-              examples:
-                '302 Success':
-                  description: 'OK. Redirect to feed.'
-                  value: '/feed'
-                '302 Failure':
-                  description: 'NOT OK. Redirect again to post page.'
-                  value: '/post/{id}'
-
   /search/{query}:
 
     get: 
+
       operationId: R606
         summary: 'R606: Users Search Action'
         description: 'Allows the search for users'
@@ -537,14 +452,24 @@ paths:
           '200':
             description: 'OK. Show Search Users UI'
 
+      operationId: R601
+      summary: 'R601: Search Action'
+      description: 'Allows the search for users, posts and groups'
+      tags:
+        - 'M06: Search'  
+      
+      responses:
+        '200':
+          description: 'OK. Show Search UI'
+    
   /api/search/users:
 
     get:
-      operationId: R504
-        summary: 'R504: Previews the users search result to use for AJAX'
-        description: 'Allows the search for users'
-        tags:
-          - 'M05: Search'
+      operationId: R602
+      summary: 'R602: Previews the users search result to use for AJAX'
+      description: 'Allows the search for users'
+      tags:
+        - 'M06: Search'
       
       parameters:
       - in: query
@@ -598,13 +523,13 @@ paths:
   /api/search/posts:
 
     get: 
-      operationId: R505
-        summary: 'R505: Posts Search Action'
-        description: 'Allows the search for posts'
-        tags:
-          - 'M05: Search'
+      operationId: R603
+      summary: 'R603: Posts Search Action'
+      description: 'Allows the search for posts'
+      tags:
+        - 'M06: Search'
           
-        parameters:
+      parameters:
         - in: query
           name: query
           description: String to use for full-text search
@@ -612,40 +537,39 @@ paths:
             type: string
           required: false
       
-
-        responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    author:
-                      type: integer
-                    title:
-                      type: string
-                    content:
-                      type: string
-                    attachement:
-                      type: string
-                    group_id:
-                      type: integer
-                    is_private:
-                      type: boolean
+          responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      author:
+                        type: integer
+                      title:
+                        type: string
+                      content:
+                        type: string
+                      attachement:
+                        type: string
+                      group_id:
+                        type: integer
+                      is_private:
+                        type: boolean
 
   /api/search/groups:
 
     get:
-      operationId: R701
-        summary: 'R702: Previews the groups search result to use for AJAX'
-        description: 'Allows the search for groups'
-        tags:
-          - 'M07: Groups'
+      operationId: R604
+      summary: 'R604: Previews the groups search result to use for AJAX'
+      description: 'Allows the search for groups'
+      tags:
+        - 'M06: Search'
       
       parameters:
       - in: query
