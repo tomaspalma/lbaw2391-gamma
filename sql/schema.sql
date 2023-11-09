@@ -287,7 +287,7 @@ BEGIN
     );
     DELETE FROM group_request_not WHERE id = (
         SELECT group_request.id 
-        FROM group_request_not JOIN group_request ON group_request_not.group_req_id = group_request.id
+        FROM group_request_not JOIN group_request ON group_request_not.group_request_id = group_request.id
         JOIN users ON users.id = group_request.user_id
         WHERE users.id = OLD.id
     );

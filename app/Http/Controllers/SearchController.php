@@ -9,6 +9,7 @@ use App\Models\Group;
 use App\Models\Post;
 
 use App\Http\Resources\PostResource;
+use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
 {
@@ -37,11 +38,19 @@ class SearchController extends Controller
 
     public function fullTextUsers(Request $request, string $query)
     {
-        $users = User::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
-            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-            ->get();
+        // $admin = Auth::user()->is_admin;
+        $admin = false;
 
-        return response()->json($users);
+        if ($admin) {
+        } else {
+            $users = User::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
+                ->where('is_private', '=', false)
+                ->where('id', '<>', 0)
+                ->get();
+
+            return response()->json($users);
+        }
     }
 
     public function fullTextPosts(Request $request, string $query)

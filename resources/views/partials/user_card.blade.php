@@ -5,11 +5,12 @@
             {{$user->username}}
         </a>
     </h1>
-    <!-- ${admin ? `<form class="delete-user-form" action="/users/${user.username}" method="POST"> -->
-    <!--     <input name="_token" value="${csrfMeta.getAttribute('content')}" hidden> -->
-    <!--     <button type="submit"> -->
-    <!--         Delete -->
-    <!--     </button> -->
-    <!---->
-    <!-- </form>` : ''} -->
+    @if($adminView)
+    <form class="delete-user-form" action="/users/{{$user->username}}">
+        <input name="_token" value="{{csrf_token()}}" hidden>
+        <button type="submit">
+            Delete
+        </button>
+    </form>
+    @endif
 </article>`

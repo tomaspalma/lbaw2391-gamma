@@ -271,58 +271,58 @@ CREATE INDEX groups_search_idx ON groups USING GIN(tsvectors);
 -----------------------------------------
 
 -- (TRIGGER01) If a user is deleted, it will change all his activity to anonymous
-CREATE OR REPLACE FUNCTION update_deleted_user() RETURNS TRIGGER AS 
-$BODY$
-BEGIN
-    DELETE FROM post_tag_not WHERE id = (
-        SELECT post_tag.id 
-        FROM post_tag_not JOIN post_tag ON post_tag_not.post_id = post_tag.id
-        JOIN users ON users.id = post_tag.user_id
-        WHERE users.id = OLD.id
-    );
-    DELETE FROM post_tag_not WHERE id = (
-        SELECT post_tag.id 
-        FROM post_tag_not JOIN post_tag ON post_tag_not.post_id = post_tag.id
-        JOIN users ON users.id = post_tag.user_id
-        WHERE users.id = OLD.id
-    );
-    DELETE FROM group_request_not WHERE id = (
-        SELECT group_request.id 
-        FROM group_request_not JOIN group_request ON group_request_not.group_req_id = group_request.id
-        JOIN users ON users.id = group_request.user_id
-        WHERE users.id = OLD.id
-    );
-    DELETE FROM friend_request_not WHERE id = (
-        SELECT friend_request.id 
-        FROM friend_request_not JOIN friend_request ON friend_request_not.friend_req_id = friend_request.id
-        JOIN users ON users.id = friend_request.user_id OR users.id = friend_request.friend_id
-        WHERE users.id = OLD.id
-    );
-    DELETE FROM comment_not WHERE comment = (
-        SELECT comment.id 
-        FROM comment_not JOIN comment ON comment_not.comment = comment.id
-        JOIN users ON users.id = comment.author
-        WHERE users.id = OLD.id
-    );
-    DELETE FROM reaction_not WHERE reaction_id = (
-        SELECT reaction.id 
-        FROM reaction_not JOIN reaction ON reaction_not.reaction_id = reaction.id
-        JOIN users ON users.id = reaction.author_id
-        WHERE users.id = OLD.id
-    );
-    UPDATE post SET author = 0 WHERE author = OLD.id;
-    UPDATE comment SET author = 0 WHERE user_id = OLD.id;
-    UPDATE reaction SET author = 0 WHERE user_id = OLD.id;
-    DELETE FROM group_owner WHERE user_id = OLD.id;
-    RETURN OLD;
-END
-$BODY$ 
-LANGUAGE plpgsql;
-
-CREATE TRIGGER update_deleted_user_trigger
-    AFTER DELETE ON users
-    FOR EACH ROW
-    EXECUTE FUNCTION update_deleted_user();
+-- CREATE OR REPLACE FUNCTION update_deleted_user() RETURNS TRIGGER AS 
+-- $BODY$
+-- BEGIN
+--     DELETE FROM post_tag_not WHERE id = (
+--         SELECT post_tag.id 
+--         FROM post_tag_not JOIN post_tag ON post_tag_not.post_id = post_tag.id
+--         JOIN users ON users.id = post_tag.user_id
+--         WHERE users.id = OLD.id
+--     );
+--     DELETE FROM post_tag_not WHERE id = (
+--         SELECT post_tag.id 
+--         FROM post_tag_not JOIN post_tag ON post_tag_not.post_id = post_tag.id
+--         JOIN users ON users.id = post_tag.user_id
+--         WHERE users.id = OLD.id
+--     );
+--     DELETE FROM group_request_not WHERE id = (
+--         SELECT group_request.id 
+--         FROM group_request_not JOIN group_request ON group_request_not.group_request_id = group_request.id
+--         JOIN users ON users.id = group_request.user_id
+--         WHERE users.id = OLD.id
+--     );
+--     DELETE FROM friend_request_not WHERE id = (
+--         SELECT friend_request.id 
+--         FROM friend_request_not JOIN friend_request ON friend_request_not.friend_request = friend_request.id
+--         JOIN users ON users.id = friend_request.user_id OR users.id = friend_request.friend_id
+--         WHERE users.id = OLD.id
+--     );
+--     DELETE FROM comment_not WHERE comment_id = (
+--         SELECT comment.id 
+--         FROM comment_not JOIN comment ON comment_not.comment_id = comment.id
+--         JOIN users ON users.id = comment.author
+--         WHERE users.id = OLD.id
+--     );
+--     DELETE FROM reaction_not WHERE reaction_id = (
+--         SELECT reaction.id 
+--         FROM reaction_not JOIN reaction ON reaction_not.reaction_id = reaction.id
+--         JOIN users ON users.id = reaction.author
+--         WHERE users.id = OLD.id
+--     );
+--     UPDATE post SET author = 0 WHERE author = OLD.id;
+--     UPDATE comment SET author = 0 WHERE user_id = OLD.id;
+--     UPDATE reaction SET author = 0 WHERE user_id = OLD.id;
+--     DELETE FROM group_owner WHERE user_id = OLD.id;
+--     RETURN OLD;
+-- END
+-- $BODY$ 
+-- LANGUAGE plpgsql;
+--
+-- CREATE TRIGGER update_deleted_user_trigger
+--     AFTER DELETE ON users
+--     FOR EACH ROW
+--     EXECUTE FUNCTION update_deleted_user();
 
 -----------------------------------------
 

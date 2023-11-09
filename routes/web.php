@@ -36,7 +36,7 @@ Route::controller(CardController::class)->group(function () {
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::post('/users/{username}', 'delete_user');
+    Route::delete('/users/{username}', 'delete_user');
 });
 
 
