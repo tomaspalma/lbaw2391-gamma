@@ -92,7 +92,7 @@ Route::controller(AdminController::class)->group(function () {
     });
 });
 
-Route::prefix('/api')->name('api')->group(function () {
+Route::prefix('/api')->group(function () {
     // Route::get('/search/users/{query}', ['searchUsers']);
     Route::controller(SearchController::class)->group(function () {
         Route::get('/search/groups/{query}', 'fullTextGroups');

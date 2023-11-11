@@ -1,3 +1,5 @@
+import { deleteUserAction } from "../admin/user/delete";
+
 const csrfMeta = document.querySelector("meta[name='csrf-token']");
 
 export async function searchUsers(query, searchPreviewContent, admin) {
@@ -13,25 +15,25 @@ export async function searchUsers(query, searchPreviewContent, admin) {
             searchPreviewContent.innerHTML = "";
             for (const user of users) {
                 searchPreviewContent.innerHTML += `
-                <article class="my-4 p-2 border-b flex align-middle space-x-2">
-                    <img 
-                        class="rounded-full w-10 h-10"
-                        src="https://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png" alt="Profile Picture"
-                    >
-                    <h1>
-                        <a href="/user/${user.username}" class="underline">
-                            ${user.username}
-                        </a>
-                    </h1>
-                    ${admin ? `<form class="delete-user-form" action="/users/${user.username}" method="POST" >
-                        <input name="_token" value="${csrfMeta.getAttribute('content')}" hidden>
-                        <button type="submit">
+                    <article data-user-image="${user.image}" data-username="${user.username}" class="my-4 p-2 border-b flex justify-between align-middle space-x-2">
+                        <div class="flex flex-row space-x-2 align-middle">
+                            <img class="rounded-full w-10 h-10" src="${user.image}" alt="Profile Picture">
+                            <h1>
+                                <a href="/user/${user.username}" class="underline">
+                                    ${user.username}
+                                </a>
+                            </h1>
+                        </div>
+                        ${admin ?
+                        `<button class="delete-confirmation-trigger order-3">
                             Delete
-                        </button>
-
-</form>` : ''}
-                </article>`;
-                // searchPreviewContent.innerHTML += `<h1>${user.username}</h1>`
+                        </button>` : ''}
+                    </article> `;
+                const deleteTriggerBtn = searchPreviewContent.querySelector(".delete-confirmation-trigger");
+                deleteTriggerBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    deleteUserAction(deleteTriggerBtn);
+                });
             }
         }
     }).catch((err) => {
@@ -41,7 +43,7 @@ export async function searchUsers(query, searchPreviewContent, admin) {
 }
 
 export async function searchPosts(query, searchPreviewContent) {
-    fetch(`/api/search/posts/${query}`, {
+    fetch(`/api/search/posts/${query} `, {
         method: "GET",
     }).then(async (res) => {
         const posts = await res.json();
@@ -52,7 +54,7 @@ export async function searchPosts(query, searchPreviewContent) {
             searchPreviewContent.innerHTML = ``;
             for (const post of posts) {
                 searchPreviewContent.innerHTML += `
-                    <article class="post-card border border-black rounded-md my-4 p-2 cursor-pointer">
+                    < article class="post-card border border-black rounded-md my-4 p-2 cursor-pointer" >
                         <div class="flex align-middle justify-between space-x-4">
                             <div class="flex space-x-4">
                                 <img src="${post.author.image}" class="rounded-full w-10 h-10">
@@ -72,7 +74,7 @@ export async function searchPosts(query, searchPreviewContent) {
                         <p class="my-4">
                             ${post.content}
                         </p>
-                    </article>`;
+                    </article > `;
             }
         }
     }).catch((err) => {
@@ -81,7 +83,7 @@ export async function searchPosts(query, searchPreviewContent) {
 }
 
 export async function searchGroups(query, searchPreviewContent) {
-    fetch(`/api/search/groups/${query}`, {
+    fetch(`/api/search/groups/${query} `, {
         method: "GET",
     }).then(async (res) => {
 
@@ -93,12 +95,12 @@ export async function searchGroups(query, searchPreviewContent) {
             searchPreviewContent.innerHTML = "";
             for (const group of groups) {
                 searchPreviewContent.innerHTML += `
-                <article class="my-4 p-2 border-b">
-                    <h1>
-                        <a href="/group/${group.name}" class="underline">${group.name}</a>
-                    </h1>
-                </article>
-            `;
+                    < article class="my-4 p-2 border-b" >
+                        <h1>
+                            <a href="/group/${group.name}" class="underline">${group.name}</a>
+                        </h1>
+                </article >
+                    `;
             }
         }
     }).catch((err) => {
@@ -107,7 +109,7 @@ export async function searchGroups(query, searchPreviewContent) {
 }
 
 function getNoneFoundText(entity) {
-    return `<p class="text-center">No ${entity} found.</p>`
+    return `<p class="text-center"> No ${entity} found.</p>`;
 }
 
 export async function getSearchResults(type, query, searchPreviewContent) {

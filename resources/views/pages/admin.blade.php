@@ -18,14 +18,10 @@
         </form>
     </div>
     <div class="flex flex-col align-middle justify-center" id="admin-search-user-results">
-        @for($i = 0; $i < count($users); $i++) @if($users[$i]->id !== 0)
+        @for($i = 0; $i < count($users); $i++) @if($users[$i]->id !== 0 && $users[$i]->role !== 1)
             @include('partials.user_card', [ 'user'=> $users[$i], 'adminView' => true])
             @endif
             @endfor
     </div>
-    @include('partials.confirm_modal', [
-    'action' => 'delete user',
-    'deleteMessage' => 'Are you sure you want to delete this user?'
-
-    ])
+    @include('partials.confirm_modal')
 </main>
