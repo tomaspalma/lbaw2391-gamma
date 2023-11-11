@@ -44,7 +44,7 @@ Route::controller(ItemController::class)->group(function () {
     Route::delete('/api/item/{id}', 'delete');
 });
 
-Route::controller(FeedController::class)->group(function() {
+Route::controller(FeedController::class)->group(function () {
     Route::get('/feed', 'show_popular');
     Route::get('/feed/personal', 'show_personal');
 });
@@ -61,15 +61,15 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
-Route::controller(SearchController::class)->group(function() {
+Route::controller(SearchController::class)->group(function () {
     Route::get("/search/{query?}", 'showSearch');
 });
 
-Route::prefix('/api')->name('api')->group(function () {
+Route::prefix('/api')->group(function () {
     // Route::get('/search/users/{query}', ['searchUsers']);
-    Route::controller(SearchController::class)->group(function() {
+    Route::controller(SearchController::class)->group(function () {
         Route::get('/search/groups/{query}', 'fullTextGroups');
         Route::get('/search/users/{query}', 'fullTextUsers');
         Route::get('/search/posts/{query}', 'fullTextPosts');
-    }); 
+    });
 });
