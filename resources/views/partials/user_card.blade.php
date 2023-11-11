@@ -8,8 +8,17 @@
         </h1>
     </div>
     @if($adminView)
-    <button class="delete-confirmation-trigger order-3">
-        Delete
-    </button>
+    <div class="order-3 space-x-8">
+        <button class="block-confirmation-trigger">
+            @if($user->app_ban === null)
+            Block
+            @else
+            Unblock
+            @endif
+        </button>
+        <button class="delete-confirmation-trigger">
+            Delete
+        </button>
+    </div>
     @endif
 </article>

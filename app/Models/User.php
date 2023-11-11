@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
@@ -69,6 +70,16 @@ class User extends Authenticatable
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, "author");
+    }
+
+    public function is_admin(): bool
+    {
+        return $this->role === 1;
+    }
+
+    public function app_ban(): BelongsTo
+    {
+        return $this->belongsTo(AppBan::class);
     }
 
     /**

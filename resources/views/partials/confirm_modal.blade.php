@@ -2,7 +2,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/components/confirmation_modal.js'])
 </head>
 
-<div id="confirmation-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden bg-gray-300 opacity-75 fixed top-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="confirmation-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden bg-gray-600 opacity-75 fixed top-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative w-full max-w-md max-h-full opacity-100">
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div class="p-6 text-center">

@@ -12,6 +12,7 @@ use App\Http\Controllers\SearchController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Middleware\EnsureUserIsAdmin;
 
 use App\Http\Controllers\PostController;
 
@@ -37,6 +38,7 @@ Route::controller(CardController::class)->group(function () {
 
 Route::controller(UserController::class)->group(function () {
     Route::delete('/users/{username}', 'delete_user');
+    Route::post('/users/{username}/block', 'block_user');
 });
 
 
