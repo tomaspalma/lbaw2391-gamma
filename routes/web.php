@@ -12,6 +12,7 @@ use App\Http\Controllers\SearchController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
 
 use App\Http\Controllers\PostController;
@@ -36,9 +37,11 @@ Route::controller(CardController::class)->group(function () {
     Route::get('/cards/{id}', 'show');
 });
 
-Route::controller(UserController::class)->group(function () {
+Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
     Route::delete('/users/{username}', 'delete_user');
+
     Route::post('/users/{username}/block', 'block_user');
+    Route::get('/users/{username}/block', 'show_block_user');
 });
 
 
