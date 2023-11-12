@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function show(string $username): View
     {
-        $user = User::where($username);
+        $user = User::where('username', $username)->firstOrFail();
 
         //$this->authorize('show', $user);
 
