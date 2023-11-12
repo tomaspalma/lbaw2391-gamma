@@ -10,13 +10,23 @@ use App\Models\Reaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
+    public function unblock_user(String $username)
+    {
+        $user = User::where('username', '=', $username)->get()[0];
+
+        if ($user->is_app_banned()) {
+            AppBan::where('banned_user_id', $user->id)->delete();
+        }
+    }
+
     public function block_user(Request $request, String $username)
     {
         // 1. Check if the user making the request is an admin (this will be done through a middleware)
-        // 2. If the username exists will also be verified through a middleware
+        //
 
         $request->validate([
             'reason' => 'required|string'
@@ -26,13 +36,27 @@ class UserController extends Controller
 
         $user = User::where('username', '=', $username)->get()[0];
 
-        if ($user->app_ban === null) {
+        if (!$user->is_app_banned()) {
             AppBan::create([
                 'reason' => $block_reason,
                 'admin_id' => 4,
                 'banned_user_id' => $user->id
             ]);
         }
+
+        return redirect('/admin/user');
+    }
+
+    /**
+     * Shows to an admin a page where the admin can give a reason for the block
+     */
+    public function show_block_user(String $username)
+    {
+        // Verify if the person who is doing this is an admin
+
+        $user_to_block = User::where('username', '=', $username)->get()[0];
+
+        return view('pages.block_user', ['user' => $user_to_block]);
     }
 
     public function delete_user(String $username)

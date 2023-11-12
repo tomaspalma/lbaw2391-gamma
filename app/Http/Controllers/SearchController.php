@@ -9,6 +9,7 @@ use App\Models\Group;
 use App\Models\Post;
 
 use App\Http\Resources\PostResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
@@ -49,7 +50,12 @@ class SearchController extends Controller
                 ->where('id', '<>', 0)
                 ->get();
 
-            return response()->json($users);
+            $usersJson = [];
+            for ($i = 0; $i < count($users); $i++) {
+                $usersJson[] = new UserResource($users[$i]);
+            }
+
+            return response()->json($usersJson);
         }
     }
 

@@ -10,6 +10,8 @@ class AppBan extends Model
     use HasFactory;
     protected $table = 'app_ban';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'reason',
         'admin_id',

@@ -42,6 +42,8 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
 
     Route::post('/users/{username}/block', 'block_user');
     Route::get('/users/{username}/block', 'show_block_user');
+
+    Route::post('/users/{username}/unblock', 'unblock_user');
 });
 
 
@@ -103,5 +105,9 @@ Route::prefix('/api')->group(function () {
         Route::get('/search/groups/{query}', 'fullTextGroups');
         Route::get('/search/users/{query}', 'fullTextUsers');
         Route::get('/search/posts/{query}', 'fullTextPosts');
+    });
+
+    Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
+        Route::get('/users/{username}/card', 'show_user_card');
     });
 });

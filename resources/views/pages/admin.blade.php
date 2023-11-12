@@ -7,11 +7,11 @@
 @include('partials.navbar')
 
 <main class="center">
-    <!-- <form method="POST" class="flex justify-center"> -->
-    <!--     <button type="button" class="center text-white bg-black hover:border hover:border-black hover:text-black hover:bg-white focus:ring-4 focus:ring-white-300 font-medium rounded-lg text-sm p-2"> -->
-    <!--         Create User + -->
-    <!--     </button> -->
-    <!-- </form> -->
+    <form method="POST" class="flex justify-center">
+        <button type="button" class="center text-white bg-black border hover:border-black hover:text-black hover:bg-white rounded text-sm p-2">
+            Create User +
+        </button>
+    </form>
     <div class="flex justify-center">
         <form id="search-form" class="w-1/2 ">
             <input name="search" type="text" id="search-user-admin" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search an user...">

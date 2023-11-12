@@ -12,6 +12,6 @@ export function deleteUserAction(deleteConfirmationTriggerButton) {
                 <p>Are you sure you want to delete <a class="hover:underline" href="/users/${username}">${username}</a>?</p>
             </div>
         `);
-    configureConfirmationForm(`/users/${username}`, "DELETE", "delete_user");
+    configureConfirmationForm(`/users/${username}`, "DELETE", "delete_user", "bg-red-500", "text-red-500");
     confirmationModal.classList.remove("hidden");
 }

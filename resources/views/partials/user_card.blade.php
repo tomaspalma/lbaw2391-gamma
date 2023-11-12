@@ -9,13 +9,10 @@
     </div>
     @if($adminView)
     <div class="order-3 space-x-8">
-        <button class="block-confirmation-trigger">
-            @if($user->app_ban === null)
-            Block
-            @else
-            Unblock
-            @endif
-        </button>
+
+        <a class="block-reason-trigger" cursor:pointer" href="/users/{{$user->username}}/block" {{$user->is_app_banned() ? 'hidden' : ''}}>Block</a>
+        <button class="unblock-confirmation-trigger" {{!$user->is_app_banned() ? 'hidden' : ''}}>
+            Unblock </button>
         <button class="delete-confirmation-trigger">
             Delete
         </button>

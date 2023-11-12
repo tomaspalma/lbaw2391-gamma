@@ -13,6 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class User extends Authenticatable
@@ -77,9 +78,14 @@ class User extends Authenticatable
         return $this->role === 1;
     }
 
-    public function app_ban(): BelongsTo
+    public function is_app_banned(): bool
     {
-        return $this->belongsTo(AppBan::class);
+        return $this->app_ban !== null;
+    }
+
+    public function app_ban(): HasOne
+    {
+        return $this->hasOne(AppBan::class, 'banned_user_id');
     }
 
     /**
