@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\FeedController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
-
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -42,6 +44,10 @@ Route::controller(ItemController::class)->group(function () {
     Route::delete('/api/item/{id}', 'delete');
 });
 
+Route::controller(FeedController::class)->group(function () {
+    Route::get('/feed', 'show_popular');
+    Route::get('/feed/personal', 'show_personal');
+});
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
@@ -58,4 +64,16 @@ Route::controller(RegisterController::class)->group(function () {
 // Profile
 Route::controller(UserController::class)->group(function () {
     Route::get('/users/{username}', 'show')->name('profile');
+});
+Route::controller(SearchController::class)->group(function () {
+    Route::get("/search/{query?}", 'showSearch');
+});
+
+Route::prefix('/api')->group(function () {
+    // Route::get('/search/users/{query}', ['searchUsers']);
+    Route::controller(SearchController::class)->group(function () {
+        Route::get('/search/groups/{query}', 'fullTextGroups');
+        Route::get('/search/users/{query}', 'fullTextUsers');
+        Route::get('/search/posts/{query}', 'fullTextPosts');
+    });
 });

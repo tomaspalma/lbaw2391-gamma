@@ -441,6 +441,17 @@ paths:
   /search/{query}:
 
     get: 
+
+      operationId: R606
+        summary: 'R606: Users Search Action'
+        description: 'Allows the search for users'
+        tags:
+          - 'M06: Posts'
+        
+        responses:
+          '200':
+            description: 'OK. Show Search Users UI'
+
       operationId: R601
       summary: 'R601: Search Action'
       description: 'Allows the search for users, posts and groups'
