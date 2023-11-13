@@ -16,7 +16,6 @@ class Post extends Model
     use HasFactory;
 
     protected $table = 'post';
-    public $timestamps  = false;
 
     public $timestamps = false;
 
@@ -26,7 +25,6 @@ class Post extends Model
         'title',
         'content',
         'attachment',
-        'author',
         'group_id',
         'is_private'
     ];
