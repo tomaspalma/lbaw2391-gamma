@@ -407,7 +407,31 @@ paths:
   /post/{id}:
     get:
       operationId: R703
-      summary: 'R703: Edit Profile Form'
+      summary: 'R703: Get post page'
+      description: 'Provide post page. Access: ATH'
+      tags:
+        - 'M07: Posts'
+      responses:
+        '200':
+          description: 'OK. Show Post'
+        '403':
+          description: 'Forbidden. User not allowed to see post.'
+    delete:
+      operationId: R704
+      summary: 'R704: Delete post'
+      description: 'Processes the delete post request. Access: ATH'
+      tags:
+        - 'M07: Posts'
+      responses:
+        '200':
+          description: 'OK. Post deleted.'
+        '403':
+          description: 'Forbidden. User doesnt own this post.'
+
+  /post/{id}/edit:
+    get:
+      operationId: R705
+      summary: 'R705: Edit Profile Form'
       description: 'Provide edit profile form. Access: ATH'
       tags:
         - 'M07: Posts'
@@ -417,8 +441,8 @@ paths:
         '403':
           description: 'Forbidden. User doesnt own this post.'
     put:
-      operationId: R704
-      summary: 'R704: Edit Post Action'
+      operationId: R706
+      summary: 'R706: Edit Post Action'
       description: 'Processes the edit post form submission. Access: ATH'
       tags:
         - 'M07: Posts'
@@ -441,16 +465,6 @@ paths:
   /search/{query}:
 
     get: 
-
-      operationId: R606
-        summary: 'R606: Users Search Action'
-        description: 'Allows the search for users'
-        tags:
-          - 'M06: Posts'
-        
-        responses:
-          '200':
-            description: 'OK. Show Search Users UI'
 
       operationId: R601
       summary: 'R601: Search Action'
