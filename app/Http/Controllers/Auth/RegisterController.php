@@ -28,15 +28,23 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:250',
+            'username' => 'required|string|max:250',
             'email' => 'required|email|max:250|unique:users',
-            'password' => 'required|min:8|confirmed'
+            'password' => 'required|min:8|confirmed',
+            'academic_status' => 'required|string|max:10',
+            'display_name'=> 'required|string|max:10',
+            'is_private' => 'required',
+            'role' => 'required'
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'academic_status' => $request->academic_status,
+            'display_name' => $request->display_name,
+            'is_private' => $request->is_private,
+            'role'=> $request->role
         ]);
 
         $credentials = $request->only('email', 'password');
