@@ -76,6 +76,11 @@ class User extends Authenticatable
         return $this->hasMany(Post::class, "author");
     }
 
+    public function publicPosts(): HasMany
+    {
+        return $this->hasMany(Post::class, "author")->where("is_private", false);
+    }
+
     /**
      * Get the cards for a user.
      */

@@ -65,10 +65,17 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::get('/users/{username}', 'show')->name('profile');
 });
+
+// Profile Edit
+Route::controller(UserController::class)->group(function () {
+    Route::get('/users/{username}/edit', 'edit')->name('profile_edit');
+    Route::put('/users/{username}/edit', 'update')->name('profile_update');
+});
+
+//Search
 Route::controller(SearchController::class)->group(function () {
     Route::get("/search/{query?}", 'showSearch');
 });
-
 Route::prefix('/api')->group(function () {
     // Route::get('/search/users/{query}', ['searchUsers']);
     Route::controller(SearchController::class)->group(function () {
