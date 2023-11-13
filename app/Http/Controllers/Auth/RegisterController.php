@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -44,6 +45,7 @@ class RegisterController extends Controller
         $new_id = $last_id + 1;
 
         User::create([
+            'id' => $new_id,
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
