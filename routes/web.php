@@ -79,7 +79,7 @@ Route::controller(RegisterController::class)->group(function () {
 
 
 // Posts
-Route::controller(PostController::class)->group(function() {
+Route::controller(PostController::class)->group(function () {
     Route::get('/post', 'showCreateForm');
     Route::post('/post', 'create')->name('post.create');
     Route::get('/post/{id}', 'showPost');
@@ -93,7 +93,7 @@ Route::controller(SearchController::class)->group(function () {
 });
 
 Route::controller(AdminController::class)->group(function () {
-    Route::prefix('/admin')->name('admin')->group(function () {
+    Route::prefix('/admin')->group(function () {
         Route::get("/user", 'show_admin_user');
         Route::get("/user/create", 'show_create_user');
     });
