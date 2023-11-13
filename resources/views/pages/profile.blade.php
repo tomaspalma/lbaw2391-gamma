@@ -6,14 +6,14 @@
 
 @include('partials.navbar')
 
-<div class="max-w-screen-md mx-auto p-4 relative">
-    <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black relative">
-        <div class="flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-gray-700 mx-auto">User Profile</h2>
-            <button class="text-black px-4 py-2 rounded absolute top-0 right-0 mt-2 mr-2">
+<div class="max-w-screen-md mx-auto p-4">
+    <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black">
+        <div class="flex justify-between">
+            <h2 class="text-2xl font-bold text-gray-700 text-center order-2">User Profile</h2>
+            <button class="text-black px-4 py-2 rounded order-3">
                 <a href="{{ route('profile_edit',['username' => $user->username]) }}">Edit</a>
             </button>
-        </div>
+        </div>        
         <div class="mt-6 flex flex-col md:flex-row -mx-3">
             <div class="md:flex-1 px-3">
                 <div class="mb-4">

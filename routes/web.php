@@ -11,6 +11,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
+use App\Http\Controllers\PostController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,7 +57,6 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('/login', 'authenticate');
     Route::get('/logout', 'logout')->name('logout');
 });
-
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
@@ -65,11 +66,19 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::get('/users/{username}', 'show')->name('profile');
 });
-
-// Profile Edit
 Route::controller(UserController::class)->group(function () {
     Route::get('/users/{username}/edit', 'edit')->name('profile_edit');
     Route::put('/users/{username}/edit', 'update')->name('profile_update');
+});
+
+// Posts
+Route::controller(PostController::class)->group(function () {
+    Route::get('/post', 'showCreateForm');
+    Route::post('/post', 'create')->name('post.create');
+    Route::get('/post/{id}', 'showPost');
+    Route::get('/post/{id}/edit', 'showEditForm');
+    Route::put('/post/{id}/edit', 'update')->name('post.update');
+    Route::delete('/post/{id}', 'delete')->name('post.delete');
 });
 
 //Search
