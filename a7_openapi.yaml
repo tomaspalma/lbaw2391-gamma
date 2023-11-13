@@ -368,10 +368,21 @@ paths:
                 '302 Failure':
                   description: 'NOT OK. Redirect again to create post form.'
                   value: '/post'
-  /api/post/{id}:
     get:
       operationId: R702
-      summary: 'R702: Get post from id as JSON'
+      summary: 'R702: Get post page creation'
+      description: 'Provide post creation page. Access: USR'
+      tags:
+        - 'M07: Posts'
+      responses:
+        '200':
+          description: 'OK. Show Post'
+        '403':
+          description: 'Forbidden. User is not logged in.'
+  /api/post/{id}:
+    get:
+      operationId: R703
+      summary: 'R703: Get post from id as JSON'
       description: 'Get post from id. Access: ATH'
       tags:
         - 'M07: Posts'
@@ -406,8 +417,8 @@ paths:
           description: 'Forbidden. User doesnt own this post.'
   /post/{id}:
     get:
-      operationId: R703
-      summary: 'R703: Get post page'
+      operationId: R704
+      summary: 'R704: Get post page'
       description: 'Provide post page. Access: ATH'
       tags:
         - 'M07: Posts'
@@ -417,8 +428,8 @@ paths:
         '403':
           description: 'Forbidden. User not allowed to see post.'
     delete:
-      operationId: R704
-      summary: 'R704: Delete post'
+      operationId: R705
+      summary: 'R705: Delete post'
       description: 'Processes the delete post request. Access: ATH'
       tags:
         - 'M07: Posts'
@@ -430,8 +441,8 @@ paths:
 
   /post/{id}/edit:
     get:
-      operationId: R705
-      summary: 'R705: Edit Profile Form'
+      operationId: R706
+      summary: 'R706: Edit Profile Form'
       description: 'Provide edit profile form. Access: ATH'
       tags:
         - 'M07: Posts'
@@ -441,8 +452,8 @@ paths:
         '403':
           description: 'Forbidden. User doesnt own this post.'
     put:
-      operationId: R706
-      summary: 'R706: Edit Post Action'
+      operationId: R707
+      summary: 'R707: Edit Post Action'
       description: 'Processes the edit post form submission. Access: ATH'
       tags:
         - 'M07: Posts'
