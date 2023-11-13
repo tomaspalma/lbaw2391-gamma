@@ -5,10 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reaction extends Model
+class AppBan extends Model
 {
     use HasFactory;
-    protected $table = 'reaction';
+    protected $table = 'app_ban';
 
     public $timestamps = false;
+
+    protected $fillable = [
+        'reason',
+        'admin_id',
+        'banned_user_id'
+    ];
 }

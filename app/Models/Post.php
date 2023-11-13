@@ -16,7 +16,8 @@ class Post extends Model
     use HasFactory;
 
     protected $table = 'post';
-    public $timestamps  = false;
+
+    public $timestamps = false;
 
     protected $fillable = [
         'id',
