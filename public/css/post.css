@@ -1,8 +1,5 @@
-main {
-    max-width: 50em;
-}
-
-.center {
+.post-card {
+    max-width: 40em;
     margin-left: auto;
     margin-right: auto;
 }

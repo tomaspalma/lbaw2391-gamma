@@ -1,3 +1,5 @@
+@extends('layouts.head')
+
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
     <head>
@@ -31,7 +33,7 @@
                 @endif
             </header>
 
-<h1 class="text-3xl font-bold">
+<h1 class="text-3xl font-bold underline">
     Hello world!
   </h1>
             <section id="content">

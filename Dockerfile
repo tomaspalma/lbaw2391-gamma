@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 AS base
 
 # Install dependencies
 env DEBIAN_FRONTEND=noninteractive
@@ -12,6 +12,22 @@ COPY ./etc/php/php.ini /usr/local/etc/php/conf.d/php.ini
 COPY ./etc/nginx/default.conf /etc/nginx/sites-enabled/default
 COPY .env_production /var/www/.env
 COPY docker_run.sh /docker_run.sh
+
+
+FROM node:18 AS assets
+
+WORKDIR /var/www
+
+COPY package.json package-lock.json ./
+RUN npm install
+
+COPY resources/ ./resources
+COPY vite.config.js ./
+COPY --from=base /var/www/vendor ./vendor
+
+RUN npm run build
+
+FROM base
 
 # Start command
 CMD sh /docker_run.sh
