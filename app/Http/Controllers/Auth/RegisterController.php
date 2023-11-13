@@ -27,6 +27,7 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        /*
         $request->validate([
             'username' => 'required|string|max:250',
             'email' => 'required|email|max:250|unique:users',
@@ -36,6 +37,7 @@ class RegisterController extends Controller
             'is_private' => 'required',
             'role' => 'required'
         ]);
+        */
 
         User::create([
             'name' => $request->name,
