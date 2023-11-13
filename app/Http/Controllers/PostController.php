@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,11 @@ class PostController extends Controller
         Auth::logout();
         Auth::loginUsingId(1);
 
-        return view('pages.create-post');
+        $groups = Auth::user()->groups;
+
+        return view('pages.create_post', [
+            'groups' => $groups
+        ]);
     }
 
     public function create(Request $request) {
@@ -31,7 +36,11 @@ class PostController extends Controller
             'is_private' => 'required|boolean'
         ]);
 
+        $last_id = DB::select('SELECT id FROM post ORDER BY id DESC LIMIT 1')[0]->id;
+        $new_id = $last_id + 1;
+
         $post = Post::create([
+            'id' => $new_id,
             'author' => Auth::user()->id,
             'title' => $request->title,
             'content' => $request->content,
@@ -60,7 +69,7 @@ class PostController extends Controller
 
     }
 
-    public function showEditFrom(string $id) : View {
+    public function showEditForm(string $id) : View {
 
         $post = Post::findOrFail($id);
 
@@ -70,8 +79,12 @@ class PostController extends Controller
 
         if($post->owner()->is(Auth::user())) {
             // ok return edit form view
-            return view('pages.edit-post', [
-                'post' => $post
+
+            $groups = Auth::user()->groups;
+
+            return view('pages.edit_post', [
+                'post' => $post,
+                'groups' => $groups
             ]);
         }
         // forbiddem. return to feed

@@ -19,6 +19,7 @@ class Post extends Model
     public $timestamps  = false;
 
     protected $fillable = [
+        'id',
         'author',
         'title',
         'content',
