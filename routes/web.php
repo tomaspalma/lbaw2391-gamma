@@ -11,6 +11,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
+use App\Http\Controllers\PostController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -59,6 +61,18 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+
+
+// Posts
+Route::controller(PostController::class)->group(function() {
+    Route::get('/post', 'showCreateForm');
+    Route::post('/post', 'create')->name('post.create');
+    Route::get('/post/{id}', 'showPost');
+    Route::get('/post/{id}/edit', 'showEditForm');
+    Route::put('/post/{id}/edit', 'update')->name('post.update');
+    Route::delete('/post/{id}', 'delete')->name('post.delete');
 });
 
 Route::controller(SearchController::class)->group(function () {
