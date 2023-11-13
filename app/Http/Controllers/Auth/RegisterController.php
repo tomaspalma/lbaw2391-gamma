@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -39,15 +40,19 @@ class RegisterController extends Controller
         ]);
         */
 
+        $last_id = DB::select('SELECT id FROM users ORDER BY id DESC LIMIT 1')[0]->id;
+        $new_id = $last_id + 1;
+
         User::create([
-            'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'academic_status' => $request->academic_status,
             'display_name' => $request->display_name,
-            'is_private' => $request->is_private,
+            'is_private' => ($request->is_private == 'yes'),
             'role'=> $request->role
         ]);
+        
 
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);

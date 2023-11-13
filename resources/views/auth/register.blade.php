@@ -5,20 +5,21 @@
     {{ csrf_field() }}
 
     <label for="username">Username</label>
-    <input id="username" type="text" name="username" value="{{ old('name') }}" required autofocus>
-    @if ($errors->has('name'))
+    <input id="username" type="text" name="username" value="{{ old('username') }}" required autofocus>
+    @if ($errors->has('username'))
       <span class="error">
-          {{ $errors->first('name') }}
+          {{ $errors->first('username') }}
       </span>
     @endif
 
     <label for="display_name">Display Name</label>
     <input id="display_name" type="text" name="display_name" value="{{ old('display_name') }}" required autofocus>
-    @if ($errors->has('name'))
-      <span class="error">
-          {{ $errors->first('name') }}
-      </span>
-    @endif
+    @if ($errors->has('display_name'))
+  <span class="error">
+      {{ $errors->first('display_name') }}
+  </span>
+  @endif
+
 
     <label for="email">E-Mail Address</label>
     <input id="email" type="email" name="email" value="{{ old('email') }}" required>
