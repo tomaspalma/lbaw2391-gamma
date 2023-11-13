@@ -9,13 +9,12 @@
 @include('partials.navbar')
 
 <main class="center">
-    <div class="post-container">
-            <h2>{{ $post->title }}</h2>
-            <p class="author">By {{ $post->owner->username }}</p>
-            
-            <div class="content">
-                {!! $post->content !!}
-            </div>
-    </div>
+    <div class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
+        <h2 class="text-4xl font-bold mb-4">{{ $post->title }}</h2>
+        <p class="text-lg text-gray-600">By {{ $post->owner->username }}</p>
 
+        <div class="mt-6 prose max-w-full">
+            {!! $post->content !!}
+        </div>
+    </div>
 </main>
