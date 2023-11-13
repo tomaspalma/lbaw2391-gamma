@@ -30,7 +30,20 @@
         </div>
 
         <div class="post-action-bar mt-4 flex justify-between items-center">
-            <!-- Add your post action buttons here -->
+        </div>
+
+        <div class="flex justify-between items-center">
+            @auth
+                @if(auth()->user()->id === $post->owner->id)
+                    <a href="{{ route('post.update', $post->id) }}" class="bg-black text-white py-2 px-4 rounded-md">Edit Post</a>
+                    
+                    <form action="{{ route('post.delete', $post->id) }}" method="post" style="display: inline-block;">
+                        @method('DELETE')
+                        @csrf
+                        <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-md" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
+                    </form>
+                @endif
+            @endauth
         </div>
     </div>
 </main>

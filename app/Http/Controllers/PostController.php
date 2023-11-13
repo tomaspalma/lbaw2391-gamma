@@ -123,4 +123,21 @@ class PostController extends Controller
         // forbidden. return to feed
         return redirect('/feed');
     }
+
+    public function delete(string $id) {
+
+        $post = Post::findOrFail($id);
+
+        // TODO set user loged in as 1 for now
+        Auth::logout();
+        Auth::loginUsingId(1);
+
+        if($post->owner()->is(Auth::user())) {
+            $post->delete();
+            return redirect('/feed');
+        }
+
+        // forbidden. return to feed -
+        return redirect('/feed');
+    }
 }

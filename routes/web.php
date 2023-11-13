@@ -72,6 +72,7 @@ Route::controller(PostController::class)->group(function() {
     Route::get('/post/{id}', 'showPost');
     Route::get('/post/{id}/edit', 'showEditForm');
     Route::put('/post/{id}/edit', 'update')->name('post.update');
+    Route::delete('/post/{id}', 'delete')->name('post.delete');
 });
 
 Route::controller(SearchController::class)->group(function () {
