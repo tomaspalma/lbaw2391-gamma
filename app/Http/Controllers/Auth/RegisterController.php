@@ -59,7 +59,7 @@ class RegisterController extends Controller
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
-        return redirect()->route('cards')
+        return redirect()->route('/feed')
             ->withSuccess('You have successfully registered & logged in!');
     }
 }
