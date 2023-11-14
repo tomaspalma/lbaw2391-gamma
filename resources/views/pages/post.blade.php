@@ -9,7 +9,7 @@
 @include('partials.navbar')
 
 <main class="center">
-    <div class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
+    <div class="border border-black p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
         <div class="flex justify-between items-center">
             <h2 class="text-4xl font-bold">{{ $post->title }}</h2>
             <span class="text-gray-600">
