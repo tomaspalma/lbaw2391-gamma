@@ -170,6 +170,7 @@ paths:
       responses:
         '200':
           description: 'OK. An email with a password link was sent.'
+
   /resetPassword/{token}:
     get:
       operationId: R107
@@ -275,6 +276,35 @@ paths:
           description: 'OK. Show User Profile'
         '403':
           description: 'Forbidden. User doesnt have access to this profile.'
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+  
+    delete:
+
+      operationId: R303
+      summary: 'R303: Deletes an user'
+      description: 'Allows an authenticated admin to be able to delete an user'
+      tags:
+        - 'M03: User Administration'
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+    
+      responses:
+        '200':
+          description: Success
+        '422':
+          description: Failure. If user not found with username
+
   /users/{username}/edit:
     get:
       operationId: R502
@@ -287,6 +317,14 @@ paths:
           description: 'Get the view of the edit post form'
         '403':
           description: 'Forbidden. User doesnt own this profile.'
+      
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+
     put:
       operationId: R503
       summary: 'R503: Edit Profile Action'
@@ -632,3 +670,98 @@ paths:
                     name: Tech Enthusiasts
                     description: A group dedicated to discussing the latest technology trends and innovations
                     is_private: True
+  /admin/user:
+    get: 
+
+      operationId: R301
+      summary: 'R301: Show administration page for actions on users'
+      description: 'Shows an administration page where the admin can search for users and perform actions on them'
+      tags:
+        - 'M03: User Administration'  
+      
+      responses:
+        '200':
+          description: 'OK. Show User Administration Page' 
+
+  /admin/user/create:
+    get:
+
+      operationId: R302
+      summary: 'R302: Shows page to create user'
+      description: 'Shows the view for the page where an admin can create a new user'
+      tags:
+          - 'M03: User Administration'
+    
+      responses:
+        '200':
+          description: 'OK. Show create user page by admin'
+
+  /users/{username}/block:
+    get:
+      
+      operationId: R304
+      summary: 'R304: Page to block a user'
+      description: 'Shows the view of the page where an admin can block an user, providing the reason'
+      tags:
+        - 'M03: User Administration'
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: 'OK. Show page to block an user'
+
+    post:
+
+      operationId: R305
+      summary: 'R305: Deletes an user'
+      description: 'Performs the deletion of an user by the admin'
+      tags:
+        - 'M03: User Administration'
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Forbidden. Requester is not an admin'
+        '422':
+          description: 'Unprocessable Entity. Username does not exist'
+
+  /users/{username}/unblock:
+    post:
+
+      operationId: R306
+      summary: 'R306: Unblocks user'
+      description: 'Allows an admin to unblock a valid user'
+      tags: 
+        - 'M03: User Administration'
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Forbidden. Requester is not an admin'
+        '422':
+          description: 'Unprocessable Entity. Username does not exist'
+
+
+        

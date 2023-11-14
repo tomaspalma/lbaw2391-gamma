@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class User extends Authenticatable
@@ -79,6 +81,20 @@ class User extends Authenticatable
     public function publicPosts(): HasMany
     {
         return $this->hasMany(Post::class, "author")->where("is_private", false);
+    }
+    public function is_admin(): bool
+    {
+        return $this->role === 1;
+    }
+
+    public function is_app_banned(): bool
+    {
+        return $this->app_ban !== null;
+    }
+
+    public function app_ban(): HasOne
+    {
+        return $this->hasOne(AppBan::class, 'banned_user_id');
     }
 
     /**
