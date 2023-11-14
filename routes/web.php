@@ -7,13 +7,10 @@ use App\Http\Controllers\CardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\FeedController;
-use App\Http\Controllers\GroupController;
 use App\Http\Controllers\SearchController;
-
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Middleware\EnsureUserExists;
-use App\Http\Middleware\EnsureUserIsAdmin;
 
 use App\Http\Controllers\PostController;
 
@@ -37,12 +34,14 @@ Route::controller(CardController::class)->group(function () {
     Route::get('/cards/{id}', 'show');
 });
 
+// Users
 Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
+    Route::get('/users/{username}', 'show')->name('profile');
+    Route::get('/users/{username}/edit', 'edit')->name('profile_edit');
+    Route::put('/users/{username}/edit', 'update')->name('profile_update');
     Route::delete('/users/{username}', 'delete_user');
-
     Route::post('/users/{username}/block', 'block_user');
     Route::get('/users/{username}/block', 'show_block_user');
-
     Route::post('/users/{username}/unblock', 'unblock_user');
 });
 
@@ -70,13 +69,10 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('/login', 'authenticate');
     Route::get('/logout', 'logout')->name('logout');
 });
-
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
-
-
 
 // Posts
 Route::controller(PostController::class)->group(function () {
@@ -88,6 +84,7 @@ Route::controller(PostController::class)->group(function () {
     Route::delete('/post/{id}', 'delete')->name('post.delete');
 });
 
+//Search
 Route::controller(SearchController::class)->group(function () {
     Route::get("/search/{query?}", 'showSearch');
 });
