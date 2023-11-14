@@ -3,7 +3,7 @@
 @section('content')
 <form method="POST" action="{{ route('register') }}">
     {{ csrf_field() }}
-
+    <input name="_token" value="{{csrf_token()}}" hidden>
     <label for="username">Username</label>
     <input id="username" type="text" name="username" value="{{ old('username') }}" required autofocus>
     @if ($errors->has('username'))

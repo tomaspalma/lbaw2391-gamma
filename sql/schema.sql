@@ -100,6 +100,7 @@ CREATE TABLE comment(
     id SERIAL PRIMARY KEY,
     post_id INTEGER REFERENCES post(id) ON UPDATE CASCADE,
     author INTEGER REFERENCES users(id) ON UPDATE CASCADE,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now()),
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now()),
     content TEXT NOT NULL
 );
@@ -286,7 +287,7 @@ BEGIN
     );
     DELETE FROM group_request_not WHERE id = (
         SELECT group_request.id 
-        FROM group_request_not JOIN group_request ON group_request_not.group_req_id = group_request.id
+        FROM group_request_not JOIN group_request ON group_request_not.group_request_id = group_request.id
         JOIN users ON users.id = group_request.user_id
         WHERE users.id = OLD.id
     );

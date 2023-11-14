@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -12,7 +12,6 @@ use Illuminate\View\View;
 
 class LoginController extends Controller
 {
-
     /**
      * Display a login form.
      */
@@ -34,13 +33,13 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
- 
+
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
- 
+
             return redirect()->intended('/cards');
         }
- 
+
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
@@ -56,5 +55,5 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('login')
             ->withSuccess('You have logged out successfully!');
-    } 
+    }
 }

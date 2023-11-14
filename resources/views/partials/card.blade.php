@@ -1,8 +1,9 @@
 <article class="card" data-id="{{ $card->id }}">
-    <header>
+    <header class="flex">
         <h2><a href="/cards/{{ $card->id }}">{{ $card->name }}</a></h2>
         <a href="#" class="delete">&#10761;</a>
     </header>
+
     <ul>
         @each('partials.item', $card->items()->orderBy('id')->get(), 'item')
     </ul>
