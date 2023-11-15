@@ -111,9 +111,10 @@ class UserController extends Controller
         // 1. Check if the user making the request is an admin (this will be done through a middleware)
         //
 
-        $request->validate([
+        $validated = $request->validate([
             'reason' => 'required|string'
         ]);
+
 
         $block_reason = $request->input('reason');
 
@@ -126,20 +127,6 @@ class UserController extends Controller
                 'banned_user_id' => $user->id
             ]);
         }
-
-        return redirect('/admin/user');
-    }
-
-    /**
-     * Shows to an admin a page where the admin can give a reason for the block
-     */
-    public function show_block_user(string $username)
-    {
-        // Verify if the person who is doing this is an admin
-
-        $user_to_block = User::where('username', '=', $username)->get()[0];
-
-        return view('pages.block_user', ['user' => $user_to_block]);
     }
 
     public function delete_user(string $username)

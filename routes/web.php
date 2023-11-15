@@ -35,7 +35,6 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
     Route::put('/users/{username}/edit', 'update')->name('profile_update');
     Route::delete('/users/{username}', 'delete_user');
     Route::post('/users/{username}/block', 'block_user');
-    Route::get('/users/{username}/block', 'show_block_user');
     Route::post('/users/{username}/unblock', 'unblock_user');
 });
 

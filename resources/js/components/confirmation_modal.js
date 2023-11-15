@@ -30,7 +30,17 @@ const callbackTypesAction = {
         blockButton.removeAttribute('hidden');
     },
     "delete_post": (confirmationForm) => {
-        window.location.href= window.location.origin + "/feed";
+        window.location.href = window.location.origin + "/feed";
+    },
+    "block_user": (form) => {
+        const username = form.action.split("/")[4];
+        const userCard = document.querySelector(`article[data-username="${username}"]`);
+
+        const unblockButton = userCard.querySelector(".unblock-confirmation-trigger");
+        const blockButton = userCard.querySelector(".block-reason-trigger");
+
+        unblockButton.removeAttribute('hidden');
+        blockButton.setAttribute('hidden', true);
     }
 };
 
@@ -45,9 +55,11 @@ if (confirmationForm) {
             },
             method: `${confirmationForm.getAttribute("data-method")}`
         }).then((res) => {
-            modal.classList.add("hidden");
+            if (res.ok) {
+                modal.classList.add("hidden");
 
-            callbackTypesAction[confirmationForm.getAttribute("data-callback-type")](confirmationForm);
+                callbackTypesAction[confirmationForm.getAttribute("data-callback-type")](confirmationForm);
+            }
         }).catch((e) => {
             console.error(e);
         });
@@ -82,4 +94,30 @@ export function configureConfirmationForm(action, method, callbackType, confirmC
     confirmButton.classList.add(confirmColor);
 
     infoIcon.classList.add(iconColor);
+}
+
+export function overrideConfirmationForm(form, action, requestParams, callbackType) {
+    clearColorConfiguration();
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        formData.append("reason", form.elements["reason"].value);
+        requestParams.body = formData;
+
+        fetch(action, requestParams).then((res) => {
+            if (res.ok) {
+                modal.classList.add("hidden");
+                confirmationForm.classList.remove("hidden");
+
+                callbackTypesAction[callbackType](confirmationForm);
+            }
+        }).catch((e) => {
+            console.error(e);
+        });
+    });
+
+    confirmationForm.classList.add("hidden");
 }

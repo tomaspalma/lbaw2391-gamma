@@ -7,26 +7,6 @@ const searchResults = document.getElementById("admin-search-user-results");
 
 // const originalDeleteUserForms = document.querySelectorAll(".delete-user-form");
 
-const deleteConfirmationTriggerButtons = document.querySelectorAll(".delete-confirmation-trigger");
-
-for (const deleteConfirmationTriggerButton of deleteConfirmationTriggerButtons) {
-    deleteConfirmationTriggerButton.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        deleteUserAction(deleteConfirmationTriggerButton);
-    });
-}
-
-const unblockConfirmationTriggerButtons = document.querySelectorAll(".unblock-confirmation-trigger");
-for (const unblockConfirmationTriggerButton of unblockConfirmationTriggerButtons) {
-    unblockConfirmationTriggerButton.addEventListener("click", (e) => {
-        console.log("fuck");
-        e.preventDefault();
-
-        unblockUserAction(unblockConfirmationTriggerButton);
-    });
-}
-
 searchInput.addEventListener("input", function(e) {
     searchUsers(e.target.value, searchResults, true);
 

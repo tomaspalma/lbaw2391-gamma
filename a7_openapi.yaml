@@ -791,25 +791,6 @@ paths:
                     is_private: True
     
   /users/{username}/block:
-    get:
-      
-      operationId: R304
-      summary: 'R304: Page to block a user'
-      description: 'Shows the view of the page where an admin can block an user, providing the reason'
-      tags:
-        - 'M03: User Administration'
-
-      parameters:
-        - in: path
-          name: username
-          schema:
-            type: string
-          required: true
-
-      responses:
-        '200':
-          description: 'OK. Show page to block an user'
-
     post:
 
       operationId: R305
