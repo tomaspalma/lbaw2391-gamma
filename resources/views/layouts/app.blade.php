@@ -27,14 +27,12 @@
     <body>
         <main>
             <header>
-                <h1><a href="{{ url('/cards') }}">Gamma</a></h1>
                 @if (Auth::check())
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
                 @endif
             </header>
 
 <h1 class="text-3xl font-bold underline">
-    Hello world!
   </h1>
             <section id="content">
                 @yield('content')

@@ -1,7 +1,6 @@
 <head>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/search_input_preview.js'])
 </head>
-
 <nav class="bg-white border-black border-b mb-5 p-1.5">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <span class="self-center text-2xl font-bold">Gamma</span>
