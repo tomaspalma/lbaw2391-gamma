@@ -69,6 +69,8 @@ export async function searchUsers(query, searchPreviewContent, admin_page) {
                 }
 
             }
+            console.log(searchPreviewContent);
+            console.log(searchPreviewContent.innerHTML);
         }
     }).catch((err) => {
 
@@ -154,6 +156,7 @@ export async function searchGroups(query, searchPreviewContent) {
 }
 
 function getNoneFoundText(entity) {
+    console.log("what's happenij")
     return `<p class="text-center"> No ${entity} found.</p>`;
 }
 

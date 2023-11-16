@@ -1,5 +1,6 @@
 import { getSearchResults } from "./search";
 
+
 const searchMenuName = 'search-input';
 
 let currentSearchPreview = `${searchMenuName}-users-preview-results`;
@@ -14,18 +15,15 @@ const search = document.getElementById("search-navbar");
 const borderType = "border-t-4";
 const borderColor = "border-black";
 
-function showSearchPreview(searchPreviewResults) {
+function showSearchPreview(searchPreviewResults, target, previewContent) {
     searchPreviewResults.style.display = 'block';
 
-    getSearchResults(currentSearchPreview, search.value, searchPreviewContent);
+    getSearchResults(currentSearchPreview, target.value, previewContent);
 }
 
 for (const previewOption of previewOptions) {
-    console.log("Preview option is: ", previewOption)
     previewOption.addEventListener("click", (e) => {
         e.stopPropagation();
-
-        console.log("Clicked");
 
         previewOptions.forEach(previewOption => {
             previewOption.classList.remove(borderType, borderColor);
@@ -37,26 +35,20 @@ for (const previewOption of previewOptions) {
             getSearchResults(previewOption.id, search.value, searchPreviewContent);
         }
 
-        currentSearchPreview = `${searchMenuName}-${previewOption.id}`;
+        currentSearchPreview = `${previewOption.id}`;
     });
 }
 
 function addNavbarSearchListener() {
-
     search.addEventListener("input", (e) => {
         const value = e.target.value;
 
         if (value.trim() === '') {
             searchPreviewResults.style.display = 'none';
         } else {
-            console.log("Search is: ", search);
-            showSearchPreview(searchPreviewResults, search);
+            showSearchPreview(searchPreviewResults, search, searchPreviewContent);
         }
     });
-
-    // search.addEventListener("blur", (e) => {
-    //     searchPreviewResults.style.display = 'none';
-    // });
 
     search.addEventListener("focus", (e) => {
         if (e.target.value.trim() !== '' && searchPreviewResults.style.display === '') {
@@ -72,6 +64,26 @@ function addNavbarSearchListener() {
 
         const query = searchForm["search"].value;
         window.location.replace(`/search/${query}?toggled=${currentSearchPreview.split("-")[4]}`);
+    });
+
+    const mobileSearch = document.getElementById("mobile-search-trigger");
+    const mobileSearchPreviewResults = document.getElementById("mobile-search-input-search-results");
+    const mobileSearchPreviewContent = document.getElementById("mobile-search-input-search-preview-content");
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 600) {
+            console.log("oh meu");
+            mobileSearchPreviewResults.style.display = 'none';
+        }
+    });
+
+    mobileSearch.addEventListener("input", (e) => {
+
+        if (e.target.value.trim() === '') {
+            mobileSearchPreviewResults.style.display = 'none';
+        } else {
+            showSearchPreview(mobileSearchPreviewResults, e.target, mobileSearchPreviewContent);
+        }
     });
 }
 
