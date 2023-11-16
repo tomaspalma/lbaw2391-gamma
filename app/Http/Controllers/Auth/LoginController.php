@@ -18,7 +18,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect('/cards'); // change this to redirect to the feed :)
+            return redirect('/feed');
         } else {
             return view('auth.login');
         }

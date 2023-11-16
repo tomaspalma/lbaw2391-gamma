@@ -42,9 +42,14 @@
                     <a href="#" class="block py-2 pl-3 pr-4">Home</a>
                 </li>
                 <li>
-                    <a href="#" class="block py-2 pl-3 pr-4">Home</a>
+                    <a href="#" class="block py-2 pl-3 pr-4">Logout</a>
                 </li>
             </ul>
+            <form method="GET" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit">Logout</button>
+            </form>
         </div>
+
     </div>
 </nav>

@@ -19,17 +19,21 @@ class RegisterController extends Controller
     /**
      * Display a login form.
      */
-    public function showRegistrationForm(): View
+    public function showRegistrationForm()
     {
-        return view('auth.register');
+        if (Auth::check()) {
+            return redirect('/feed');
+        } else {
+            return view('auth.register');
+        }
     }
+
 
     /**
      * Register a new user.
      */
     public function register(Request $request)
     {
-        /*
         $request->validate([
             'username' => 'required|string|max:250',
             'email' => 'required|email|max:250|unique:users',
@@ -37,9 +41,7 @@ class RegisterController extends Controller
             'academic_status' => 'required|string|max:10',
             'display_name'=> 'required|string|max:10',
             'is_private' => 'required',
-            'role' => 'required'
         ]);
-        */
 
         $last_id = DB::select('SELECT id FROM users ORDER BY id DESC LIMIT 1')[0]->id;
         $new_id = $last_id + 1;
@@ -52,7 +54,7 @@ class RegisterController extends Controller
             'academic_status' => $request->academic_status,
             'display_name' => $request->display_name,
             'is_private' => ($request->is_private == 'yes'),
-            'role'=> $request->role
+            'role'=> 0
         ]);
         
 
