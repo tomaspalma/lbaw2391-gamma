@@ -349,6 +349,8 @@ paths:
                   type: string
                 is_private:
                   type: boolean
+                password:
+                  type: string
       responses:
         '302':
           description: 'Redirect after processing the new user information.'
