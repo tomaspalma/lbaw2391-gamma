@@ -9,6 +9,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\CheckEmailExistsController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -74,6 +75,11 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+Route::controller(CheckEmailExistsController::class)->group(function () {
+    Route::get('/checkEmailExists', 'checkEmail');
+
 });
 
 
