@@ -37,7 +37,7 @@
                 @if(auth()->user()->id === $post->owner->id)
                     <a href="{{ route('post.update', $post->id) }}" class="bg-black text-white py-2 px-4 rounded-md">Edit Post</a>
                     
-                    <form action="{{ route('post.delete', $post->id) }}" method="post" style="display: inline-block;">
+                    <form action="{{ route('post.delete', $post->id) }}" method="post" class="mx-2 my-2">
                         @method('DELETE')
                         @csrf
                         <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-md" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
