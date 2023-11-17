@@ -10,11 +10,14 @@ use App\Models\AppBan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function show(string $username): View
     {
+        Auth::loginUsingId(4);
+
         $user = User::where('username', $username)->firstOrFail();
 
         $posts = $user->publicPosts()->orderBy('date', 'desc')->get();
@@ -198,5 +201,17 @@ class UserController extends Controller
         DB::table('users')
             ->where('id', '=', $user_id)
             ->delete();
+    }
+
+    private function is_friend($user_id, $friend_id)
+    {
+        $friendship = DB::table('friends')
+            ->where('friend1', '=', $user_id)
+            ->where('friend2', '=', $friend_id)
+            ->orWhere('friend1', '=', $friend_id)
+            ->where('friend2', '=', $user_id)
+            ->get();
+
+        return count($friendship) > 0;
     }
 }
