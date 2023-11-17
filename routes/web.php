@@ -3,14 +3,13 @@
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ItemController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Middleware\EnsureUserExists;
+use App\Http\Middleware\EnsureUserIsAdmin;
 
 use App\Http\Controllers\PostController;
 
@@ -40,7 +39,7 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
 
 Route::controller(FeedController::class)->group(function () {
     Route::get('/feed', 'show_popular');
-    Route::get('/feed/personal', 'show_personal');
+    Route::get('/feed/personal', 'show_personal')->middleware('auth');
 });
 
 // Authentication
@@ -72,7 +71,7 @@ Route::controller(SearchController::class)->group(function () {
     Route::get("/search/{query?}", 'showSearch');
 });
 
-Route::controller(AdminController::class)->group(function () {
+Route::controller(AdminController::class)->middleware(['auth', EnsureUserIsAdmin::class])->group(function () {
     Route::prefix('/admin')->group(function () {
         Route::get("/user", 'show_admin_user');
         Route::get("/user/create", 'show_create_user');
@@ -81,9 +80,10 @@ Route::controller(AdminController::class)->group(function () {
 
 Route::prefix('/api')->group(function () {
     Route::controller(SearchController::class)->group(function () {
-        Route::get('/search/groups/{query}', 'fullTextGroups');
-        Route::get('/search/users/{query}', 'fullTextUsers');
-        Route::get('/search/posts/{query}', 'fullTextPosts');
+        Route::get('/search/groups/{query?}', 'fullTextGroups');
+        Route::get('/search/users/{query?}', 'fullTextUsers');
+        Route::get('/search/posts/{query?}', 'fullTextPosts');
+        Route::get('/admin/search/users/{query?}', 'adminFullTextUsers')->middleware(['auth', EnsureUserIsAdmin::class]);
     });
 
     Route::controller(UserController::class)->group(function () {

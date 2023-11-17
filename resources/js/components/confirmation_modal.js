@@ -1,4 +1,4 @@
-const leaveModalButton = document.getElementById("close-confirmation-modal");
+const leaveModalButtons = document.querySelectorAll(".close-confirmation-modal");
 const modal = document.getElementById("confirmation-modal");
 const confirmationMessage = document.getElementById("confirmation-modal-delete-message");
 const confirmationForm = document.getElementById("confirmation-form");
@@ -6,10 +6,12 @@ const confirmationForm = document.getElementById("confirmation-form");
 const confirmButton = document.getElementById("action-confirmation-modal");
 const infoIcon = document.getElementById("info-icon");
 
-if (leaveModalButton) {
-    leaveModalButton.addEventListener("click", () => {
-        modal.classList.add("hidden");
-    });
+if (leaveModalButtons) {
+    for (const leaveModalButton of leaveModalButtons) {
+        leaveModalButton.addEventListener("click", () => {
+            modal.classList.add("hidden");
+        });
+    }
 }
 
 const callbackTypesAction = {

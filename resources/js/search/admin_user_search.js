@@ -1,5 +1,3 @@
-import { deleteUserAction } from "../admin/user/delete";
-import { unblockUserAction } from "../admin/user/unblock";
 import { searchUsers } from "./search";
 
 const searchInput = document.getElementById("search-user-admin");
