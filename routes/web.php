@@ -8,7 +8,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\CheckEmailExistsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Middleware\EnsureUserExists;
@@ -46,7 +45,6 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
     Route::post('/users/{username}/unblock', 'unblock_user');
 });
 
-
 // API
 Route::controller(CardController::class)->group(function () {
     Route::put('/api/cards', 'create');
@@ -75,11 +73,6 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
-Route::controller(CheckEmailExistsController::class)->group(function () {
-    Route::get('/checkEmailExists', 'checkEmail');
-
-});
-
 // Posts
 Route::controller(PostController::class)->group(function () {
     Route::get('/post', 'showCreateForm');
@@ -100,6 +93,11 @@ Route::controller(AdminController::class)->group(function () {
         Route::get("/user", 'show_admin_user');
         Route::get("/user/create", 'show_create_user');
     });
+});
+
+Route::controller(UserController::class)->group(function () {
+    Route::get("/api/users/username/{username}", 'checkUsernameExists');
+    Route::get("/api/users/email/{email}", 'checkEmailExists');
 });
 
 Route::prefix('/api')->group(function () {

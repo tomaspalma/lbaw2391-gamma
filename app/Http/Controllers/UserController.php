@@ -86,6 +86,28 @@ class UserController extends Controller
         }
     }
 
+    public function checkEmailExists(String $email)
+    {
+        $user = User::where('email', $email)->get();
+
+        if ($user) {
+            return response()->json($user);
+        }
+        else{
+           return null;
+        }
+    }
+
+    public function checkUsernameExists(String $username){
+        $user = User::where('username', $username)->get();
+        if ($user) {
+            return response()->json($user);
+        }
+        else{
+            return null;
+        }
+    }
+
     public function block_user(Request $request, string $username)
     {
         // 1. Check if the user making the request is an admin (this will be done through a middleware)

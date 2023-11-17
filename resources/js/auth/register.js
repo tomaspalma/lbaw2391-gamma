@@ -1,22 +1,41 @@
-var email = document.getElementById("email")
-
-
-email.addEventListener("input", (e) => {
+email.addEventListener("input", async (e) => {
     var temp = document.getElementById("email").value;
-    checkEmailExists(temp)
+    await checkEmailExists(temp);
 });
 
+username.addEventListener("input", async (e) => {
+    var temp = document.getElementById("username").value;
+    await checkUsernameExists(temp);
+});
 
-function checkEmailExists() {
+async function checkEmailExists(data) {
+    let element = document.getElementById("email");
+    try {
+        let response = await fetch('api/users/email/' + data);
+        let responseData = await response.json();
 
-    console.log("Hello, World")
+        if (responseData.length === 0) {
+            element.style.color = "green";
+        } else {
+            element.style.color = "red";
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+}
 
-    //const response = await fetch('../api/api_artists.php?search=' + this.value)
-    //const artists = await response.json()
+async function checkUsernameExists(data) {
+    let element = document.getElementById("username");
+    try {
+        let response = await fetch('api/users/username/' + data);
+        let responseData = await response.json();
 
-    const section = document.querySelector('#artists')
-    section.innerHTML = ''
-
-
-    
+        if (responseData.length === 0) {
+            element.style.color = "green";
+        } else {
+            element.style.color = "red";
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
 }
