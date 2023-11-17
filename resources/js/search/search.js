@@ -28,9 +28,14 @@ export async function searchUsers(query, searchPreviewContent, admin) {
     </div>
     ${admin ?
                         `<div class="order-3 space-x-8">
-        <a class="block-reason-trigger" cursor:pointer" href="/users/${user.username}/block" ${user.is_app_banned ? 'hidden' : ''}>Block</a>
-        <button class="unblock-confirmation-trigger" ${user.is_app_banned ? '' : 'hidden'}> 
-            Unblock 
+        <button>
+            <a target="_blank" href="/users/${user.username}/edit">Edit</a>
+        </button>
+        <button class="block-reason-trigger" ${user.is_app_banned ? 'hidden' : ''}>
+            Block
+        </button>
+        <button class="unblock-confirmation-trigger" ${user.is_app_banned ? '' : 'hidden'} >
+            Unblock
         </button>
         <button class="delete-confirmation-trigger">
             Delete

@@ -15,4 +15,12 @@ class AdminController extends Controller
             'users' => $users
         ]);
     }
+
+    /**
+     *
+     */
+    public function show_create_user()
+    {
+        return view('pages.admin_create_user');
+    }
 }

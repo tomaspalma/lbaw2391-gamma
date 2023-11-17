@@ -54,6 +54,10 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
+Route::controller(CheckEmailExistsController::class)->group(function () {
+    Route::get('/checkEmailExists', 'checkEmail');
+});
+
 // Posts
 Route::controller(PostController::class)->group(function () {
     Route::get('/post', 'showCreateForm');
@@ -64,7 +68,6 @@ Route::controller(PostController::class)->group(function () {
     Route::delete('/post/{id}', 'delete')->name('post.delete');
 });
 
-//Search
 Route::controller(SearchController::class)->group(function () {
     Route::get("/search/{query?}", 'showSearch');
 });
@@ -77,7 +80,6 @@ Route::controller(AdminController::class)->group(function () {
 });
 
 Route::prefix('/api')->group(function () {
-    // Route::get('/search/users/{query}', ['searchUsers']);
     Route::controller(SearchController::class)->group(function () {
         Route::get('/search/groups/{query}', 'fullTextGroups');
         Route::get('/search/users/{query}', 'fullTextUsers');
@@ -85,7 +87,7 @@ Route::prefix('/api')->group(function () {
     });
 
     Route::controller(UserController::class)->group(function () {
-    Route::get("/users/username/{username}", 'checkUsernameExists');
-    Route::get("/users/email/{email}", 'checkEmailExists');
-});
+        Route::get("/users/username/{username}", 'checkUsernameExists');
+        Route::get("/users/email/{email}", 'checkEmailExists');
+    });
 });
