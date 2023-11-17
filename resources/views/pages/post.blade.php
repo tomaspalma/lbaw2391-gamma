@@ -46,5 +46,22 @@
             @endauth
         </div>
     </div>
+
+    <section class="border border-black p-4 my-4 max-w-3xl mx-auto rounded-md shadow-md">
+        <h3 class="text-2xl font-bold mb-4">Comments</h3>
+        
+        @forelse($comments as $comment)
+            <div class="flex space-x-4">
+                <img src="{{ $comment->author->image ?? 'hello' }}" class="rounded-full w-8 h-8">
+                <div>
+                    <p class="text-gray-600">{{ $comment->owner->username }}</p>
+                    <p>{{ $comment->content }}</p>
+                </div>
+            </div>
+            <hr class="my-2">
+        @empty
+            <p>No comments yet.</p>
+        @endforelse
+    </section>
 </main>
 

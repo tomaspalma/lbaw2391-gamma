@@ -9,6 +9,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
+use App\Models\Comment;
 
 class PostController extends Controller
 {
@@ -55,7 +56,7 @@ class PostController extends Controller
     public function showPost(string $id) : View {
 
         $post = Post::findOrFail($id);
-
+        $comments = $post->comments()->get();
         
         // // verify if can see post
         // if($post->is_private && $post->owner()->isNot(Auth::user())) {
@@ -64,7 +65,8 @@ class PostController extends Controller
         // }
 
         return view('pages.post', [
-            'post' => $post
+            'post' => $post,
+            'comments' => $comments
         ]);
 
     }
