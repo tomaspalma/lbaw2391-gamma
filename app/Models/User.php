@@ -73,6 +73,11 @@ class User extends Authenticatable
         });
     }
 
+    public function friend($user_id): bool
+    {
+        return $this->friends()->get()->contains($user_id);
+    }
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, "author");

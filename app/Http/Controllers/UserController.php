@@ -203,15 +203,12 @@ class UserController extends Controller
             ->delete();
     }
 
-    private function is_friend($user_id, $friend_id)
+    private function checkUsername($username)
     {
-        $friendship = DB::table('friends')
-            ->where('friend1', '=', $user_id)
-            ->where('friend2', '=', $friend_id)
-            ->orWhere('friend1', '=', $friend_id)
-            ->where('friend2', '=', $user_id)
-            ->get();
-
-        return count($friendship) > 0;
+        $user = DB::table('users')->where('username', '=', $username)->get();
+        if (count($user) > 0) {
+            return false;
+        }
+        return true;
     }
 }

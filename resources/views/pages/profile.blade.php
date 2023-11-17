@@ -45,7 +45,7 @@
             </div>
         </div>
     </div>
-    @if(count($posts) == 0 || !is_friends(auth()->user(), $user) || $user->is_private)
+    @if(count($posts) == 0 || (!auth()->user()->friend($user) && $user->is_private))
     <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No posts found.</p>
     @else
     @for($i = 0; $i < count($posts); $i++) @include('partials.post_card', ['post'=> $posts[$i]])
