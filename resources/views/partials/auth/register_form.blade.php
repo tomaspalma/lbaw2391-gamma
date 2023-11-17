@@ -1,5 +1,5 @@
-<div class="flex items-center justify-content: center min-h-screen">
-    <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-self: center" action="{{ route('register') }}">
+<div class="flex justify-center">
+    <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-center" action="{{ route('register') }}">
         {{ csrf_field() }}
         <input name="_token" value="{{ csrf_token() }}" hidden>
 

@@ -6,7 +6,7 @@
 
 @include('partials.navbar')
 
-<main class="center">
+<main class="center mx-4">
     <div class="flex justify-center mb-2">
         <a target="_blank" href="{{url('/admin/user/create')}}">Create user</a>
     </div>

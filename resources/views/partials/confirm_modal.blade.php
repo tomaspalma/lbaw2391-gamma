@@ -7,13 +7,13 @@
     <div class="relative w-full max-w-md max-h-full">
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div class="p-6 text-center">
+                <div class="text-right">
+                    <i class="close-confirmation-modal fa-solid fa-x p-4 hover:cursor-pointer"></i>
+                </div>
                 <div class="flex justify-between">
                     <svg id="info-icon" class="mx-auto mb-4 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
-                    <div class="text-right">
-                        <i class="close-confirmation-modal fa-solid fa-x p-4 hover:cursor-pointer"></i>
-                    </div>
                 </div>
                 <h3 id="confirmation-modal-delete-message" class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 
