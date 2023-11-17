@@ -1,7 +1,6 @@
 <head>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/search_input_preview.js'])
 </head>
-
 <nav class="bg-white border-black border-b mb-5 p-1.5">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <span class="self-center text-2xl font-bold">Gamma</span>
@@ -43,9 +42,14 @@
                     <a href="#" class="block py-2 pl-3 pr-4">Home</a>
                 </li>
                 <li>
-                    <a href="#" class="block py-2 pl-3 pr-4">Home</a>
+                    <a href="#" class="block py-2 pl-3 pr-4">Logout</a>
                 </li>
             </ul>
+            <form method="GET" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit">Logout</button>
+            </form>
         </div>
+
     </div>
 </nav>

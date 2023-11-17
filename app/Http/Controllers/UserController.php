@@ -2,19 +2,82 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AppBan;
-use App\Models\Comment as ModelsComment;
-use App\Models\GroupOwner;
-use App\Models\Post;
-use App\Models\Reaction;
+use Illuminate\View\View;
+
 use App\Models\User;
+use App\Models\AppBan;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
-    public function unblock_user(String $username)
+    public function show(string $username): View
+    {
+        $user = User::where('username', $username)->firstOrFail();
+
+        $posts = $user->publicPosts()->orderBy('date', 'desc')->get();
+
+        //$this->authorize('show', $user);
+
+        return view('pages.profile', [
+            'user' => $user,
+            'posts' => $posts
+        ]);
+    }
+
+    public function edit(string $username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+
+        return view('pages.profile_edit', [
+            'user' => $user
+        ]);
+    }
+
+    public function update(Request $request, string $username)
+    {
+        // Validate the form data
+        $request->validate([
+            'display_name' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'password' => 'nullable|string|min:8|confirmed',
+            'academic_status' => 'required|in:student,teacher',
+            'privacy' => 'required|in:public,private',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Find the user by username
+        $user = User::where('username', $username)->firstOrFail();
+
+        // Update the user information
+        $user->display_name = $request->input('display_name');
+        $user->username = $request->input('username');
+        $user->email = $request->input('email');
+        $user->academic_status = $request->input('academic_status');
+        $user->is_private = $request->input('privacy') === 'private';
+
+        // Update the password if provided
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
+        }
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('profile_images', 'public');
+            $user->image = asset('storage/' . $imagePath);
+        }
+
+        // Save the changes
+        $user->save();
+
+        return redirect()->route('profile', ['username' => $user->username])
+            ->with('success', 'Profile updated successfully!');
+    }
+
+    public function unblock_user(string $username)
     {
         $user = User::where('username', '=', $username)->get()[0];
 
@@ -23,7 +86,7 @@ class UserController extends Controller
         }
     }
 
-    public function block_user(Request $request, String $username)
+    public function block_user(Request $request, string $username)
     {
         // 1. Check if the user making the request is an admin (this will be done through a middleware)
         //
@@ -50,7 +113,7 @@ class UserController extends Controller
     /**
      * Shows to an admin a page where the admin can give a reason for the block
      */
-    public function show_block_user(String $username)
+    public function show_block_user(string $username)
     {
         // Verify if the person who is doing this is an admin
 
@@ -59,7 +122,7 @@ class UserController extends Controller
         return view('pages.block_user', ['user' => $user_to_block]);
     }
 
-    public function delete_user(String $username)
+    public function delete_user(string $username)
     {
         $user = User::where('username', $username)->get();
         $user_id = $user[0]->id;

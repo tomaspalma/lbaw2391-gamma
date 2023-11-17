@@ -6,7 +6,7 @@
     <div class="flex align-middle justify-between space-x-4">
         <div class="flex space-x-4">
             <img src="{{ $post->owner->image ?? 'hello'}}" class="rounded-full w-10 h-10">
-            <a class="hover:underline" href="">{{ $post->owner->username ?? 'hello' }}</a>
+            <a class="hover:underline" href="{{ route('profile',['username' => $post->owner->username]) }}">{{ $post->owner->username ?? 'hello' }}</a>
             @if($post->group)
             <a class="hover:underline">@ {{ $post->group->name }}</a>
             @endif
