@@ -84,7 +84,7 @@ Route::controller(CheckEmailExistsController::class)->group(function () {
 Route::controller(PostController::class)->group(function () {
     Route::get('/post', 'showCreateForm');
     Route::post('/post', 'create')->name('post.create');
-    Route::get('/post/{id}', 'showPost');
+    Route::get('/post/{id}', 'showPost')->name('post.show');
     Route::get('/post/{id}/edit', 'showEditForm');
     Route::put('/post/{id}/edit', 'update')->name('post.update');
     Route::delete('/post/{id}', 'delete')->name('post.delete');

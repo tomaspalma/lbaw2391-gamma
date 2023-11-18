@@ -17,7 +17,7 @@
     </div>
     <header class="my-4">
         <h1 class="text-2xl">
-            <a class="hover:underline">{{ $post->title }}</a>
+            <a class="hover:underline" href="{{ route('post.show', $post->id) }}">{{ $post->title }}</a>
         </h1>
     </header>
     <p class="my-4">
