@@ -28,12 +28,6 @@ use App\Http\Controllers\PostController;
 // Home
 Route::redirect('/', '/login');
 
-// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
-});
-
 // Users
 Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
     Route::get('/users/{username}', 'show')->name('profile');
@@ -44,18 +38,6 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
     Route::get('/users/{username}/block', 'show_block_user');
     Route::post('/users/{username}/unblock', 'unblock_user');
     Route::get('/api/users/{username}', 'checkUsernameExists');
-});
-
-// API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
-});
-
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
 });
 
 Route::controller(FeedController::class)->group(function () {
@@ -78,7 +60,7 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(PostController::class)->group(function () {
     Route::get('/post', 'showCreateForm');
     Route::post('/post', 'create')->name('post.create');
-    Route::get('/post/{id}', 'showPost');
+    Route::get('/post/{id}', 'showPost')->name('post.show');
     Route::get('/post/{id}/edit', 'showEditForm');
     Route::put('/post/{id}/edit', 'update')->name('post.update');
     Route::delete('/post/{id}', 'delete')->name('post.delete');
@@ -96,11 +78,6 @@ Route::controller(AdminController::class)->group(function () {
     });
 });
 
-Route::controller(UserController::class)->group(function () {
-    Route::get("/api/users/username/{username}", 'checkUsernameExists');
-    Route::get("/api/users/email/{email}", 'checkEmailExists');
-});
-
 Route::prefix('/api')->group(function () {
     // Route::get('/search/users/{query}', ['searchUsers']);
     Route::controller(SearchController::class)->group(function () {
@@ -109,7 +86,8 @@ Route::prefix('/api')->group(function () {
         Route::get('/search/posts/{query}', 'fullTextPosts');
     });
 
-    Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
-        Route::get('/users/{username}/card', 'show_user_card');
-    });
+    Route::controller(UserController::class)->group(function () {
+    Route::get("/users/username/{username}", 'checkUsernameExists');
+    Route::get("/users/email/{email}", 'checkEmailExists');
+});
 });

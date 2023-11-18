@@ -17,14 +17,14 @@
     </div>
     <header class="my-4">
         <h1 class="text-2xl">
-            <a class="hover:underline">{{ $post->title }}</a>
+            <a class="hover:underline" href="{{ route('post.show', $post->id) }}">{{ $post->title }}</a>
         </h1>
     </header>
     <p class="my-4">
         {{ $post->content }}
     </p>
     <div class="post-action-bar">
-        <button>3</button>
+        <button>{{$post->reactions_count}}</button>
         <button>
         </button>
         <button>

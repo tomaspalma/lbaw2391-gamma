@@ -21,12 +21,11 @@
 
 
     @if(count($posts) == 0)
-    <p class="text-center">No posts found.</p>
+        <p class="text-center">No posts found.</p>
     @else
-    @for($i = 0; $i < count($posts); $i++) @if(!($posts[$i]->owner->is_private))
-        @include('partials.post_card', ['post'=> $posts[$i]])
-        @endif
+        @for($i = 0; $i < count($posts); $i++) 
+            @include('partials.post_card', ['post'=> $posts[$i]])
         @endfor
-        @endif
+    @endif
 
 </main>
