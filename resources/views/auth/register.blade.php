@@ -16,6 +16,9 @@
         <div class="mb-4">
             <label for="username" class="block text-sm font-medium text-gray-600">Username</label>
             <input class="mt-1 p-2 w-full border focus:ring-2" id="username" type="text" name="username" value="{{ old('username') }}" required autofocus>
+            
+            <div id="username-error" class="text-red-500 text-sm"></div>
+            
             @if ($errors->has('username'))
                 <span class="text-red-500 text-sm">
                     {{ $errors->first('username') }}
@@ -36,6 +39,10 @@
         <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-600">E-Mail Address</label>
             <input class="mt-1 p-2 w-full border focus:ring-2" id="email" type="email" name="email" value="{{ old('email') }}" required>
+
+            <div id="email-error" class="text-red-500 text-sm"></div>
+
+
             @if ($errors->has('email'))
                 <span class="text-red-500 text-sm">
                     {{ $errors->first('email') }}

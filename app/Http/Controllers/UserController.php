@@ -86,10 +86,8 @@ class UserController extends Controller
         }
     }
 
-    public function checkEmailExists(String $email)
-    {
+    public function checkEmailExists(String $email){
         $user = User::where('email', $email)->get();
-
         if ($user) {
             return response()->json($user);
         }
