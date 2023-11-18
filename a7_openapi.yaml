@@ -265,7 +265,34 @@ paths:
         '200':
           description: 'OK. Show feed UI'
 
+  /admin/user:
+    get: 
+
+      operationId: R301
+      summary: 'R301: Show administration page for actions on users'
+      description: 'Shows an administration page where the admin can search for users and perform actions on them'
+      tags:
+        - 'M03: User Administration'  
+      
+      responses:
+        '200':
+          description: 'OK. Show User Administration Page' 
+
+  /admin/user/create:
+    get:
+
+      operationId: R302
+      summary: 'R302: Shows page to create user'
+      description: 'Shows the view for the page where an admin can create a new user'
+      tags:
+          - 'M03: User Administration'
+    
+      responses:
+        '200':
+          description: 'OK. Show create user page by admin'
+
   /users/{username}:
+
     get:
       operationId: R501
       summary: 'R501: Profile Action'
@@ -284,10 +311,8 @@ paths:
           schema:
             type: string
           required: true
-
           
     delete:
-
       operationId: R303
       summary: 'R303: Deletes an user'
       description: 'Allows an authenticated admin to be able to delete an user'
@@ -767,31 +792,6 @@ paths:
                     name: Tech Enthusiasts
                     description: A group dedicated to discussing the latest technology trends and innovations
                     is_private: True
-  /admin/user:
-    get: 
-
-      operationId: R301
-      summary: 'R301: Show administration page for actions on users'
-      description: 'Shows an administration page where the admin can search for users and perform actions on them'
-      tags:
-        - 'M03: User Administration'  
-      
-      responses:
-        '200':
-          description: 'OK. Show User Administration Page' 
-
-  /admin/user/create:
-    get:
-
-      operationId: R302
-      summary: 'R302: Shows page to create user'
-      description: 'Shows the view for the page where an admin can create a new user'
-      tags:
-          - 'M03: User Administration'
-    
-      responses:
-        '200':
-          description: 'OK. Show create user page by admin'
     
   /users/{username}/block:
     get:
