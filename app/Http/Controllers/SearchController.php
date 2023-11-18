@@ -28,26 +28,74 @@ class SearchController extends Controller
     }
 
 
-    public function fullTextGroups(Request $request, string $query)
+    public function fullTextGroups(Request $request, string $query = null)
     {
-        $groups = Group::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
-            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-            ->get();
+        $groups = [];
+
+        if ($query === null) {
+            $groups = Group::where('is_private', '<>', false)->get();
+        } else {
+            $groups = Group::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
+                ->get();
+        }
 
         return response()->json($groups);
     }
 
-    public function fullTextUsers(Request $request, string $query)
+    /**
+     * Method used in the API endpoint used in the admin page to search for users
+     */
+    public function adminFullTextUsers(string $query = null)
     {
-        // $admin = Auth::user()->is_admin;
-        $admin = false;
-
-        if ($admin) {
+        if ($query === null) {
+            $users = User::where('id', '<>', 0)->where('role', '<>', 1)->get();
         } else {
             $users = User::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
+                ->where('id', '<>', 0)
+                ->where('role', '<>', 1)
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
+                ->get();
+        }
+
+        $usersJson = [];
+        for ($i = 0; $i < count($users); $i++) {
+            $usersJson[] = new UserResource($users[$i]);
+        }
+
+        return response()->json($usersJson);
+    }
+
+    public function fullTextUsers(Request $request, string $query = null)
+    {
+        if ($query === null) {
+            $users = [];
+
+            // Public user
+            if (Auth::user() === null) {
+                $users = User::where('id', '<>', 0)
+                    ->where('role', '<>', 1)
+                    ->where('is_private', '=', false)
+                    ->get();
+            } else {
+                $users = User::where('id', '<>', 0)
+                    ->where('is_private', '=', false)
+                    ->get();
+            }
+
+            $usersJson = [];
+            for ($i = 0; $i < count($users); $i++) {
+                $usersJson[] = new UserResource($users[$i]);
+            }
+
+            return response()->json($usersJson);
+        } else {
+            $users = [];
+
+            $users = User::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
                 ->where('is_private', '=', false)
                 ->where('id', '<>', 0)
+                ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
                 ->get();
 
             $usersJson = [];
@@ -59,11 +107,17 @@ class SearchController extends Controller
         }
     }
 
-    public function fullTextPosts(Request $request, string $query)
+    public function fullTextPosts(Request $request, string $query = null)
     {
-        $rawPosts = Post::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?) and not is_private', [$query])
-            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-            ->get();
+        $rawPosts = [];
+
+        if ($query === null) {
+            $rawPosts = Post::where('is_private', '<>', false)->get();
+        } else {
+            $rawPosts = Post::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?) and not is_private', [$query])
+                ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
+                ->get();
+        }
 
         $finalPosts = [];
         for ($i = 0; $i < count($rawPosts); $i++) {
