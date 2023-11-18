@@ -111,4 +111,10 @@ Route::prefix('/api')->group(function () {
     Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
         Route::get('/users/{username}/card', 'show_user_card');
     });
+
+    Route::controller(UserController::class)->group(function () {
+        Route::get("/users/username/{username}", 'checkUsernameExists');
+        Route::get("/users/email/{email}", 'checkEmailExists');
+    });
+    
 });

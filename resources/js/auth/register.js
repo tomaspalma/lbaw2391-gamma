@@ -1,21 +1,21 @@
 email.addEventListener("input", async (e) => {
-    let temp = document.getElementById("email").value;
+    const temp = document.getElementById("email").value;
     await checkEmailExists(temp);
 });
 
 username.addEventListener("input", async (e) => {
-    let temp = document.getElementById("username").value;
+    const temp = document.getElementById("username").value;
     await checkUsernameExists(temp);
 });
 
 
 async function checkEmailExists(data) {
-    let element = document.getElementById("email");
-    let errorMessage = document.getElementById("email-error");
+    const element = document.getElementById("email");
+    const errorMessage = document.getElementById("email-error");
 
     try {
-        let response = await fetch('api/users/email/' + data);
-        let responseData = await response.json();
+        const response = await fetch('api/users/email/' + data);
+        const responseData = await response.json();
 
         if (responseData.length === 0) {
             errorMessage.textContent = "";
@@ -31,11 +31,11 @@ async function checkEmailExists(data) {
 
 
 async function checkUsernameExists(data) {
-    let element = document.getElementById("username");
-    let errorMessage = document.getElementById("username-error");
+    const element = document.getElementById("username");
+    const errorMessage = document.getElementById("username-error");
     try {
-        let response = await fetch('api/users/username/' + data);
-        let responseData = await response.json();
+        const response = await fetch('api/users/username/' + data);
+        const responseData = await response.json();
 
         if (responseData.length === 0) {
             errorMessage.textContent = "";
