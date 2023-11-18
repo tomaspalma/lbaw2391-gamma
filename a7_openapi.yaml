@@ -381,7 +381,8 @@ paths:
                       type: string
 
 
-  
+  /users/{username}:
+
     delete:
 
       operationId: R303
@@ -402,6 +403,8 @@ paths:
           description: Success
         '422':
           description: Failure. If user not found with username
+        '403':
+          description: Action forbidden
 
   /users/{username}/edit:
     get:
