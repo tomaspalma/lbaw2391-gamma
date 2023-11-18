@@ -38,7 +38,7 @@
                 @if(auth()->user()->id === $post->owner->id)
                     <a href="{{ route('post.update', $post->id) }}" class="bg-black text-white py-2 px-4 rounded-md">Edit Post</a>
 
-                    <button type="submit" class="delete-confirmation-trigger bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
+                    <button type="submit" class="delete-post-button bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
                 @endif
             @endauth
         </div>
