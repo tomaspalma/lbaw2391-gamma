@@ -86,31 +86,28 @@ class UserController extends Controller
         }
     }
 
-    public function checkEmailExists(String $email){
+    public function checkEmailExists(String $email)
+    {
         $user = User::where('email', $email)->get();
         if ($user) {
             return response()->json($user);
-        }
-        else{
-           return null;
+        } else {
+            return null;
         }
     }
 
-    public function checkUsernameExists(String $username){
+    public function checkUsernameExists(String $username)
+    {
         $user = User::where('username', $username)->get();
         if ($user) {
             return response()->json($user);
-        }
-        else{
+        } else {
             return null;
         }
     }
 
     public function block_user(Request $request, string $username)
     {
-        // 1. Check if the user making the request is an admin (this will be done through a middleware)
-        //
-
         $validated = $request->validate([
             'reason' => 'required|string'
         ]);
@@ -126,6 +123,8 @@ class UserController extends Controller
                 'admin_id' => 4,
                 'banned_user_id' => $user->id
             ]);
+        } else {
+            return response()->json(['error' => 'User is banned'], 403);
         }
     }
 

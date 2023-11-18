@@ -10,7 +10,7 @@
     @if($adminView)
     <div class="order-3 space-x-8">
         <button>
-            <a target="_blank" href="{{ url('/users/' . $user->username . '/edit')}}">Edit</a>
+            <a target="_blank" href="{{'/users/' . $user->username . '/edit'}}">Edit</a>
         </button>
         <button class="block-reason-trigger" {{$user->is_app_banned() ? 'hidden' : ''}}>
             Block

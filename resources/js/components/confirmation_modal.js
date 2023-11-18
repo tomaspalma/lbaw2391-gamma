@@ -35,14 +35,23 @@ const callbackTypesAction = {
         window.location.href = window.location.origin + "/feed";
     },
     "block_user": (form) => {
+        console.log("Form is: ", form);
         const username = form.action.split("/")[4];
+
+        console.log("Form action is: ", form.action);
+
         const userCard = document.querySelector(`article[data-username="${username}"]`);
 
         const unblockButton = userCard.querySelector(".unblock-confirmation-trigger");
         const blockButton = userCard.querySelector(".block-reason-trigger");
 
+        console.log("Unblock button, ", unblockButton);
+        console.log("Block button, ", blockButton);
+
         unblockButton.removeAttribute('hidden');
         blockButton.setAttribute('hidden', true);
+
+        form.remove();
     }
 };
 
@@ -104,6 +113,8 @@ export function overrideConfirmationForm(form, action, requestParams, callbackTy
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
+        console.log("Form submitted");
+
         const formData = new FormData();
 
         formData.append("reason", form.elements["reason"].value);
@@ -114,7 +125,7 @@ export function overrideConfirmationForm(form, action, requestParams, callbackTy
                 modal.classList.add("hidden");
                 confirmationForm.classList.remove("hidden");
 
-                callbackTypesAction[callbackType](confirmationForm);
+                callbackTypesAction[callbackType](form);
             }
         }).catch((e) => {
             console.error(e);

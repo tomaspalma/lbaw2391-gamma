@@ -26,7 +26,7 @@ export async function searchUsers(query, searchPreviewContent, admin_page) {
             <div class="flex flex-row space-x-2 align-middle">
                 <img class="rounded-full w-10 h-10" src="${user.image}" alt="Profile Picture">
                     <h1>
-                        <a href="/user/${user.username}" class="underline">
+                        <a href="/users/${user.username}" class="underline">
                             ${user.username}
                         </a>
                     </h1>
