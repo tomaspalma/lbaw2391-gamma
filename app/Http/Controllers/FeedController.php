@@ -23,7 +23,7 @@ class FeedController extends Controller
         $user = auth()->user();
 
         $groups = $user->groups;
-        $posts = $groups->pluck('posts')->flatten()->where('is_private', false);
+        $posts = $groups->pluck('posts')->flatten();
 
         $friends = $user->friends;
         $posts = $posts->merge($friends->pluck('posts')->flatten());
@@ -41,9 +41,6 @@ class FeedController extends Controller
     {
         $posts = Post::withCount('reactions')
             ->where('is_private', '=', false)
-            ->whereHas('owner', function ($query) {
-                $query->where('is_private', false);
-            })
             ->orderBy('reactions_count', 'desc')
             ->get();
 
