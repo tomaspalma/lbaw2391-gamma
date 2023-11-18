@@ -71,7 +71,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'friends', 'friend1', 'friend2')
             ->union($this->belongsToMany(User::class, 'friends', 'friend2', 'friend1'))
-            ->where('id', '!=', $this->id);
+            ->where('id', '<>', $this->id);
     }
 
     public function is_friend(User $user): bool
