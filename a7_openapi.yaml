@@ -409,7 +409,7 @@ paths:
       summary: 'R502: Edit Profile Form'
       description: 'Provide edit profile form. Access: ATH'
       tags:
-        - 'M05: User Profile'
+        - 'M05: Users'
       responses:
         '200':
           description: 'Get the view of the edit post form'
@@ -428,7 +428,7 @@ paths:
       summary: 'R503: Edit Profile Action'
       description: 'Processes the edit profile form submission. Access: ATH'
       tags:
-        - 'M05: User Profile'
+        - 'M05: Users'
       requestBody:
         required: true
         content:
