@@ -79,6 +79,11 @@ class User extends Authenticatable
         return $this->hasMany(Post::class, "author");
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, "author");
+    }
+
     public function publicPosts(): HasMany
     {
         return $this->hasMany(Post::class, "author")->where("is_private", false);
