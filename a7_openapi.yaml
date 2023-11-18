@@ -334,97 +334,6 @@ paths:
         '403':
           description: Action forbidden
 
-
-  /users/api/username/{username}:
-    get:
-      operationId: R504
-      summary: 'R504: User Data'
-      description: 'Get the user information'
-      tags:
-        - 'M05: Users'
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    username:
-                      type: string
-                    email:
-                      type: string
-                    image:
-                      type: string
-                    academic_status:
-                      type: string
-                    display_name:
-                      type: string
-                    is_private:
-                      type: boolean
-                    role:
-                      type: integer
-                    tsvectors:
-                      type: string
-        
-      parameters:
-        - in: path
-          name: username
-          description: Username of the user
-          schema:
-            type: string
-          required: true
-
-      
-
-  /users/api/email/{email}:
-    get:
-      operationId: R505
-      summary: 'R505: User Data'
-      description: 'Get the user information'
-      tags:
-        - 'M05: Users'
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    username:
-                      type: string
-                    email:
-                      type: string
-                    image:
-                      type: string
-                    academic_status:
-                      type: string
-                    display_name:
-                      type: string
-                    is_private:
-                      type: boolean
-                    role:
-                      type: integer
-                    tsvectors:
-                      type: string
-        
-      parameters:
-        - in: path
-          name: email
-          description: Email of the user
-          schema:
-            type: string
-          required: true
-
   /users/{username}/edit:
     get:
       operationId: R502
@@ -485,6 +394,95 @@ paths:
                 '302 Failure':
                   description: 'NOT OK. Redirect again to edit profile form.'
                   value: '/users/{id}/edit'
+
+  /users/api/username/{username}:
+    get:
+      operationId: R504
+      summary: 'R504: User Data'
+      description: 'Get the user information'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    email:
+                      type: string
+                    image:
+                      type: string
+                    academic_status:
+                      type: string
+                    display_name:
+                      type: string
+                    is_private:
+                      type: boolean
+                    role:
+                      type: integer
+                    tsvectors:
+                      type: string
+        
+      parameters:
+        - in: path
+          name: username
+          description: Username of the user
+          schema:
+            type: string
+          required: true
+
+  /users/api/email/{email}:
+    get:
+      operationId: R505
+      summary: 'R505: User Data'
+      description: 'Get the user information'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    email:
+                      type: string
+                    image:
+                      type: string
+                    academic_status:
+                      type: string
+                    display_name:
+                      type: string
+                    is_private:
+                      type: boolean
+                    role:
+                      type: integer
+                    tsvectors:
+                      type: string
+        
+      parameters:
+        - in: path
+          name: email
+          description: Email of the user
+          schema:
+            type: string
+          required: true
+
   /post:
     post:
       operationId: R701
