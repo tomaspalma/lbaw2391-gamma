@@ -264,6 +264,33 @@ paths:
       responses:
         '200':
           description: 'OK. Show feed UI'
+
+  /admin/user:
+    get: 
+
+      operationId: R301
+      summary: 'R301: Show administration page for actions on users'
+      description: 'Shows an administration page where the admin can search for users and perform actions on them'
+      tags:
+        - 'M03: User Administration'  
+      
+      responses:
+        '200':
+          description: 'OK. Show User Administration Page' 
+
+  /admin/user/create:
+    get:
+
+      operationId: R302
+      summary: 'R302: Shows page to create user'
+      description: 'Shows the view for the page where an admin can create a new user'
+      tags:
+          - 'M03: User Administration'
+    
+      responses:
+        '200':
+          description: 'OK. Show create user page by admin'
+
   /users/{username}:
     get:
       operationId: R501
@@ -283,107 +310,8 @@ paths:
           schema:
             type: string
           required: true
-
-  /users/api/username/{username}:
-    get:
-      operationId: R504
-      summary: 'R504: User Data'
-      description: 'Get the user information'
-      tags:
-        - 'M05: Users'
-      responses:
-        '200':
-          description: 'OK. Sent the User Information'
-        
-      parameters:
-        - in: path
-          name: username
-          description: Username of the user
-          schema:
-            type: string
-          required: true
-      
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    username:
-                      type: string
-                    email:
-                      type: string
-                    image:
-                      type: string
-                    academic_status:
-                      type: string
-                    display_name:
-                      type: string
-                    is_private:
-                      type: boolean
-                    role:
-                      type: integer
-                    tsvectors:
-                      type: string
-
-  /users/api/email/{email}:
-    get:
-      operationId: R505
-      summary: 'R505: User Data'
-      description: 'Get the user information'
-      tags:
-        - 'M05: Users'
-      responses:
-        '200':
-          description: 'OK. Sent the User Information'
-        
-      parameters:
-        - in: path
-          name: email
-          description: Email of the user
-          schema:
-            type: string
-          required: true
-      
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    username:
-                      type: string
-                    email:
-                      type: string
-                    image:
-                      type: string
-                    academic_status:
-                      type: string
-                    display_name:
-                      type: string
-                    is_private:
-                      type: boolean
-                    role:
-                      type: integer
-                    tsvectors:
-                      type: string
-
-
-  
+          
     delete:
-
       operationId: R303
       summary: 'R303: Deletes an user'
       description: 'Allows an authenticated admin to be able to delete an user'
@@ -402,6 +330,8 @@ paths:
           description: Success
         '422':
           description: Failure. If user not found with username
+        '403':
+          description: Action forbidden
 
   /users/{username}/edit:
     get:
@@ -463,6 +393,95 @@ paths:
                 '302 Failure':
                   description: 'NOT OK. Redirect again to edit profile form.'
                   value: '/users/{id}/edit'
+
+  /api/users/username/{username}:
+    get:
+      operationId: R504
+      summary: 'R504: User Data'
+      description: 'Get the user information'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    email:
+                      type: string
+                    image:
+                      type: string
+                    academic_status:
+                      type: string
+                    display_name:
+                      type: string
+                    is_private:
+                      type: boolean
+                    role:
+                      type: integer
+                    tsvectors:
+                      type: string
+        
+      parameters:
+        - in: path
+          name: username
+          description: Username of the user
+          schema:
+            type: string
+          required: true
+
+  /api/users/email/{email}:
+    get:
+      operationId: R505
+      summary: 'R505: User Data'
+      description: 'Get the user information'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    email:
+                      type: string
+                    image:
+                      type: string
+                    academic_status:
+                      type: string
+                    display_name:
+                      type: string
+                    is_private:
+                      type: boolean
+                    role:
+                      type: integer
+                    tsvectors:
+                      type: string
+        
+      parameters:
+        - in: path
+          name: email
+          description: Email of the user
+          schema:
+            type: string
+          required: true
+
   /post:
     post:
       operationId: R701
@@ -770,32 +789,7 @@ paths:
                     name: Tech Enthusiasts
                     description: A group dedicated to discussing the latest technology trends and innovations
                     is_private: True
-  /admin/user:
-    get: 
-
-      operationId: R301
-      summary: 'R301: Show administration page for actions on users'
-      description: 'Shows an administration page where the admin can search for users and perform actions on them'
-      tags:
-        - 'M03: User Administration'  
-      
-      responses:
-        '200':
-          description: 'OK. Show User Administration Page' 
-
-  /admin/user/create:
-    get:
-
-      operationId: R302
-      summary: 'R302: Shows page to create user'
-      description: 'Shows the view for the page where an admin can create a new user'
-      tags:
-          - 'M03: User Administration'
     
-      responses:
-        '200':
-          description: 'OK. Show create user page by admin'
-
   /users/{username}/block:
     get:
       
