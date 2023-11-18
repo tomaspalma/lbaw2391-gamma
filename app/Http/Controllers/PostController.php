@@ -9,15 +9,12 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
+use App\Models\Comment;
 
 class PostController extends Controller
 {
 
     public function showCreateForm() : View {
-
-        // TODO set user loged in as 1 for now
-        Auth::logout();
-        Auth::loginUsingId(1);
 
         $groups = Auth::user()->groups;
 
@@ -55,7 +52,7 @@ class PostController extends Controller
     public function showPost(string $id) : View {
 
         $post = Post::findOrFail($id);
-
+        $comments = $post->comments()->get();
         
         // // verify if can see post
         // if($post->is_private && $post->owner()->isNot(Auth::user())) {
@@ -64,7 +61,8 @@ class PostController extends Controller
         // }
 
         return view('pages.post', [
-            'post' => $post
+            'post' => $post,
+            'comments' => $comments
         ]);
 
     }
@@ -73,9 +71,6 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
-        // TODO set user loged in as 1 for now
-        Auth::logout();
-        Auth::loginUsingId(1);
 
         if($post->owner()->is(Auth::user())) {
             // ok return edit form view
@@ -103,9 +98,6 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
-        // TODO set user loged in as 1 for now
-        Auth::logout();
-        Auth::loginUsingId(1);
 
         if($post->owner()->is(Auth::user())) {
             // ok return edit form view
@@ -128,9 +120,6 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
-        // TODO set user loged in as 1 for now
-        Auth::logout();
-        Auth::loginUsingId(1);
 
         if($post->owner()->is(Auth::user())) {
             $post->delete();

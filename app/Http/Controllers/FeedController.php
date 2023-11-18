@@ -14,40 +14,40 @@ class FeedController extends Controller
     public function show_personal()
     {
         /*
-        * Posts made by friends and groups they belong
-        *
-        */
+         * Posts made by friends and groups they belong
+         *
+         */
 
         // TODO Alter this so we get the logged in user
-        $user = User::find(1);
+        auth()->loginUsingId(1);
+        $user = auth()->user();
 
         $groups = $user->groups;
-
         $posts = $groups->pluck('posts')->flatten();
 
         $friends = $user->friends;
-        foreach ($friends as $friend) {
-            $friend_posts = $friend->posts;
-            foreach ($friend_posts as $post) {
-                $posts[] = $post;
-            }
-        }
+        $posts = $posts->merge($friends->pluck('posts')->flatten());
+        $posts = Post::withCount('reactions')->whereIn('id', $posts->pluck('id'))->get();
 
+        $posts = $posts->unique('id')->values();
 
         return view('pages.homepage', [
             'feed' => 'personal',
-            'posts' => $posts
+            'posts' => $posts,
         ]);
     }
 
     public function show_popular()
     {
-        //> Post::withCount('reactions')->where('is_private', '=', false)->where('group_id', '=', null)->orderBy('reactions_count', 'desc')->get();
-        $posts = Post::withCount('reactions')->where('is_private', '=', false)->orderBy('reactions_count', 'desc')->get();
+        $posts = Post::withCount('reactions')
+            ->where('is_private', '=', false)
+            ->orderBy('reactions_count', 'desc')
+            ->get();
 
         return view('pages.homepage', [
             'feed' => 'popular',
             'posts' => $posts
         ]);
     }
+
 }

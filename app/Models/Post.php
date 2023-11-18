@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Models\User;
 use App\Models\Reaction;
+use App\Models\Comment;
 
 class Post extends Model
 {
@@ -46,5 +47,10 @@ class Post extends Model
     public function reactions(): HasMany
     {
         return $this->hasMany(Reaction::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, "post_id");
     }
 }
