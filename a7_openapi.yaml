@@ -284,53 +284,53 @@ paths:
             type: string
           required: true
 
-    /users/api/username/{username}:
-      get:
-        operationId: R504
-        summary: 'R504: User Data'
-        description: 'Get the user information'
-        tags:
-          - 'M05: Users'
-        responses:
-          '200':
-            description: 'OK. Sent the User Information'
+  /users/api/username/{username}:
+    get:
+      operationId: R504
+      summary: 'R504: User Data'
+      description: 'Get the user information'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'OK. Sent the User Information'
         
-        parameters:
-          - in: path
-            name: username
-            description: Username of the user
-            schema:
-              type: string
-            required: false
+      parameters:
+        - in: path
+          name: username
+          description: Username of the user
+          schema:
+            type: string
+          required: false
       
-        responses:
-          '200':
-            description: Success
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      username:
-                        type: string
-                      email:
-                        type: string
-                      image:
-                        type: string
-                      academic_status:
-                        type: string
-                      display_name:
-                        type: string
-                      is_private:
-                        type: boolean
-                      role:
-                        type: integer
-                      tsvectors:
-                        type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    email:
+                      type: string
+                    image:
+                      type: string
+                    academic_status:
+                      type: string
+                    display_name:
+                      type: string
+                    is_private:
+                      type: boolean
+                    role:
+                      type: integer
+                    tsvectors:
+                      type: string
 
 
   
