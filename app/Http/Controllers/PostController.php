@@ -15,10 +15,6 @@ class PostController extends Controller
 
     public function showCreateForm() : View {
 
-        // TODO set user loged in as 1 for now
-        Auth::logout();
-        Auth::loginUsingId(1);
-
         $groups = Auth::user()->groups;
 
         return view('pages.create_post', [
@@ -73,9 +69,6 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
-        // TODO set user loged in as 1 for now
-        Auth::logout();
-        Auth::loginUsingId(1);
 
         if($post->owner()->is(Auth::user())) {
             // ok return edit form view
@@ -103,9 +96,6 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
-        // TODO set user loged in as 1 for now
-        Auth::logout();
-        Auth::loginUsingId(1);
 
         if($post->owner()->is(Auth::user())) {
             // ok return edit form view
@@ -128,9 +118,6 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
-        // TODO set user loged in as 1 for now
-        Auth::logout();
-        Auth::loginUsingId(1);
 
         if($post->owner()->is(Auth::user())) {
             $post->delete();
