@@ -16,6 +16,8 @@ class PostController extends Controller
 
     public function showCreateForm() : View {
 
+        $this->authorize('create', Post::class);
+
         $groups = Auth::user()->groups;
 
         return view('pages.create_post', [
@@ -24,6 +26,8 @@ class PostController extends Controller
     }
 
     public function create(Request $request) {
+
+        $this->authorize('create', Post::class);
         
         $request->validate([
             'title' => 'required|string|max:255',
@@ -52,38 +56,29 @@ class PostController extends Controller
     public function showPost(string $id) : View {
 
         $post = Post::findOrFail($id);
+
+        $this->authorize('view', $post);
+
         $comments = $post->comments()->get();
-        
-        // // verify if can see post
-        // if($post->is_private && $post->owner()->isNot(Auth::user())) {
-        //     // forbidenn. return to feed
-        //     return redirect('/feed');
-        // }
 
         return view('pages.post', [
             'post' => $post,
             'comments' => $comments
         ]);
-
     }
 
     public function showEditForm(string $id) : View {
 
         $post = Post::findOrFail($id);
 
+        $this->authorize('update', $post);
 
-        if($post->owner()->is(Auth::user())) {
-            // ok return edit form view
+        $groups = Auth::user()->groups;
 
-            $groups = Auth::user()->groups;
-
-            return view('pages.edit_post', [
-                'post' => $post,
-                'groups' => $groups
-            ]);
-        }
-        // forbiddem. return to feed
-        return redirect('/feed');
+        return view('pages.edit_post', [
+            'post' => $post,
+            'groups' => $groups
+        ]);
     }
 
     public function update(Request $request, string $id) {
@@ -98,35 +93,26 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
+        $this->authorize('update', $post);
 
-        if($post->owner()->is(Auth::user())) {
-            // ok return edit form view
-            $post->update([
-                'title' => $request->title,
-                'content' => $request->content,
-                'attachment' => $request->attachment,
-                'group_id' => $request->group,
-                'is_private' => $request->is_private
-            ]);
+        $post->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            'attachment' => $request->attachment,
+            'group_id' => $request->group,
+            'is_private' => $request->is_private
+        ]);
 
-            return redirect('/post/'.$id);
-        }
-
-        // forbidden. return to feed
-        return redirect('/feed');
+        return redirect('/post/'.$id);
     }
 
     public function delete(string $id) {
 
         $post = Post::findOrFail($id);
 
+        $this->authorize('delete', $post);
 
-        if($post->owner()->is(Auth::user())) {
-            $post->delete();
-            return redirect('/feed');
-        }
-
-        // forbidden. return to feed -
+        $post->delete();
         return redirect('/feed');
     }
 }
