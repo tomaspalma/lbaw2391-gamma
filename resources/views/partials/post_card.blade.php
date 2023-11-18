@@ -24,7 +24,7 @@
         {{ $post->content }}
     </p>
     <div class="post-action-bar">
-        <button>3</button>
+        <button>{{$post->reactions_count}}</button>
         <button>
         </button>
         <button>

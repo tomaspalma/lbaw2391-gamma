@@ -67,11 +67,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
     }
 
-    public function friends(): BelongsToMany
+    public function friends()
     {
-        return $this->belongsToMany(User::class, 'friends', 'friend1', 'friend2')->orWhere(function ($query) {
-            $query->where('friend1', $this->id)->where('friend2', $this->id);
-        });
+        return $this->belongsToMany(User::class, 'friends', 'friend1', 'friend2')
+            ->union($this->belongsToMany(User::class, 'friends', 'friend2', 'friend1'))
+            ->where('id', '<>', $this->id);
+    }
+
+    public function is_friend(User $user): bool
+    {
+        return $this->friends->contains($user);
     }
 
     public function posts(): HasMany
