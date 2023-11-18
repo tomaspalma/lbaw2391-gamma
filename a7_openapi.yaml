@@ -748,7 +748,7 @@ paths:
 
     get:
       operationId: R604
-      summary: 'R604: Previews the groups search result to use for AJAX'
+      summary: 'R604: Previews the groups search result to use for AJAX. Access: GST'
       description: 'Allows the search for groups'
       tags:
         - 'M06: Search'
@@ -760,7 +760,6 @@ paths:
         schema:
           type: string
         required: false
-      
         
       responses:
         '200':
@@ -789,31 +788,33 @@ paths:
                     name: Tech Enthusiasts
                     description: A group dedicated to discussing the latest technology trends and innovations
                     is_private: True
-    
-  /users/{username}/block:
-    get:
-      
-      operationId: R304
-      summary: 'R304: Page to block a user'
-      description: 'Shows the view of the page where an admin can block an user, providing the reason'
+  /admin/user:
+    get: 
+
+      operationId: R301
+      summary: 'R301: Show administration page for actions on users'
+      description: 'Shows an administration page where the admin can search for users and perform actions on them'
       tags:
-        - 'M03: User Administration'
-
-      parameters:
-        - in: path
-          name: username
-          schema:
-            type: string
-          required: true
-
+        - 'M03: User Administration'  
+      
       responses:
         '200':
-          description: 'OK. Show page to block an user'
+          description: 'OK. Show User Administration Page' 
 
+  /admin/user/create:
+    get:
+
+      operationId: R302
+      summary: 'R302: Shows page to create user. Access: ADM'
+      description: 'Shows the view for the page where an admin can create a new user'
+      tags:
+          - 'M03: User Administration'
+    
+  /users/{username}/block:
     post:
 
       operationId: R305
-      summary: 'R305: Deletes an user'
+      summary: 'R305: Deletes an user. Access: ADM'
       description: 'Performs the deletion of an user by the admin'
       tags:
         - 'M03: User Administration'
@@ -837,7 +838,7 @@ paths:
     post:
 
       operationId: R306
-      summary: 'R306: Unblocks user'
+      summary: 'R306: Unblocks user. Access: ADM'
       description: 'Allows an admin to unblock a valid user'
       tags: 
         - 'M03: User Administration'
@@ -856,6 +857,65 @@ paths:
           description: 'Forbidden. Requester is not an admin'
         '422':
           description: 'Unprocessable Entity. Username does not exist'
+
+  /api/admin/search/users:
+
+    get:
+      operationId: R307
+      summary: 'R307: Previews the users search result to use for AJAX in the admin page. Access: ADM'
+      description: 'Allows the search for users'
+      tags:
+        - 'M03: User Administration'
+      
+      parameters:
+      - in: query
+        name: query
+        description: String to use for full-text search
+        schema:
+          type: string
+        required: false
+      
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    image:
+                      type: string
+                    username:
+                      type: string
+                    e-mail:
+                      type: string
+                    academic_status:
+                      type: string
+                    display_name:
+                      type: string
+                    is_private:
+                      type: boolean
+                example:
+                  - id: 1
+                    image: url/of/the/image.jpg
+                    username: john_doe
+                    e-mail: johndoe@trigger.com
+                    academic_status: Student 
+                    display_name: John Doe
+                    is_private: False
+                  - id: 28
+                    image: url/of/the/image2.jpg
+                    username: carlosbarbossa
+                    e-mail: carlosbarbossa@carlosbarbossa.com
+                    academic_status: Student 
+                    display_name: Carlos Barbossa
+                    is_private: False
+
+
 
 
         
