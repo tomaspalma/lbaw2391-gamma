@@ -80,16 +80,6 @@ class UserController extends Controller
             ->with('success', 'Profile updated successfully!');
     }
 
-    public function checkUsernameExists(string $username)
-    {
-        $user = User::where('username', $username)->first();
-        if ($user) {
-            return response()->json($user);
-        } else {
-            return response()->json(null);
-        }
-    }
-
     public function unblock_user(string $username)
     {
         $user = User::where('username', '=', $username)->get()[0];
@@ -99,22 +89,22 @@ class UserController extends Controller
         }
     }
 
-    public function checkEmailExists(String $email){
+    public function checkEmailExists(string $email)
+    {
         $user = User::where('email', $email)->get();
         if ($user) {
             return response()->json($user);
-        }
-        else{
-           return null;
+        } else {
+            return null;
         }
     }
 
-    public function checkUsernameExists(String $username){
+    public function checkUsernameExists(string $username)
+    {
         $user = User::where('username', $username)->get();
         if ($user) {
             return response()->json($user);
-        }
-        else{
+        } else {
             return null;
         }
     }
@@ -233,12 +223,4 @@ class UserController extends Controller
             ->delete();
     }
 
-    private function checkUsername($username)
-    {
-        $user = DB::table('users')->where('username', '=', $username)->get();
-        if (count($user) > 0) {
-            return false;
-        }
-        return true;
-    }
 }

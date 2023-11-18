@@ -14,7 +14,7 @@ export default defineConfig({
         "resources/js/components/confirmation_modal.js",
         "resources/js/admin/user/delete.js",
         "resources/js/admin/user/unblock.js",
-        "resources/js/edit_profile.js",
+        "resources/js/edit_profile/edit_profile.js",
       ],
       refresh: true,
     }),

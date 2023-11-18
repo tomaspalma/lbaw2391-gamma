@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css','resources/js/edit_profile.js'])
+    @vite(['resources/css/app.css','resources/js/edit_profile/edit_profile.js'])
 </head>
 
 @include('partials.navbar')
@@ -29,7 +29,7 @@
                         class="mt-1 py-2 px-3 border rounded-md w-full">
                 </div>
                 <div class="">
-                    <input type="hidden" id="old_username" value="{{ $user->username }}">
+                    <input type="hidden" id="old-username" value="{{ $user->username }}">
                     <label for="username" class="text-sm text-gray-600">Username</label>
                     <input type="text" name="username" id="username" value="{{ $user->username }}"
                         class="mt-1 py-2 px-3 border rounded-md w-full">
@@ -61,13 +61,17 @@
                     <label for="password" class="text-sm text-gray-600">Password</label>
                     <input type="password" name="password" id="password"
                         class="mt-1 py-2 px-3 border rounded-md w-full">
+                    @if ($errors->has('password'))
+                    <span class="text-red-500 text-sm">
+                        {{ $errors->first('password') }}
+                    </span>
+                    @endif
                 </div>
-                <div class="">
-                    <label for="password_confirmation" class="text-sm text-gray-600">Confirm Password</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation"
+                <div class="mb-4">
+                    <label for="password-confirm" class="text-sm text-gray-600">Confirm Password</label>
+                    <input type="password" name="password_confirmation" id="password-confirm"
                         class="mt-1 py-2 px-3 border rounded-md w-full">
                 </div>
-                <div id="password-confirmation-error" class="text-red-700 text-sm mb-4 "></div>
                 <div class="mb-4">
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
                 </div>
