@@ -4,6 +4,7 @@
     @vite(['resources/css/app.css', 'resources/js/auth/register.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/38229b6c34.js" crossorigin="anonymous"></script>
 </head>
 
 @include('partials.navbar')
@@ -69,6 +70,8 @@
         <div class="mb-4">
             <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
             <input class="mt-1 p-2 w-full border focus:ring-2" id="password" type="password" name="password" required>
+
+            
             @if ($errors->has('password'))
                 <span class="text-red-500 text-sm">
                     {{ $errors->first('password') }}

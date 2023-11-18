@@ -1,12 +1,13 @@
 email.addEventListener("input", async (e) => {
-    var temp = document.getElementById("email").value;
+    let temp = document.getElementById("email").value;
     await checkEmailExists(temp);
 });
 
 username.addEventListener("input", async (e) => {
-    var temp = document.getElementById("username").value;
+    let temp = document.getElementById("username").value;
     await checkUsernameExists(temp);
 });
+
 
 async function checkEmailExists(data) {
     let element = document.getElementById("email");
