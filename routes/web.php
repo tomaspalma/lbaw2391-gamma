@@ -46,7 +46,6 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
     Route::get('/api/users/{username}', 'checkUsernameExists');
 });
 
-
 // API
 Route::controller(CardController::class)->group(function () {
     Route::put('/api/cards', 'create');
@@ -95,6 +94,11 @@ Route::controller(AdminController::class)->group(function () {
         Route::get("/user", 'show_admin_user');
         Route::get("/user/create", 'show_create_user');
     });
+});
+
+Route::controller(UserController::class)->group(function () {
+    Route::get("/api/users/username/{username}", 'checkUsernameExists');
+    Route::get("/api/users/email/{email}", 'checkEmailExists');
 });
 
 Route::prefix('/api')->group(function () {
