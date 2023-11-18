@@ -381,30 +381,6 @@ paths:
                       type: string
 
 
-  /users/{username}:
-
-    delete:
-
-      operationId: R303
-      summary: 'R303: Deletes an user'
-      description: 'Allows an authenticated admin to be able to delete an user'
-      tags:
-        - 'M03: User Administration'
-
-      parameters:
-        - in: path
-          name: username
-          schema:
-            type: string
-          required: true
-    
-      responses:
-        '200':
-          description: Success
-        '422':
-          description: Failure. If user not found with username
-        '403':
-          description: Action forbidden
 
   /users/{username}/edit:
     get:
@@ -798,6 +774,32 @@ paths:
       responses:
         '200':
           description: 'OK. Show create user page by admin'
+
+
+  /users/{username}:
+
+    delete:
+
+      operationId: R303
+      summary: 'R303: Deletes an user'
+      description: 'Allows an authenticated admin to be able to delete an user'
+      tags:
+        - 'M03: User Administration'
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+    
+      responses:
+        '200':
+          description: Success
+        '422':
+          description: Failure. If user not found with username
+        '403':
+          description: Action forbidden
 
   /users/{username}/block:
     get:
