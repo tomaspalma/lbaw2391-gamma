@@ -292,7 +292,6 @@ paths:
           description: 'OK. Show create user page by admin'
 
   /users/{username}:
-
     get:
       operationId: R501
       summary: 'R501: Profile Action'
@@ -395,7 +394,7 @@ paths:
                   description: 'NOT OK. Redirect again to edit profile form.'
                   value: '/users/{id}/edit'
 
-  /users/api/username/{username}:
+  /api/users/username/{username}:
     get:
       operationId: R504
       summary: 'R504: User Data'
@@ -439,7 +438,7 @@ paths:
             type: string
           required: true
 
-  /users/api/email/{email}:
+  /api/users/email/{email}:
     get:
       operationId: R505
       summary: 'R505: User Data'
