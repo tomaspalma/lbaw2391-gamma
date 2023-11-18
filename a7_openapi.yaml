@@ -264,6 +264,7 @@ paths:
       responses:
         '200':
           description: 'OK. Show feed UI'
+
   /users/{username}:
     get:
       operationId: R501
@@ -284,6 +285,31 @@ paths:
             type: string
           required: true
 
+          
+    delete:
+
+      operationId: R303
+      summary: 'R303: Deletes an user'
+      description: 'Allows an authenticated admin to be able to delete an user'
+      tags:
+        - 'M03: User Administration'
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+    
+      responses:
+        '200':
+          description: Success
+        '422':
+          description: Failure. If user not found with username
+        '403':
+          description: Action forbidden
+
+
   /users/api/username/{username}:
     get:
       operationId: R504
@@ -291,18 +317,6 @@ paths:
       description: 'Get the user information'
       tags:
         - 'M05: Users'
-      responses:
-        '200':
-          description: 'OK. Sent the User Information'
-        
-      parameters:
-        - in: path
-          name: username
-          description: Username of the user
-          schema:
-            type: string
-          required: true
-      
       responses:
         '200':
           description: Success
@@ -331,6 +345,16 @@ paths:
                       type: integer
                     tsvectors:
                       type: string
+        
+      parameters:
+        - in: path
+          name: username
+          description: Username of the user
+          schema:
+            type: string
+          required: true
+
+      
 
   /users/api/email/{email}:
     get:
@@ -341,18 +365,6 @@ paths:
         - 'M05: Users'
       responses:
         '200':
-          description: 'OK. Sent the User Information'
-        
-      parameters:
-        - in: path
-          name: email
-          description: Email of the user
-          schema:
-            type: string
-          required: true
-      
-      responses:
-        '200':
           description: Success
           content:
             application/json:
@@ -379,8 +391,14 @@ paths:
                       type: integer
                     tsvectors:
                       type: string
-
-
+        
+      parameters:
+        - in: path
+          name: email
+          description: Email of the user
+          schema:
+            type: string
+          required: true
 
   /users/{username}/edit:
     get:
@@ -774,33 +792,7 @@ paths:
       responses:
         '200':
           description: 'OK. Show create user page by admin'
-
-
-  /users/{username}:
-
-    delete:
-
-      operationId: R303
-      summary: 'R303: Deletes an user'
-      description: 'Allows an authenticated admin to be able to delete an user'
-      tags:
-        - 'M03: User Administration'
-
-      parameters:
-        - in: path
-          name: username
-          schema:
-            type: string
-          required: true
     
-      responses:
-        '200':
-          description: Success
-        '422':
-          description: Failure. If user not found with username
-        '403':
-          description: Action forbidden
-
   /users/{username}/block:
     get:
       
