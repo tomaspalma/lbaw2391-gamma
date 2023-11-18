@@ -28,6 +28,9 @@ const callbackTypesAction = {
 
         unblockButton.setAttribute('hidden', true);
         blockButton.removeAttribute('hidden');
+    },
+    "delete_post": (confirmationForm) => {
+        window.location.href= window.location.origin + "/feed";
     }
 };
 
