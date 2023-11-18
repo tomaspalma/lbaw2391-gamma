@@ -1,5 +1,5 @@
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/search_input_preview.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/search_input_preview.js', 'resources/js/components/navbar_mobile_menu.js'])
 </head>
 <nav class="bg-white border-black border-b mb-5 p-1.5">
     <div class="max-w-screen-xl flex flex-col md:flex-row flex-wrap justify-between mx-auto p-4">
@@ -35,7 +35,8 @@
             ])
         </div>
         <div class="items-center w-full md:flex md:w-auto md:order-1">
-            <ul class="flex flex-col justify-center align-middle items-center p-4 md:p-0 mt-4 font-medium bg-gray-50 md:flex-row md:space-x-2 md:mt-0 md:border-0 md:bg-white">
+            <i id="hamburger-toggle" class="md:hidden block fa-solid fa-bars mt-4 cursor-pointer"></i>
+            <ul id="navbar-menu" class="hidden md:flex flex flex-col justify-center align-middle items-center p-4 md:p-0 mt-4 font-medium bg-gray-50 md:flex-row md:space-x-2 md:mt-0 md:border-0 md:bg-white">
                 <li>
                     <a href="/feed" class="block py-2 pl-3 pr-4">
                         Home
