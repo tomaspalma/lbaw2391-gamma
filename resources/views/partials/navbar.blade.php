@@ -3,7 +3,7 @@
 </head>
 <nav class="bg-white border-black border-b mb-5 p-1.5">
     <div class="max-w-screen-xl flex flex-col md:flex-row flex-wrap justify-between mx-auto p-4">
-        <span class="self-center text-2xl font-bold">Gamma</span>
+        <a href="/" class="self-center text-2xl font-bold hover:underline">Gamma</a>
         <div class="flex flex-col items-center md:order-1">
             <input name="search" type="text" id="mobile-search-trigger" class="mt-4 md:hidden block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
             <form id="search-form" class="relative hidden md:block">
@@ -47,12 +47,14 @@
                     <a href="/admin/user" class="block py-2 pl-3 pr-4">Admin</a>
                 </li>
                 @endif
+                @guest
                 <li>
-                    <a href="#" class="block py-2 pl-3 pr-4">
-                        <i class="hidden md:inline fa-solid fa-bell"></i>
-                        <span class="md:hidden">Notifications</span>
-                    </a>
+                    <a href="/login/" class="block py-2 pl-3 pr-4">Login</a>
                 </li>
+                <li>
+                    <a href="/register/" class="block py-2 pl-3 pr-4">Register</a>
+                </li>
+                @endguest
                 @auth
                 <li>
                     <form method="GET" action="{{ route('logout') }}" class="block py-2 pl-3 pr-4 mb-0">
@@ -61,6 +63,12 @@
                     </form>
                 </li>
                 @endauth
+                <li>
+                    <a href="#" class="block py-2 pl-3 pr-4">
+                        <i class="hidden md:inline fa-solid fa-bell"></i>
+                        <span class="md:hidden">Notifications</span>
+                    </a>
+                </li>
             </ul>
         </div>
 

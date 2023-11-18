@@ -72,7 +72,6 @@ function addNavbarSearchListener() {
 
     window.addEventListener("resize", () => {
         if (window.innerWidth > 600) {
-            console.log("oh meu");
             mobileSearchPreviewResults.style.display = 'none';
         }
     });

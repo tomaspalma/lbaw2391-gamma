@@ -9,7 +9,6 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
-use App\Models\Comment;
 
 class PostController extends Controller
 {

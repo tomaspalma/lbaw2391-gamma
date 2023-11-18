@@ -8,9 +8,6 @@ searchInput.addEventListener("input", function(e) {
 
     const deleteUserForms = document.querySelectorAll(".delete-user-form");
     for (const deleteUserForm of deleteUserForms) {
-        console.log(deleteUserForm);
-        console.log(deleteUserForm.querySelector("button"));
-
         deleteUserForm.addEventListener("submit", function(e) {
             e.preventDefault();
 
@@ -18,8 +15,6 @@ searchInput.addEventListener("input", function(e) {
             deleteUserForm.querySelector("button").addEventListener("click", function(e) {
                 e.preventDefault();
             });
-
-            console.log("submitted");
         });
     }
 });

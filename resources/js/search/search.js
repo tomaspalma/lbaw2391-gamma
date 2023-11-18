@@ -69,8 +69,6 @@ export async function searchUsers(query, searchPreviewContent, admin_page) {
                 }
 
             }
-            console.log(searchPreviewContent);
-            console.log(searchPreviewContent.innerHTML);
         }
     }).catch((err) => {
 
