@@ -34,7 +34,7 @@ class UserController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        return view('pages.profile_edit', [
+        return view('pages.edit_profile', [
             'user' => $user
         ]);
     }
@@ -78,6 +78,16 @@ class UserController extends Controller
 
         return redirect()->route('profile', ['username' => $user->username])
             ->with('success', 'Profile updated successfully!');
+    }
+
+    public function checkUsernameExists(string $username)
+    {
+        $user = User::where('username', $username)->first();
+        if ($user) {
+            return response()->json($user);
+        } else {
+            return response()->json(null);
+        }
     }
 
     public function unblock_user(string $username)

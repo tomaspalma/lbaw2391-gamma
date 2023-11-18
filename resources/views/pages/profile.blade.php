@@ -13,7 +13,7 @@
             <button class="text-black px-4 py-2 rounded order-3">
                 @auth
                     @if(auth()->user()->id === $user->id || auth()->user()->role === 1)
-                    <a href="{{ route('profile_edit',['username' => $user->username]) }}">Edit</a>
+                    <a href="{{ route('edit_profile',['username' => $user->username]) }}">Edit</a>
                     @endif
                 @endauth
             </button>
