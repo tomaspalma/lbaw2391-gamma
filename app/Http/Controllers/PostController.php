@@ -122,7 +122,17 @@ class PostController extends Controller
 
 
         if($post->owner()->is(Auth::user())) {
-            $post->delete();
+
+            DB::transaction(function () use ($post) {
+                $comments = $post->comments();
+                foreach($comments as $comment) {
+                    $comment->reactions()->delete();
+                }
+                $comments->delete();
+                $post->reactions()->delete();
+                $post->delete();
+            });
+            
             return redirect('/feed');
         }
 
