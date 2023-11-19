@@ -14,9 +14,11 @@
             <a href="/feed" class="hover:underline">Popular</a>
         </li>
 
+        @auth
         <li class="flex w-1/2 {{ $feed === 'personal' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
             <a href="/feed/personal" class="hover:underline">Personalized</a>
         </li>
+        @endauth
     </ul>
 
 

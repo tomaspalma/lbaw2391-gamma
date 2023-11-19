@@ -10,11 +10,14 @@ use App\Models\AppBan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function show(string $username): View
     {
+        Auth::loginUsingId(4);
+
         $user = User::where('username', $username)->firstOrFail();
 
         $posts = $user->publicPosts()->orderBy('date', 'desc')->get();
@@ -29,7 +32,7 @@ class UserController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
         $this->authorize('update', $user);
-        return view('pages.profile_edit', [
+        return view('pages.edit_profile', [
             'user' => $user
         ]);
     }
@@ -211,4 +214,5 @@ class UserController extends Controller
             ->where('id', '=', $user_id)
             ->delete();
     }
+
 }
