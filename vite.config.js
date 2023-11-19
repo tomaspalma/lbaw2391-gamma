@@ -20,6 +20,7 @@ export default defineConfig({
         "resources/js/auth/register.js",
         "resources/js/post/delete.js",
         "resources/js/edit_profile/edit_profile.js",
+        "resources/js/components/navbar_mobile_menu.js",
       ],
       refresh: true,
     }),

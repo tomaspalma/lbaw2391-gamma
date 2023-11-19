@@ -23,7 +23,8 @@ class SearchController extends Controller
             'previewMenuWidth' => 'w-full',
             'previewMenuPosAbs' => false,
             'previewMenuName' => 'main-search',
-            'toggled' => $request->input('toggled')
+            'toggled' => $request->input('toggled'),
+            'isMobile' => false
         ]);
     }
 
