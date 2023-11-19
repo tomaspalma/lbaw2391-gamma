@@ -151,11 +151,7 @@ class PostController extends Controller
                 $this->delete_post($post->id);
             });
             
-            return redirect('/feed');
         }
-
-        // forbidden. return to feed -
-        return redirect('/feed');
     }
 
     /**
