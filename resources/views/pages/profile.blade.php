@@ -1,5 +1,6 @@
 @extends('layouts.head')
 
+
 <head>
     @vite('resources/css/app.css')
 </head>
@@ -10,9 +11,11 @@
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black">
         <div class="flex justify-between">
             <h2 class="text-2xl font-bold text-gray-700 text-center order-2">User Profile</h2>
+            @can('update', $user)
             <button class="text-black px-4 py-2 rounded order-3">
                 <a href="{{ route('profile_edit',['username' => $user->username]) }}">Edit</a>
             </button>
+            @endcan
         </div>        
         <div class="mt-6 flex flex-col md:flex-row -mx-3">
             <div class="md:flex-1 px-3">
