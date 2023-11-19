@@ -18,7 +18,8 @@ export default defineConfig({
                 "resources/js/profile_edit/validate_password.js",
                 "resources/js/auth/login.js",
                 "resources/js/auth/register.js",
-                "resources/js/post/delete.js"
+                "resources/js/post/delete.js",
+                "resources/js/components/navbar_mobile_menu.js"
             ],
             refresh: true,
         }),
