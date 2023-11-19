@@ -2,6 +2,16 @@ import { configureConfirmationForm, populateModalText } from "../../components/c
 
 const confirmationModal = document.getElementById("confirmation-modal");
 
+const deleteConfirmationTriggerButtons = document.querySelectorAll(".delete-confirmation-trigger");
+
+for (const deleteConfirmationTriggerButton of deleteConfirmationTriggerButtons) {
+    deleteConfirmationTriggerButton.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        deleteUserAction(deleteConfirmationTriggerButton);
+    });
+}
+
 export function deleteUserAction(deleteConfirmationTriggerButton) {
     const username = deleteConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-username");
     const profileImage = deleteConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-user-image");

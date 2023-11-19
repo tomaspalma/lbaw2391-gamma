@@ -1,4 +1,4 @@
-const leaveModalButton = document.getElementById("close-confirmation-modal");
+const leaveModalButtons = document.querySelectorAll(".close-confirmation-modal");
 const modal = document.getElementById("confirmation-modal");
 const confirmationMessage = document.getElementById("confirmation-modal-delete-message");
 const confirmationForm = document.getElementById("confirmation-form");
@@ -6,10 +6,12 @@ const confirmationForm = document.getElementById("confirmation-form");
 const confirmButton = document.getElementById("action-confirmation-modal");
 const infoIcon = document.getElementById("info-icon");
 
-if (leaveModalButton) {
-    leaveModalButton.addEventListener("click", () => {
-        modal.classList.add("hidden");
-    });
+if (leaveModalButtons) {
+    for (const leaveModalButton of leaveModalButtons) {
+        leaveModalButton.addEventListener("click", () => {
+            modal.classList.add("hidden");
+        });
+    }
 }
 
 const callbackTypesAction = {
@@ -30,7 +32,26 @@ const callbackTypesAction = {
         blockButton.removeAttribute('hidden');
     },
     "delete_post": (confirmationForm) => {
-        window.location.href= window.location.origin + "/feed";
+        window.location.href = window.location.origin + "/feed";
+    },
+    "block_user": (form) => {
+        console.log("Form is: ", form);
+        const username = form.action.split("/")[4];
+
+        console.log("Form action is: ", form.action);
+
+        const userCard = document.querySelector(`article[data-username="${username}"]`);
+
+        const unblockButton = userCard.querySelector(".unblock-confirmation-trigger");
+        const blockButton = userCard.querySelector(".block-reason-trigger");
+
+        console.log("Unblock button, ", unblockButton);
+        console.log("Block button, ", blockButton);
+
+        unblockButton.removeAttribute('hidden');
+        blockButton.setAttribute('hidden', true);
+
+        form.remove();
     }
 };
 
@@ -45,9 +66,11 @@ if (confirmationForm) {
             },
             method: `${confirmationForm.getAttribute("data-method")}`
         }).then((res) => {
-            modal.classList.add("hidden");
+            if (res.ok) {
+                modal.classList.add("hidden");
 
-            callbackTypesAction[confirmationForm.getAttribute("data-callback-type")](confirmationForm);
+                callbackTypesAction[confirmationForm.getAttribute("data-callback-type")](confirmationForm);
+            }
         }).catch((e) => {
             console.error(e);
         });
@@ -82,4 +105,32 @@ export function configureConfirmationForm(action, method, callbackType, confirmC
     confirmButton.classList.add(confirmColor);
 
     infoIcon.classList.add(iconColor);
+}
+
+export function overrideConfirmationForm(form, action, requestParams, callbackType) {
+    clearColorConfiguration();
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        console.log("Form submitted");
+
+        const formData = new FormData();
+
+        formData.append("reason", form.elements["reason"].value);
+        requestParams.body = formData;
+
+        fetch(action, requestParams).then((res) => {
+            if (res.ok) {
+                modal.classList.add("hidden");
+                confirmationForm.classList.remove("hidden");
+
+                callbackTypesAction[callbackType](form);
+            }
+        }).catch((e) => {
+            console.error(e);
+        });
+    });
+
+    confirmationForm.classList.add("hidden");
 }
