@@ -9,17 +9,17 @@
 
 @include('partials.navbar')
 
-<div class="flex items-center justify-content: center min-h-screen">
-    <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-self: center" action="{{ route('login') }}">
+<div class="flex justify-center">
+    <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-center mt-4" action="{{ route('login') }}">
         {{ csrf_field() }}
 
         <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-600">E-mail</label>
             <input class="mt-1 p-2 w-full border focus:ring-2" id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
             @if ($errors->has('email'))
-                <span class="text-red-500 text-sm">
-                    {{ $errors->first('email') }}
-                </span>
+            <span class="text-red-500 text-sm">
+                {{ $errors->first('email') }}
+            </span>
             @endif
         </div>
 
@@ -30,9 +30,9 @@
             <i class="fas fa-eye-slash" id="togglePassword" style="margin-top: -29px; margin-left: 310px;"></i>
             
             @if ($errors->has('password'))
-                <span class="text-red-500 text-sm">
-                    {{ $errors->first('password') }}
-                </span>
+            <span class="text-red-500 text-sm">
+                {{ $errors->first('password') }}
+            </span>
             @endif
         </div>
 
@@ -50,9 +50,9 @@
         </div>
 
         @if (session('success'))
-            <p class="text-green-500 text-sm mt-2">
-                {{ session('success') }}
-            </p>
+        <p class="text-green-500 text-sm mt-2">
+            {{ session('success') }}
+        </p>
         @endif
     </form>
 </div>

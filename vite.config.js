@@ -14,9 +14,19 @@ export default defineConfig({
         "resources/js/components/confirmation_modal.js",
         "resources/js/admin/user/delete.js",
         "resources/js/admin/user/unblock.js",
+        "resources/js/admin/user/block.js",
+        "resources/js/profile_edit/validate_password.js",
+        "resources/js/auth/login.js",
+        "resources/js/auth/register.js",
+        "resources/js/post/delete.js",
         "resources/js/edit_profile/edit_profile.js",
       ],
       refresh: true,
     }),
   ],
+  server: {
+    hmr: {
+      host: "localhost",
+    },
+  },
 });
