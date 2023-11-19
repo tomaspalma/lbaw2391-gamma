@@ -86,14 +86,32 @@ class UserController extends Controller
         }
     }
 
+    public function checkEmailExists(String $email)
+    {
+        $user = User::where('email', $email)->get();
+        if ($user) {
+            return response()->json($user);
+        } else {
+            return null;
+        }
+    }
+
+    public function checkUsernameExists(String $username)
+    {
+        $user = User::where('username', $username)->get();
+        if ($user) {
+            return response()->json($user);
+        } else {
+            return null;
+        }
+    }
+
     public function block_user(Request $request, string $username)
     {
-        // 1. Check if the user making the request is an admin (this will be done through a middleware)
-        //
-
-        $request->validate([
+        $validated = $request->validate([
             'reason' => 'required|string'
         ]);
+
 
         $block_reason = $request->input('reason');
 
@@ -105,21 +123,9 @@ class UserController extends Controller
                 'admin_id' => 4,
                 'banned_user_id' => $user->id
             ]);
+        } else {
+            return response()->json(['error' => 'User is banned'], 403);
         }
-
-        return redirect('/admin/user');
-    }
-
-    /**
-     * Shows to an admin a page where the admin can give a reason for the block
-     */
-    public function show_block_user(string $username)
-    {
-        // Verify if the person who is doing this is an admin
-
-        $user_to_block = User::where('username', '=', $username)->get()[0];
-
-        return view('pages.block_user', ['user' => $user_to_block]);
     }
 
     public function delete_user(string $username)
