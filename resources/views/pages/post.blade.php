@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js']), 
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
@@ -34,13 +34,11 @@
         </div>
 
         <div class="flex justify-between items-center">
-            @auth
-                @if(auth()->user()->id === $post->owner->id)
+                @canany(['update', 'delete'], $post)
                     <a href="{{ route('post.update', $post->id) }}" class="bg-black text-white py-2 px-4 rounded-md">Edit Post</a>
 
                     <button type="submit" class="delete-confirmation-trigger bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
-                @endif
-            @endauth
+                @endcanany
         </div>
     </div>
 
