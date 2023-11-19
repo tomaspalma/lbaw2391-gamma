@@ -18,8 +18,6 @@ class FeedController extends Controller
          *
          */
 
-        // TODO Alter this so we get the logged in user
-        auth()->loginUsingId(1);
         $user = auth()->user();
 
         $groups = $user->groups;

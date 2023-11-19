@@ -20,7 +20,6 @@ export async function searchUsers(query, searchPreviewContent, admin_page) {
             } else {
                 searchPreviewContent.innerHTML = "";
                 for (const user of users) {
-                    console.log("User received is: ", user);
                     searchPreviewContent.innerHTML += `
         <article data-user-image="${user.image}" data-username="${user.username}" class="my-4 p-2 border-b flex justify-between align-middle space-x-2" >
             <div class="flex flex-row space-x-2 align-middle">
@@ -88,6 +87,7 @@ export async function searchPosts(query, searchPreviewContent) {
             const posts = await res.json();
 
             if (posts.length == 0) {
+                console.log("Hi there");
                 searchPreviewContent.innerHTML = getNoneFoundText("posts");
             } else {
                 searchPreviewContent.innerHTML = ``;
@@ -158,7 +158,10 @@ function getNoneFoundText(entity) {
 }
 
 export async function getSearchResults(type, query, searchPreviewContent) {
+    console.log("Before type is: ", type);
     type = type.split("-").slice(2).join("-");
+
+    console.log(type);
 
     const actions = {
         "users-preview-results": searchUsers,

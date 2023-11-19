@@ -10,16 +10,17 @@ use App\Models\AppBan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function show(string $username): View
     {
+        Auth::loginUsingId(4);
+
         $user = User::where('username', $username)->firstOrFail();
 
         $posts = $user->publicPosts()->orderBy('date', 'desc')->get();
-
-        //$this->authorize('show', $user);
 
         return view('pages.profile', [
             'user' => $user,
@@ -27,17 +28,18 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit(string $username)
+    public function edit(Request $request, string $username)
     {
         $user = User::where('username', $username)->firstOrFail();
-
-        return view('pages.profile_edit', [
+        $this->authorize('update', $user);
+        return view('pages.edit_profile', [
             'user' => $user
         ]);
     }
 
     public function update(Request $request, string $username)
     {
+
         // Validate the form data
         $request->validate([
             'display_name' => 'required|string|max:255',
@@ -49,8 +51,9 @@ class UserController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Find the user by username
+        // Find the user by username**8
         $user = User::where('username', $username)->firstOrFail();
+        $this->authorize('update', $user);
 
         // Update the user information
         $user->display_name = $request->input('display_name');
@@ -61,7 +64,13 @@ class UserController extends Controller
 
         // Update the password if provided
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->input('password'));
+            try {
+                $this->authorize('updatePassword', $username);
+                $user->password = Hash::make($request->input('password'));
+            } catch (\Throwable $th) {
+                return redirect()->route('profile', ['username' => $user->username])
+                    ->with('error', 'You do not have permission to change this user\'s password!');
+            }
         }
 
         // Handle image upload
@@ -86,7 +95,7 @@ class UserController extends Controller
         }
     }
 
-    public function checkEmailExists(String $email)
+    public function checkEmailExists(string $email)
     {
         $user = User::where('email', $email)->get();
         if ($user) {
@@ -96,7 +105,7 @@ class UserController extends Controller
         }
     }
 
-    public function checkUsernameExists(String $username)
+    public function checkUsernameExists(string $username)
     {
         $user = User::where('username', $username)->get();
         if ($user) {
@@ -205,4 +214,5 @@ class UserController extends Controller
             ->where('id', '=', $user_id)
             ->delete();
     }
+
 }
