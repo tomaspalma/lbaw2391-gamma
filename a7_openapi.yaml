@@ -286,14 +286,14 @@ paths:
 
   /feed/personal:
     get:
-      operationId: R201
-      summary: 'R201: Provide personalized feed'
+      operationId: R202
+      summary: 'R202: Provide personalized feed'
       description: 'Get the page with the feed. Access: USR'
       tags:
         - 'M02: Feed'
       responses:
         '200':
-          description: 'OK. Show popular feed UI'
+          description: 'OK. Show personalized feed UI'
 
   /admin/user:
     get: 
@@ -342,8 +342,8 @@ paths:
           required: true
           
     delete:
-      operationId: R303
-      summary: 'R303: Deletes an user'
+      operationId: R502
+      summary: 'R502: Deletes an user'
       description: 'Allows an authenticated admin to be able to delete an user'
       tags:
         - 'M05: Users'
@@ -365,8 +365,8 @@ paths:
 
   /users/{username}/edit:
     get:
-      operationId: R502
-      summary: 'R502: Edit Profile Form'
+      operationId: R503
+      summary: 'R503: Edit Profile Form'
       description: 'Provide edit profile form. Access: ATH'
       tags:
         - 'M05: Users'
@@ -384,8 +384,8 @@ paths:
           required: true
 
     put:
-      operationId: R503
-      summary: 'R503: Edit Profile Action'
+      operationId: R504
+      summary: 'R504: Edit Profile Action'
       description: 'Processes the edit profile form submission. Access: ATH'
       tags:
         - 'M05: Users'
@@ -426,8 +426,8 @@ paths:
 
   /api/users/username/{username}:
     get:
-      operationId: R504
-      summary: 'R504: Retrieve user by username'
+      operationId: R505
+      summary: 'R505: Retrieve user by username'
       description: 'Get the user information by username. Access: VST, USR. If USR, can only see private users that are friends, otherwise only public.'
       tags:
         - 'M05: Users'
@@ -470,8 +470,8 @@ paths:
 
   /api/users/email/{email}:
     get:
-      operationId: R505
-      summary: 'R505: Retrieve user by email'
+      operationId: R506
+      summary: 'R506: Retrieve user by email'
       description: 'Get the user information by email. Access: VST, USR. If USR, can only see private users that are friends, otherwise only public.'
       tags:
         - 'M05: Users'
@@ -517,13 +517,6 @@ paths:
       operationId: R701
       summary: 'R701: Create Post Action'
       description: 'Processes the create post form submission. Access: ATH'
-      parameters:
-      - in: query
-        name: id
-        description: Id of the user
-        schema:
-          type: string
-        required: true
       tags:
         - 'M07: Posts'
       requestBody:
@@ -566,13 +559,6 @@ paths:
       operationId: R702
       summary: 'R702: Get post page creation'
       description: 'Provide post creation page. Access: USR'
-      parameters:
-      - in: query
-        name: id
-        description: Id of the post 
-        schema:
-          type: string
-        required: true
       tags:
         - 'M07: Posts'
       responses:
@@ -587,7 +573,7 @@ paths:
       parameters:
       - in: query
         name: id
-        description: Id of the user 
+        description: Id of the post 
         schema:
           type: string
         required: true
@@ -630,7 +616,7 @@ paths:
       parameters:
       - in: query
         name: id
-        description: Id of the user 
+        description: Id of the post 
         schema:
           type: string
         required: true
@@ -709,6 +695,23 @@ paths:
                   type: string
                 is_private:
                   type: boolean
+      responses:
+        '302':
+          description: 'Redirect to post page (post/{id})'
+          headers:
+           Location:
+             schema:
+               type: string
+             examples:
+               302Success:
+                 description: 'Successful edit. Redirect to post page.'
+                 value: '/post/{id}'
+               302Failure:
+                 description: 'Failed edit. Fix the errors and try again.' 
+                 value: '/post/{id}/edit'
+        '403':
+          description: 'Forbidden'
+
   /search/{query}:
 
     get: 
