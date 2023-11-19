@@ -57,6 +57,7 @@
                         <option value="private" {{ $user->is_private ? 'selected' : '' }}>Private</option>
                     </select>
                 </div>
+                @can('updatePassword', $user)
                 <div class="mb-4">
                     <label for="password" class="text-sm text-gray-600">Password</label>
                     <input type="password" name="password" id="password"
@@ -72,6 +73,7 @@
                     <input type="password" name="password_confirmation" id="password-confirm"
                         class="mt-1 py-2 px-3 border rounded-md w-full">
                 </div>
+                @endcan
                 <div class="mb-4">
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
                 </div>
