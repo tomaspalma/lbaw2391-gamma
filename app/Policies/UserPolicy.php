@@ -28,7 +28,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): response
     {
-        return ($user->id === $model->id || $user->is_admi()) ? Response::allow() : Response::deny('You do not own this profile.');
+        return ($user->id === $model->id || $user->is_admin()) ? Response::allow() : Response::deny('You do not own this profile.');
     }
 
 }
