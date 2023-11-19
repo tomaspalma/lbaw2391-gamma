@@ -62,6 +62,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+
     public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
@@ -77,6 +78,11 @@ class User extends Authenticatable
     public function is_friend(User $user): bool
     {
         return $this->friends->contains($user);
+    }
+
+    public function friend($user_id): bool
+    {
+        return $this->friends()->get()->contains($user_id);
     }
 
     public function posts(): HasMany

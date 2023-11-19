@@ -9,12 +9,11 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
-use App\Models\Comment;
 
 class PostController extends Controller
 {
-
-    public function showCreateForm() : View {
+    public function showCreateForm(): View
+    {
 
         $this->authorize('create', Post::class);
 
@@ -50,13 +49,14 @@ class PostController extends Controller
             'is_private' => $request->is_private
         ]);
 
-        return redirect('/post/'.$post->id);
+        return redirect('/post/' . $post->id);
     }
 
-    public function showPost(string $id) {
+    public function showPost(string $id)
+    {
 
         // validate id
-        if(!is_numeric($id)) {
+        if (!is_numeric($id)) {
             // not valid. return to feed
             return redirect('/feed');
         }
@@ -73,10 +73,11 @@ class PostController extends Controller
         ]);
     }
 
-    public function showEditForm(string $id) {
+    public function showEditForm(string $id)
+    {
 
         // validate id
-        if(!is_numeric($id)) {
+        if (!is_numeric($id)) {
             // not valid. return to feed
             return redirect('/feed');
         }
@@ -93,10 +94,11 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(Request $request, string $id) {
+    public function update(Request $request, string $id)
+    {
 
         // validate id
-        if(!is_numeric($id)) {
+        if (!is_numeric($id)) {
             // not valid. return to feed
             return redirect('/feed');
         }
@@ -124,10 +126,11 @@ class PostController extends Controller
         return redirect('/post/'.$id);
     }
 
-    public function delete(string $id) {
+    public function delete(string $id)
+    {
 
         // validate id
-        if(!is_numeric($id)) {
+        if (!is_numeric($id)) {
             // not valid. return to feed
             return redirect('/feed');
         }
