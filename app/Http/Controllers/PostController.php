@@ -138,13 +138,10 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
         $this->authorize('delete', $post);
-
-        if($post->owner()->is(Auth::user())) {
-            DB::transaction(function () use ($post) {
-                $this->delete_post($post->id);
-            });
-        }
-        return redirect('/feed');
+        
+        DB::transaction(function () use ($post) {
+            $this->delete_post($post->id);
+        });
     }
 
     /**
