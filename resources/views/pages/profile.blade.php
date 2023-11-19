@@ -7,7 +7,7 @@
 
 @include('partials.navbar')
 
-<div class="max-w-screen-md mx-auto p-4">
+<div class="max-w-screen-md mx-auto pb-4">
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black">
         <div class="flex justify-between">
             <h2 class="text-2xl font-bold text-gray-700 text-center order-2">User Profile</h2>
