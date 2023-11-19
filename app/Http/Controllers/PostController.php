@@ -49,7 +49,13 @@ class PostController extends Controller
         return redirect('/post/'.$post->id);
     }
 
-    public function showPost(string $id) : View {
+    public function showPost(string $id) {
+
+        // validate id
+        if(!is_numeric($id)) {
+            // not valid. return to feed
+            return redirect('/feed');
+        }
 
         $post = Post::findOrFail($id);
         $comments = $post->comments()->get();
@@ -67,7 +73,13 @@ class PostController extends Controller
 
     }
 
-    public function showEditForm(string $id) : View {
+    public function showEditForm(string $id) {
+
+        // validate id
+        if(!is_numeric($id)) {
+            // not valid. return to feed
+            return redirect('/feed');
+        }
 
         $post = Post::findOrFail($id);
 
@@ -87,6 +99,12 @@ class PostController extends Controller
     }
 
     public function update(Request $request, string $id) {
+
+        // validate id
+        if(!is_numeric($id)) {
+            // not valid. return to feed
+            return redirect('/feed');
+        }
 
         $request->validate([
             'title' => 'required|string|max:255',
@@ -117,6 +135,12 @@ class PostController extends Controller
     }
 
     public function delete(string $id) {
+
+        // validate id
+        if(!is_numeric($id)) {
+            // not valid. return to feed
+            return redirect('/feed');
+        }
 
         $post = Post::findOrFail($id);
 
