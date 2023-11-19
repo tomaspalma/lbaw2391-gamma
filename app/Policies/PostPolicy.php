@@ -29,10 +29,10 @@ class PostPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): Response
+    public function create(?User $user): Response
     {
         // Only authenticated users can create posts
-        return $user->id !== null
+        return $user !== null
             ? Response::allow()
             : Response::deny('You must be logged in to create a post.');
     }
