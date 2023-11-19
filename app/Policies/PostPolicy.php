@@ -11,10 +11,13 @@ class PostPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Post $post): Response
+    public function view(?User $user, Post $post): Response
     {
         // If post is private, only the owner and friends can see it (or an admin)
         if ($post->is_private) {
+            if ($user === null) {
+                return Response::deny('This post is private.');
+            }
             return ($user->id === $post->author || $user->friends->contains($post->author) || $user->is_admin()) 
                 ? Response::allow()
                 : Response::deny('This post is private.');
