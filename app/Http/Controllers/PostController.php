@@ -9,12 +9,11 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
-use App\Models\Comment;
 
 class PostController extends Controller
 {
-
-    public function showCreateForm() : View {
+    public function showCreateForm(): View
+    {
 
         $groups = Auth::user()->groups;
 
@@ -23,8 +22,9 @@ class PostController extends Controller
         ]);
     }
 
-    public function create(Request $request) {
-        
+    public function create(Request $request)
+    {
+
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
@@ -46,21 +46,21 @@ class PostController extends Controller
             'is_private' => $request->is_private
         ]);
 
-        return redirect('/post/'.$post->id);
+        return redirect('/post/' . $post->id);
     }
 
-    public function showPost(string $id) {
+    public function showPost(string $id)
+    {
 
         // validate id
-        if(!is_numeric($id)) {
+        if (!is_numeric($id)) {
             // not valid. return to feed
             return redirect('/feed');
         }
 
         $post = Post::findOrFail($id);
         $comments = $post->comments()->get();
-        
-        // // verify if can see post
+
         // if($post->is_private && $post->owner()->isNot(Auth::user())) {
         //     // forbidenn. return to feed
         //     return redirect('/feed');
@@ -70,13 +70,13 @@ class PostController extends Controller
             'post' => $post,
             'comments' => $comments
         ]);
-
     }
 
-    public function showEditForm(string $id) {
+    public function showEditForm(string $id)
+    {
 
         // validate id
-        if(!is_numeric($id)) {
+        if (!is_numeric($id)) {
             // not valid. return to feed
             return redirect('/feed');
         }
@@ -84,7 +84,7 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
 
-        if($post->owner()->is(Auth::user())) {
+        if ($post->owner()->is(Auth::user())) {
             // ok return edit form view
 
             $groups = Auth::user()->groups;
@@ -98,10 +98,11 @@ class PostController extends Controller
         return redirect('/feed');
     }
 
-    public function update(Request $request, string $id) {
+    public function update(Request $request, string $id)
+    {
 
         // validate id
-        if(!is_numeric($id)) {
+        if (!is_numeric($id)) {
             // not valid. return to feed
             return redirect('/feed');
         }
@@ -117,7 +118,7 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
 
-        if($post->owner()->is(Auth::user())) {
+        if ($post->owner()->is(Auth::user())) {
             // ok return edit form view
             $post->update([
                 'title' => $request->title,
@@ -127,17 +128,18 @@ class PostController extends Controller
                 'is_private' => $request->is_private
             ]);
 
-            return redirect('/post/'.$id);
+            return redirect('/post/' . $id);
         }
 
         // forbidden. return to feed
         return redirect('/feed');
     }
 
-    public function delete(string $id) {
+    public function delete(string $id)
+    {
 
         // validate id
-        if(!is_numeric($id)) {
+        if (!is_numeric($id)) {
             // not valid. return to feed
             return redirect('/feed');
         }
@@ -145,7 +147,7 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
 
-        if($post->owner()->is(Auth::user())) {
+        if ($post->owner()->is(Auth::user())) {
             $post->delete();
             return redirect('/feed');
         }
