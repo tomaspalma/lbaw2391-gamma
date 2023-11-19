@@ -16,7 +16,6 @@ class UserController extends Controller
 {
     public function show(string $username): View
     {
-        Auth::loginUsingId(4);
 
         $user = User::where('username', $username)->firstOrFail();
 
