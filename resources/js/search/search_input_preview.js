@@ -8,9 +8,14 @@ let currentSearchPreview = `${searchMenuName}-users-preview-results`;
 const searchPreviewResults = document.getElementById(`${searchMenuName}-search-results`);
 const searchPreviewContent = document.getElementById(`${searchMenuName}-search-preview-content`);
 
+const mobileSearchPreviewResults = document.getElementById(`mobile-${searchMenuName}-search-results`);
+const mobileSearchPreviewContent = document.getElementById(`mobile-${searchMenuName}-search-preview-content`);
+
 const previewOptions = searchPreviewResults.querySelectorAll(".preview-results-option");
+const mobilePreviewOptions = mobileSearchPreviewResults.querySelectorAll(".preview-results-option");
 
 const search = document.getElementById("search-navbar");
+const mobileSearch = document.getElementById("mobile-search-trigger");
 
 const borderType = "border-t-4";
 const borderColor = "border-black";
@@ -36,6 +41,26 @@ for (const previewOption of previewOptions) {
         }
 
         currentSearchPreview = `${previewOption.id}`;
+    });
+}
+
+for (const previewOption of mobilePreviewOptions) {
+    previewOption.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        const corrected_id = `${(previewOption.id).split("-").slice(1).join("-")}`;
+
+        mobilePreviewOptions.forEach(previewOption => {
+            previewOption.classList.remove(borderType, borderColor);
+        });
+
+        if (!previewOption.classList.contains(borderType) && !previewOption.classList.contains(borderColor)) {
+            previewOption.classList.add(borderType, borderColor);
+
+            getSearchResults(corrected_id, mobileSearch.value, mobileSearchPreviewContent);
+        }
+
+        currentSearchPreview = corrected_id;
     });
 }
 

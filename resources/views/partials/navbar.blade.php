@@ -69,6 +69,13 @@
                         <span class="md:hidden">Notifications</span>
                     </a>
                 </li>
+                @auth
+                <li class="flex items-center space-x-0">
+                    <a href="/users/{{Auth::user()->username}}" class="block py-2 pl-3 pr-1">
+                        Profile
+                    </a>
+                </li>
+                @endauth
             </ul>
         </div>
 
