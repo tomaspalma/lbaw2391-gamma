@@ -30,11 +30,12 @@ Route::redirect('/', '/login');
 // Users
 Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
     Route::get('/users/{username}', 'show')->name('profile');
-    Route::get('/users/{username}/edit', 'edit')->name('profile_edit');
+    Route::get('/users/{username}/edit', 'edit')->name('edit_profile');
     Route::put('/users/{username}/edit', 'update')->name('profile_update');
     Route::delete('/users/{username}', 'delete_user');
     Route::post('/users/{username}/block', 'block_user');
     Route::post('/users/{username}/unblock', 'unblock_user');
+    Route::get('/api/users/{username}', 'checkUsernameExists');
 });
 
 Route::controller(FeedController::class)->group(function () {
