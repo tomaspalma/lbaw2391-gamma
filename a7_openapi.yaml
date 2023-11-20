@@ -178,6 +178,13 @@ paths:
       description: 'Get the view for the form to reset the password. Access: VST'
       tags:
         - 'M01: Authentication'
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
+
       responses:
         '200':
           description: 'Reset the password form returned'
@@ -242,6 +249,12 @@ paths:
       description: 'Get the view for the form to reset the password. Access: VST'
       tags:
         - 'M01: Authentication'
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: 'Reset the verify email form returned'
@@ -249,21 +262,38 @@ paths:
       operationId: R111
       summary: 'R111: Send Verify Email Request'
       description: 'Sends a verify email request to the server'
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
       tags:
         - 'M01: Authentication'
       responses:
         '200':
           description: 'OK. Email verified.'
-  /feed/{type}:
+  /feed/:
     get:
       operationId: R201
-      summary: 'R201: Provide feed form'
-      description: 'Get the page with the feed. Access: USR, ADM'
+      summary: 'R201: Provide popular feed'
+      description: 'Get the page with the feed. Access: VST'
       tags:
         - 'M02: Feed'
       responses:
         '200':
-          description: 'OK. Show feed UI'
+          description: 'OK. Show popular feed UI'
+
+  /feed/personal:
+    get:
+      operationId: R202
+      summary: 'R202: Provide personalized feed'
+      description: 'Get the page with the feed. Access: USR'
+      tags:
+        - 'M02: Feed'
+      responses:
+        '200':
+          description: 'OK. Show personalized feed UI'
 
   /admin/user:
     get: 
@@ -294,8 +324,8 @@ paths:
   /users/{username}:
     get:
       operationId: R501
-      summary: 'R501: Profile Action'
-      description: 'Get the page view for a user profile'
+      summary: 'R501: Profile Action.'
+      description: 'Get the page view for a user profile. Access: VST, USR. If the requester is a visitor, only public profiles. Otherwise, public and friends are shown.'
       tags:
         - 'M05: Users'
       responses:
@@ -312,11 +342,11 @@ paths:
           required: true
           
     delete:
-      operationId: R303
-      summary: 'R303: Deletes an user'
+      operationId: R502
+      summary: 'R502: Deletes an user'
       description: 'Allows an authenticated admin to be able to delete an user'
       tags:
-        - 'M03: User Administration'
+        - 'M05: Users'
 
       parameters:
         - in: path
@@ -335,8 +365,8 @@ paths:
 
   /users/{username}/edit:
     get:
-      operationId: R502
-      summary: 'R502: Edit Profile Form'
+      operationId: R503
+      summary: 'R503: Edit Profile Form'
       description: 'Provide edit profile form. Access: ATH'
       tags:
         - 'M05: Users'
@@ -354,8 +384,8 @@ paths:
           required: true
 
     put:
-      operationId: R503
-      summary: 'R503: Edit Profile Action'
+      operationId: R504
+      summary: 'R504: Edit Profile Action'
       description: 'Processes the edit profile form submission. Access: ATH'
       tags:
         - 'M05: Users'
@@ -396,9 +426,9 @@ paths:
 
   /api/users/username/{username}:
     get:
-      operationId: R504
-      summary: 'R504: User Data'
-      description: 'Get the user information'
+      operationId: R505
+      summary: 'R505: Retrieve user by username'
+      description: 'Get the user information by username. Access: VST, USR. If USR, can only see private users that are friends, otherwise only public.'
       tags:
         - 'M05: Users'
       responses:
@@ -440,9 +470,9 @@ paths:
 
   /api/users/email/{email}:
     get:
-      operationId: R505
-      summary: 'R505: User Data'
-      description: 'Get the user information'
+      operationId: R506
+      summary: 'R506: Retrieve user by email'
+      description: 'Get the user information by email. Access: VST, USR. If USR, can only see private users that are friends, otherwise only public.'
       tags:
         - 'M05: Users'
       responses:
@@ -540,6 +570,13 @@ paths:
     get:
       operationId: R703
       summary: 'R703: Get post from id as JSON'
+      parameters:
+      - in: query
+        name: id
+        description: Id of the post 
+        schema:
+          type: string
+        required: true
       description: 'Get post from id. Access: ATH'
       tags:
         - 'M07: Posts'
@@ -576,6 +613,13 @@ paths:
     get:
       operationId: R704
       summary: 'R704: Get post page'
+      parameters:
+      - in: query
+        name: id
+        description: Id of the post 
+        schema:
+          type: string
+        required: true
       description: 'Provide post page. Access: ATH'
       tags:
         - 'M07: Posts'
@@ -588,6 +632,13 @@ paths:
       operationId: R705
       summary: 'R705: Delete post'
       description: 'Processes the delete post request. Access: ATH'
+      parameters:
+      - in: query
+        name: id
+        description: Id of the user 
+        schema:
+          type: string
+        required: true
       tags:
         - 'M07: Posts'
       responses:
@@ -600,7 +651,14 @@ paths:
     get:
       operationId: R706
       summary: 'R706: Edit Profile Form'
-      description: 'Provide edit profile form. Access: ATH'
+      parameters:
+      - in: query
+        name: id
+        description: Id of the post 
+        schema:
+          type: string
+        required: true
+      description: 'Show edit post form. Access: ATH'
       tags:
         - 'M07: Posts'
       responses:
@@ -611,6 +669,13 @@ paths:
     put:
       operationId: R707
       summary: 'R707: Edit Post Action'
+      parameters:
+      - in: query
+        name: id
+        description: Id of the post 
+        schema:
+          type: string
+        required: false
       description: 'Processes the edit post form submission. Access: ATH'
       tags:
         - 'M07: Posts'
@@ -630,26 +695,51 @@ paths:
                   type: string
                 is_private:
                   type: boolean
+      responses:
+        '302':
+          description: 'Redirect to post page (post/{id})'
+          headers:
+           Location:
+             schema:
+               type: string
+             examples:
+               302Success:
+                 description: 'Successful edit. Redirect to post page.'
+                 value: '/post/{id}'
+               302Failure:
+                 description: 'Failed edit. Fix the errors and try again.' 
+                 value: '/post/{id}/edit'
+        '403':
+          description: 'Forbidden'
+
   /search/{query}:
 
     get: 
 
       operationId: R601
       summary: 'R601: Search Action'
-      description: 'Allows the search for users, posts and groups'
+      description: 'Allows the search for users, posts and groups. Access: VST, USR'
+      parameters:
+        - in: path
+          name: query
+          description: Search query
+          schema:
+            type: string
+          required: false
       tags:
         - 'M06: Search'  
+
       
       responses:
         '200':
           description: 'OK. Show Search UI'
     
-  /api/search/users:
+  /api/search/users/{query}:
 
     get:
       operationId: R602
       summary: 'R602: Previews the users search result to use for AJAX'
-      description: 'Allows the search for users'
+      description: 'Allows the search for users. Access: VST, USR'
       tags:
         - 'M06: Search'
       
@@ -702,12 +792,12 @@ paths:
                     display_name: Carlos Barbossa
                     is_private: False
 
-  /api/search/posts:
+  /api/search/posts/{query}:
 
     get: 
       operationId: R603
       summary: 'R603: Posts Search Action'
-      description: 'Allows the search for posts'
+      description: 'Allows the search for posts. Access: VST, USR'
       tags:
         - 'M06: Search'
           
@@ -744,12 +834,12 @@ paths:
                       is_private:
                         type: boolean
 
-  /api/search/groups:
+  /api/search/groups/{query}:
 
     get:
       operationId: R604
-      summary: 'R604: Previews the groups search result to use for AJAX. Access: GST'
-      description: 'Allows the search for groups'
+      summary: 'R604: Previews the groups search result to use for AJAX'
+      description: 'Allows the search for groups. Access: VST, USR'
       tags:
         - 'M06: Search'
       
@@ -805,8 +895,8 @@ paths:
     get:
 
       operationId: R302
-      summary: 'R302: Shows page to create user. Access: ADM'
-      description: 'Shows the view for the page where an admin can create a new user'
+      summary: 'R302: Shows page to create user.'
+      description: 'Shows the view for the page where an admin can create a new user. Access: ADM'
       tags:
           - 'M03: User Administration'
     
@@ -814,8 +904,8 @@ paths:
     post:
 
       operationId: R305
-      summary: 'R305: Deletes an user. Access: ADM'
-      description: 'Performs the deletion of an user by the admin'
+      summary: 'R305: Deletes an user.'
+      description: 'Performs the deletion of an user by the admin Access: ADM'
       tags:
         - 'M03: User Administration'
 
@@ -838,8 +928,8 @@ paths:
     post:
 
       operationId: R306
-      summary: 'R306: Unblocks user. Access: ADM'
-      description: 'Allows an admin to unblock a valid user'
+      summary: 'R306: Unblocks user.'
+      description: 'Allows an admin to unblock a valid user. Access: ADM'
       tags: 
         - 'M03: User Administration'
 
@@ -858,12 +948,18 @@ paths:
         '422':
           description: 'Unprocessable Entity. Username does not exist'
 
-  /api/admin/search/users:
+  /api/admin/search/users/{query}:
 
     get:
       operationId: R307
-      summary: 'R307: Previews the users search result to use for AJAX in the admin page. Access: ADM'
-      description: 'Allows the search for users'
+      summary: 'R307: Previews the users search result to use for AJAX in the admin page.' 
+      description: 'Allows the search for users. Access: ADM'
+      parameters:
+        - in: path
+          name: query
+          schema:
+            type: string
+          required: false
       tags:
         - 'M03: User Administration'
       
