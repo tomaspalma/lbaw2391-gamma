@@ -18,14 +18,16 @@ export default defineConfig({
                 "resources/js/profile_edit/validate_password.js",
                 "resources/js/auth/seePassword.js",
                 "resources/js/auth/register.js",
-                "resources/js/post/delete.js"
+                "resources/js/post/delete.js",
+                "resources/js/edit_profile/edit_profile.js",
+                "resources/js/components/navbar_mobile_menu.js",
             ],
             refresh: true,
         }),
     ],
     server: {
         hmr: {
-            host: 'localhost',
+            host: "localhost",
         },
-    }
+    },
 });

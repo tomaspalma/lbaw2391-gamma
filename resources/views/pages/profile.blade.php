@@ -1,18 +1,25 @@
 @extends('layouts.head')
 
+
 <head>
     @vite('resources/css/app.css')
 </head>
 
 @include('partials.navbar')
 
-<div class="max-w-screen-md mx-auto p-4">
+<div class="max-w-screen-md mx-auto pb-4">
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black">
         <div class="flex justify-between">
             <h2 class="text-2xl font-bold text-gray-700 text-center order-2">User Profile</h2>
+            @can('update', $user)
             <button class="text-black px-4 py-2 rounded order-3">
-                <a href="{{ route('profile_edit',['username' => $user->username]) }}">Edit</a>
+                @auth
+                    @if(auth()->user()->id === $user->id || auth()->user()->role === 1)
+                    <a href="{{ route('edit_profile',['username' => $user->username]) }}">Edit</a>
+                    @endif
+                @endauth
             </button>
+            @endcan
         </div>        
         <div class="mt-6 flex flex-col md:flex-row -mx-3">
             <div class="md:flex-1 px-3">
@@ -41,10 +48,9 @@
             </div>
         </div>
     </div>
-    @if(count($posts) == 0)
-    <p class="text-center">No posts found.</p>
-    @else
-    @for($i = 0; $i < count($posts); $i++) @include('partials.post_card', ['post'=> $posts[$i]])
-        @endfor
-        @endif
+    @forelse($posts as $post)
+        @include('partials.post_card', ['post'=> $post])
+    @empty <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No posts found.</p>
+    @endforelse
+
 </div>

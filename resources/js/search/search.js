@@ -20,7 +20,6 @@ export async function searchUsers(query, searchPreviewContent, admin_page) {
             } else {
                 searchPreviewContent.innerHTML = "";
                 for (const user of users) {
-                    console.log("User received is: ", user);
                     searchPreviewContent.innerHTML += `
         <article data-user-image="${user.image}" data-username="${user.username}" class="my-4 p-2 border-b flex justify-between align-middle space-x-2" >
             <div class="flex flex-row space-x-2 align-middle">
@@ -107,7 +106,7 @@ export async function searchPosts(query, searchPreviewContent) {
                         </div>
                         <header class="my-4">
                             <h1 class="text-2xl">
-                                <a href="/post/${post.title}"class="hover:underline">${post.title}</a>
+                                <a href="/post/${post.id}"class="hover:underline">${post.title}</a>
                             </h1>
                         </header>
                         <p class="my-4">
@@ -158,7 +157,10 @@ function getNoneFoundText(entity) {
 }
 
 export async function getSearchResults(type, query, searchPreviewContent) {
+    console.log("Before type is: ", type);
     type = type.split("-").slice(2).join("-");
+
+    console.log(type);
 
     const actions = {
         "users-preview-results": searchUsers,
