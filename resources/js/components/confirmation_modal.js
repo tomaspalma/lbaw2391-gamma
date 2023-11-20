@@ -1,9 +1,9 @@
 const leaveModalButtons = document.querySelectorAll(
-  ".close-confirmation-modal"
+    ".close-confirmation-modal"
 );
 const modal = document.getElementById("confirmation-modal");
 const confirmationMessage = document.getElementById(
-  "confirmation-modal-delete-message"
+    "confirmation-modal-delete-message"
 );
 const confirmationForm = document.getElementById("confirmation-form");
 
@@ -11,176 +11,176 @@ const confirmButton = document.getElementById("action-confirmation-modal");
 const infoIcon = document.getElementById("info-icon");
 
 if (leaveModalButtons) {
-  for (const leaveModalButton of leaveModalButtons) {
-    leaveModalButton.addEventListener("click", () => {
-      modal.classList.add("hidden");
-    });
-  }
+    for (const leaveModalButton of leaveModalButtons) {
+        leaveModalButton.addEventListener("click", () => {
+            modal.classList.add("hidden");
+        });
+    }
 }
 
 const callbackTypesAction = {
-  delete_user: (confirmationForm) => {
-    const username = confirmationForm.action.split("/")[4];
-    const userCard = document.querySelector(
-      `article[data-username="${username}"]`
-    );
+    delete_user: (confirmationForm) => {
+        const username = confirmationForm.action.split("/")[4];
+        const userCard = document.querySelector(
+            `article[data-username="${username}"]`
+        );
 
-    userCard.remove();
-  },
-  unblock_user: (confirmationForm) => {
-    const username = confirmationForm.action.split("/")[4];
-    const userCard = document.querySelector(
-      `article[data-username="${username}"]`
-    );
+        userCard.remove();
+    },
+    unblock_user: (confirmationForm) => {
+        const username = confirmationForm.action.split("/")[4];
+        const userCard = document.querySelector(
+            `article[data-username="${username}"]`
+        );
 
-    const unblockButton = userCard.querySelector(
-      ".unblock-confirmation-trigger"
-    );
-    const blockButton = userCard.querySelector(".block-reason-trigger");
+        const unblockButton = userCard.querySelector(
+            ".unblock-confirmation-trigger"
+        );
+        const blockButton = userCard.querySelector(".block-reason-trigger");
 
-    unblockButton.setAttribute("hidden", true);
-    blockButton.removeAttribute("hidden");
-  },
-  delete_post: (confirmationForm) => {
-    window.location.href = window.location.origin + "/feed";
-  },
-  block_user: (form) => {
-    console.log("Form is: ", form);
-    const username = form.action.split("/")[4];
+        unblockButton.setAttribute("hidden", true);
+        blockButton.removeAttribute("hidden");
+    },
+    delete_post: (confirmationForm) => {
+        window.location.href = window.location.origin + "/feed";
+    },
+    block_user: (form) => {
+        console.log("Form is: ", form);
+        const username = form.action.split("/")[4];
 
-    console.log("Form action is: ", form.action);
+        console.log("Form action is: ", form.action);
 
-    const userCard = document.querySelector(
-      `article[data-username="${username}"]`
-    );
+        const userCard = document.querySelector(
+            `article[data-username="${username}"]`
+        );
 
-    const unblockButton = userCard.querySelector(
-      ".unblock-confirmation-trigger"
-    );
-    const blockButton = userCard.querySelector(".block-reason-trigger");
+        const unblockButton = userCard.querySelector(
+            ".unblock-confirmation-trigger"
+        );
+        const blockButton = userCard.querySelector(".block-reason-trigger");
 
-    console.log("Unblock button, ", unblockButton);
-    console.log("Block button, ", blockButton);
+        console.log("Unblock button, ", unblockButton);
+        console.log("Block button, ", blockButton);
 
-    unblockButton.removeAttribute("hidden");
-    blockButton.setAttribute("hidden", true);
+        unblockButton.removeAttribute("hidden");
+        blockButton.setAttribute("hidden", true);
 
-    form.remove();
-  },
-  delete_self: (confirmationForm) => {
-    fetch("/logout", {
-      headers: {
-        "X-CSRF-Token": `${confirmationForm.elements["_token"].value}`,
-      },
-      method: "POST",
-    })
-      .then((res) => {
-        if (res.ok) {
-          window.location.href = window.location.origin + "/feed";
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  },
-  delete_user_profile: (confirmationForm) => {
-    window.location.href = window.location.origin + "/feed";
-  },
+        form.remove();
+    },
+    delete_self: (confirmationForm) => {
+        fetch("/logout", {
+            headers: {
+                "X-CSRF-Token": `${confirmationForm.elements["_token"].value}`,
+            },
+            method: "POST",
+        })
+            .then((res) => {
+                if (res.ok) {
+                    window.location.href = window.location.origin + "/feed";
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    },
+    delete_user_profile: (confirmationForm) => {
+        window.location.href = window.location.origin + "/feed";
+    },
 };
 
 if (confirmationForm) {
-  confirmationForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    confirmationForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-    fetch(confirmationForm.action, {
-      headers: {
-        "X-CSRF-Token": `${confirmationForm.elements["_token"].value}`,
-      },
-      method: `${confirmationForm.getAttribute("data-method")}`,
-    })
-      .then((res) => {
-        if (res.ok) {
-          modal.classList.add("hidden");
+        fetch(confirmationForm.action, {
+            headers: {
+                "X-CSRF-Token": `${confirmationForm.elements["_token"].value}`,
+            },
+            method: `${confirmationForm.getAttribute("data-method")}`,
+        })
+            .then((res) => {
+                if (res.ok) {
+                    modal.classList.add("hidden");
 
-          callbackTypesAction[
-            confirmationForm.getAttribute("data-callback-type")
-          ](confirmationForm);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  });
+                    callbackTypesAction[
+                        confirmationForm.getAttribute("data-callback-type")
+                    ](confirmationForm);
+                }
+            })
+            .catch((e) => {
+                console.error(e);
+            });
+    });
 }
 
 export function populateModalText(messageContent) {
-  confirmationMessage.innerHTML = messageContent;
+    confirmationMessage.innerHTML = messageContent;
 }
 
 const colorsUsedInModal = [
-  "bg-blue-500",
-  "bg-red-500",
-  "text-blue-500",
-  "text-red-500",
+    "bg-blue-500",
+    "bg-red-500",
+    "text-blue-500",
+    "text-red-500",
 ];
 
 function clearColorConfiguration() {
-  for (const color of colorsUsedInModal) {
-    confirmButton.classList.remove(color);
-    infoIcon.classList.remove(color);
-  }
+    for (const color of colorsUsedInModal) {
+        confirmButton.classList.remove(color);
+        infoIcon.classList.remove(color);
+    }
 }
 
 export function configureConfirmationForm(
-  action,
-  method,
-  callbackType,
-  confirmColor,
-  iconColor
+    action,
+    method,
+    callbackType,
+    confirmColor,
+    iconColor
 ) {
-  clearColorConfiguration();
+    clearColorConfiguration();
 
-  confirmationForm.action = action;
-  confirmationForm.setAttribute("data-method", method);
-  confirmationForm.setAttribute("data-callback-type", callbackType);
+    confirmationForm.action = action;
+    confirmationForm.setAttribute("data-method", method);
+    confirmationForm.setAttribute("data-callback-type", callbackType);
 
-  confirmButton.classList.add(confirmColor);
+    confirmButton.classList.add(confirmColor);
 
-  infoIcon.classList.add(iconColor);
+    infoIcon.classList.add(iconColor);
 }
 
 export function overrideConfirmationForm(
-  form,
-  action,
-  requestParams,
-  callbackType
+    form,
+    action,
+    requestParams,
+    callbackType
 ) {
-  clearColorConfiguration();
+    clearColorConfiguration();
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    console.log("Form submitted");
+        console.log("Form submitted");
 
-    const formData = new FormData();
+        const formData = new FormData();
 
-    formData.append("reason", form.elements["reason"].value);
-    requestParams.body = formData;
+        formData.append("reason", form.elements["reason"].value);
+        requestParams.body = formData;
 
-    fetch(action, requestParams)
-      .then((res) => {
-        if (res.ok) {
-          modal.classList.add("hidden");
-          confirmationForm.classList.remove("hidden");
+        fetch(action, requestParams)
+            .then((res) => {
+                if (res.ok) {
+                    modal.classList.add("hidden");
+                    confirmationForm.classList.remove("hidden");
 
-          callbackTypesAction[callbackType](form);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  });
+                    callbackTypesAction[callbackType](form);
+                }
+            })
+            .catch((e) => {
+                console.error(e);
+            });
+    });
 
-  confirmationForm.classList.add("hidden");
+    confirmationForm.classList.add("hidden");
 }
