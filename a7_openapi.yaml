@@ -24,7 +24,9 @@ tags:
   - name: 'M08: Groups'
 
 paths:
+
   /login:
+
     get:
       operationId: R101
       summary: 'R101: Login Form'
@@ -34,6 +36,7 @@ paths:
       responses:
         '200':
           description: 'Get login form view.'
+
     post:
       operationId: R102
       summary: 'R102: Login Action'
@@ -78,10 +81,11 @@ paths:
                 type: string
 
   /logout:
+
     post:
       operationId: R103
       summary: 'R103: Logout Action'
-      description: 'Logout the current logged user. Access: USR, ADM'
+      description: 'Logout the current logged user. Access: USR'
       tags:
         - 'M01: Authentication'
       responses:
@@ -95,7 +99,9 @@ paths:
                 '302 Success':
                   description: 'OK. Redirect to public feed.'
                   value: '/'
+
   /register:
+
     get:
       operationId: R104
       summary: 'R104: Register Form'
@@ -105,6 +111,7 @@ paths:
       responses:
         '200':
           description: 'Sign-up is ready'
+
     post:
       operationId: R105
       summary: 'R105: Register Action'
@@ -149,7 +156,9 @@ paths:
                 '302 Failure':
                   description: 'The user was not registered with success. Redirect to the login form'
                   value: '/login'
+
   /api/sendResetPassword:
+
     post:
       operationId: R106
       summary: 'R106: Send Email Action'
@@ -172,6 +181,7 @@ paths:
           description: 'OK. An email with a password link was sent.'
 
   /resetPassword/{token}:
+
     get:
       operationId: R107
       summary: 'R107: Register Form'
@@ -184,10 +194,10 @@ paths:
           schema:
             type: string
           required: true
-
       responses:
         '200':
           description: 'Reset the password form returned'
+
     post:
       operationId: R108
       summary: 'R108: Reset Password'
@@ -219,7 +229,9 @@ paths:
           description: 'OK. You received a token on your email.'
         '404':
           description: 'Error. Email doesnt exist.'
+
   /api/sendVerifyEmail:
+
     post:
       operationId: R109
       summary: 'R109: Send Email Action'
@@ -242,7 +254,9 @@ paths:
           description: 'OK. You received a token on your email.'
         '404':
           description: 'Error. Email doesnt exist.'
+
   /verifyEmail/{token}:
+
     get:
       operationId: R110
       summary: 'R110: Verify Email Form'
@@ -258,6 +272,7 @@ paths:
       responses:
         '200':
           description: 'Reset the verify email form returned'
+
     post:
       operationId: R111
       summary: 'R111: Send Verify Email Request'
@@ -273,7 +288,9 @@ paths:
       responses:
         '200':
           description: 'OK. Email verified.'
+
   /feed/:
+
     get:
       operationId: R201
       summary: 'R201: Provide popular feed'
@@ -285,6 +302,7 @@ paths:
           description: 'OK. Show popular feed UI'
 
   /feed/personal:
+
     get:
       operationId: R202
       summary: 'R202: Provide personalized feed'
@@ -296,11 +314,12 @@ paths:
           description: 'OK. Show personalized feed UI'
 
   /admin/user:
+
     get: 
 
       operationId: R301
       summary: 'R301: Show administration page for actions on users'
-      description: 'Shows an administration page where the admin can search for users and perform actions on them'
+      description: 'Shows an administration page where the admin can search for users and perform actions on them. Access: ADM'
       tags:
         - 'M03: User Administration'  
       
@@ -309,11 +328,12 @@ paths:
           description: 'OK. Show User Administration Page' 
 
   /admin/user/create:
+
     get:
 
       operationId: R302
       summary: 'R302: Shows page to create user'
-      description: 'Shows the view for the page where an admin can create a new user'
+      description: 'Shows the view for the page where an admin can create a new user. Access: ADM'
       tags:
           - 'M03: User Administration'
     
@@ -321,11 +341,118 @@ paths:
         '200':
           description: 'OK. Show create user page by admin'
 
+  /users/{username}/block:
+
+    post:
+
+      operationId: R303
+      summary: 'R303: Blocks an user.'
+      description: 'Performs the ban of an user of the application. Access: ADM'
+      tags:
+        - 'M03: User Administration'
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Forbidden. Requester is not an admin'
+        '422':
+          description: 'Unprocessable Entity. Username does not exist'
+
+  /users/{username}/unblock:
+
+    post:
+
+      operationId: R304
+      summary: 'R304: Unblocks user.'
+      description: 'Allows an admin to unblock a valid user. Access: ADM'
+      tags: 
+        - 'M03: User Administration'
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Forbidden. Requester is not an admin'
+        '422':
+          description: 'Unprocessable Entity. Username does not exist'
+
+  /api/admin/search/users/{query}:
+
+    get:
+      operationId: R306
+      summary: 'R306: Previews the users search result to use for AJAX in the admin page.' 
+      description: 'Allows the search for users. Access: ADM'
+      parameters:
+        - in: path
+          name: query
+          description: String to use for full-text search
+          schema:
+            type: string
+          required: false
+      tags:
+        - 'M03: User Administration'
+      
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    image:
+                      type: string
+                    username:
+                      type: string
+                    e-mail:
+                      type: string
+                    academic_status:
+                      type: string
+                    display_name:
+                      type: string
+                    is_private:
+                      type: boolean
+                example:
+                  - id: 1
+                    image: url/of/the/image.jpg
+                    username: john_doe
+                    e-mail: johndoe@trigger.com
+                    academic_status: Student 
+                    display_name: John Doe
+                    is_private: False
+                  - id: 28
+                    image: url/of/the/image2.jpg
+                    username: carlosbarbossa
+                    e-mail: carlosbarbossa@carlosbarbossa.com
+                    academic_status: Student 
+                    display_name: Carlos Barbossa
+                    is_private: False
+
   /users/{username}:
+
     get:
       operationId: R501
       summary: 'R501: Profile Action.'
-      description: 'Get the page view for a user profile. Access: VST, USR. If the requester is a visitor, only public profiles. Otherwise, public and friends are shown.'
+      description: 'Get the page view for a user profile. Access: VST, USR'
       tags:
         - 'M05: Users'
       responses:
@@ -344,7 +471,7 @@ paths:
     delete:
       operationId: R502
       summary: 'R502: Deletes an user'
-      description: 'Allows an authenticated admin to be able to delete an user'
+      description: 'Allows an authenticated user or admin to delete himself or another user (if admin). Access: USR, ADM'
       tags:
         - 'M05: Users'
 
@@ -364,10 +491,11 @@ paths:
           description: Action forbidden
 
   /users/{username}/edit:
+
     get:
       operationId: R503
       summary: 'R503: Edit Profile Form'
-      description: 'Provide edit profile form. Access: ATH'
+      description: 'Provide edit profile form. Access: USR'
       tags:
         - 'M05: Users'
       responses:
@@ -386,7 +514,7 @@ paths:
     put:
       operationId: R504
       summary: 'R504: Edit Profile Action'
-      description: 'Processes the edit profile form submission. Access: ATH'
+      description: 'Processes the edit profile form submission. Access: USR'
       tags:
         - 'M05: Users'
       requestBody:
@@ -425,10 +553,11 @@ paths:
                   value: '/users/{id}/edit'
 
   /api/users/username/{username}:
+
     get:
       operationId: R505
       summary: 'R505: Retrieve user by username'
-      description: 'Get the user information by username. Access: VST, USR. If USR, can only see private users that are friends, otherwise only public.'
+      description: 'Get the user information by username. Access: VST, USR'
       tags:
         - 'M05: Users'
       responses:
@@ -469,10 +598,11 @@ paths:
           required: true
 
   /api/users/email/{email}:
+
     get:
       operationId: R506
       summary: 'R506: Retrieve user by email'
-      description: 'Get the user information by email. Access: VST, USR. If USR, can only see private users that are friends, otherwise only public.'
+      description: 'Get the user information by email. Access: VST, USR'
       tags:
         - 'M05: Users'
       responses:
@@ -503,7 +633,6 @@ paths:
                       type: integer
                     tsvectors:
                       type: string
-        
       parameters:
         - in: path
           name: email
@@ -513,10 +642,11 @@ paths:
           required: true
 
   /post:
+
     post:
       operationId: R701
       summary: 'R701: Create Post Action'
-      description: 'Processes the create post form submission. Access: ATH'
+      description: 'Processes the create post form submission. Access: USR'
       tags:
         - 'M07: Posts'
       requestBody:
@@ -555,6 +685,7 @@ paths:
                 '302 Failure':
                   description: 'NOT OK. Redirect again to create post form.'
                   value: '/post'
+
     get:
       operationId: R702
       summary: 'R702: Get post page creation'
@@ -566,20 +697,22 @@ paths:
           description: 'OK. Show Post'
         '403':
           description: 'Forbidden. User is not logged in.'
+
   /api/post/{id}:
+
     get:
       operationId: R703
       summary: 'R703: Get post from id as JSON'
+      description: 'Get post from id. Access: ATH'
+      tags:
+        - 'M07: Posts'
       parameters:
-      - in: query
+      - in: path
         name: id
         description: Id of the post 
         schema:
           type: string
         required: true
-      description: 'Get post from id. Access: ATH'
-      tags:
-        - 'M07: Posts'
       responses:
         '200':
           description: 'OK.'
@@ -609,38 +742,41 @@ paths:
                 group: null
         '403':
           description: 'Forbidden. User doesnt own this post.'
+
   /post/{id}:
+
     get:
       operationId: R704
       summary: 'R704: Get post page'
+      description: 'Provide post page. Access: USR, VST, ADM. Visitor can only see public posts while Authenticated User can see private posts from himself, friends or groups. Administrator can see all posts.'
+      tags:
+        - 'M07: Posts'
       parameters:
-      - in: query
+      - in: path
         name: id
         description: Id of the post 
         schema:
           type: string
         required: true
-      description: 'Provide post page. Access: ATH'
-      tags:
-        - 'M07: Posts'
       responses:
         '200':
           description: 'OK. Show Post'
         '403':
           description: 'Forbidden. User not allowed to see post.'
+
     delete:
       operationId: R705
       summary: 'R705: Delete post'
-      description: 'Processes the delete post request. Access: ATH'
+      description: 'Processes the delete post request. Access: ATH, ADM'
+      tags:
+        - 'M07: Posts'
       parameters:
-      - in: query
+      - in: path
         name: id
         description: Id of the user 
         schema:
           type: string
         required: true
-      tags:
-        - 'M07: Posts'
       responses:
         '200':
           description: 'OK. Post deleted.'
@@ -648,37 +784,39 @@ paths:
           description: 'Forbidden. User doesnt own this post.'
 
   /post/{id}/edit:
+
     get:
       operationId: R706
       summary: 'R706: Edit Profile Form'
+      description: 'Show edit post form. Access: ATH'
+      tags:
+        - 'M07: Posts'
       parameters:
-      - in: query
+      - in: path
         name: id
         description: Id of the post 
         schema:
           type: string
         required: true
-      description: 'Show edit post form. Access: ATH'
-      tags:
-        - 'M07: Posts'
       responses:
         '200':
           description: 'OK. Show Post'
         '403':
           description: 'Forbidden. User doesnt own this post.'
+
     put:
       operationId: R707
       summary: 'R707: Edit Post Action'
+      description: 'Processes the edit post form submission. Access: ATH'
+      tags:
+        - 'M07: Posts'
       parameters:
-      - in: query
+      - in: path
         name: id
         description: Id of the post 
         schema:
           type: string
         required: false
-      description: 'Processes the edit post form submission. Access: ATH'
-      tags:
-        - 'M07: Posts'
       requestBody:
         required: true
         content:
@@ -715,10 +853,11 @@ paths:
   /search/{query}:
 
     get: 
-
       operationId: R601
       summary: 'R601: Search Action'
       description: 'Allows the search for users, posts and groups. Access: VST, USR'
+      tags:
+        - 'M06: Search' 
       parameters:
         - in: path
           name: query
@@ -726,10 +865,6 @@ paths:
           schema:
             type: string
           required: false
-      tags:
-        - 'M06: Search'  
-
-      
       responses:
         '200':
           description: 'OK. Show Search UI'
@@ -742,16 +877,13 @@ paths:
       description: 'Allows the search for users. Access: VST, USR'
       tags:
         - 'M06: Search'
-      
       parameters:
-      - in: query
+      - in: path
         name: query
         description: String to use for full-text search
         schema:
           type: string
         required: false
-      
-        
       responses:
         '200':
           description: Success
@@ -800,39 +932,37 @@ paths:
       description: 'Allows the search for posts. Access: VST, USR'
       tags:
         - 'M06: Search'
-          
       parameters:
-        - in: query
+        - in: path
           name: query
           description: String to use for full-text search
           schema:
             type: string
           required: false
-      
-          responses:
-          '200':
-            description: Success
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      author:
-                        type: integer
-                      title:
-                        type: string
-                      content:
-                        type: string
-                      attachement:
-                        type: string
-                      group_id:
-                        type: integer
-                      is_private:
-                        type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    author:
+                      type: integer
+                    title:
+                      type: string
+                    content:
+                      type: string
+                    attachement:
+                      type: string
+                    group_id:
+                      type: integer
+                    is_private:
+                      type: boolean
 
   /api/search/groups/{query}:
 
@@ -842,15 +972,13 @@ paths:
       description: 'Allows the search for groups. Access: VST, USR'
       tags:
         - 'M06: Search'
-      
       parameters:
-      - in: query
+      - in: path
         name: query
         description: String to use for full-text search
         schema:
           type: string
         required: false
-        
       responses:
         '200':
           description: Success
@@ -878,139 +1006,8 @@ paths:
                     name: Tech Enthusiasts
                     description: A group dedicated to discussing the latest technology trends and innovations
                     is_private: True
-  /admin/user:
-    get: 
-
-      operationId: R301
-      summary: 'R301: Show administration page for actions on users'
-      description: 'Shows an administration page where the admin can search for users and perform actions on them'
-      tags:
-        - 'M03: User Administration'  
-      
-      responses:
-        '200':
-          description: 'OK. Show User Administration Page' 
-
-  /admin/user/create:
-    get:
-
-      operationId: R302
-      summary: 'R302: Shows page to create user.'
-      description: 'Shows the view for the page where an admin can create a new user. Access: ADM'
-      tags:
-          - 'M03: User Administration'
     
-  /users/{username}/block:
-    post:
-
-      operationId: R305
-      summary: 'R305: Deletes an user.'
-      description: 'Performs the deletion of an user by the admin Access: ADM'
-      tags:
-        - 'M03: User Administration'
-
-      parameters:
-        - in: path
-          name: username
-          schema:
-            type: string
-          required: true
-
-      responses:
-        '200':
-          description: 'Success'
-        '403':
-          description: 'Forbidden. Requester is not an admin'
-        '422':
-          description: 'Unprocessable Entity. Username does not exist'
-
-  /users/{username}/unblock:
-    post:
-
-      operationId: R306
-      summary: 'R306: Unblocks user.'
-      description: 'Allows an admin to unblock a valid user. Access: ADM'
-      tags: 
-        - 'M03: User Administration'
-
-      parameters:
-        - in: path
-          name: username
-          schema:
-            type: string
-          required: true
-
-      responses:
-        '200':
-          description: 'Success'
-        '403':
-          description: 'Forbidden. Requester is not an admin'
-        '422':
-          description: 'Unprocessable Entity. Username does not exist'
-
-  /api/admin/search/users/{query}:
-
-    get:
-      operationId: R307
-      summary: 'R307: Previews the users search result to use for AJAX in the admin page.' 
-      description: 'Allows the search for users. Access: ADM'
-      parameters:
-        - in: path
-          name: query
-          schema:
-            type: string
-          required: false
-      tags:
-        - 'M03: User Administration'
-      
-      parameters:
-      - in: query
-        name: query
-        description: String to use for full-text search
-        schema:
-          type: string
-        required: false
-      
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    image:
-                      type: string
-                    username:
-                      type: string
-                    e-mail:
-                      type: string
-                    academic_status:
-                      type: string
-                    display_name:
-                      type: string
-                    is_private:
-                      type: boolean
-                example:
-                  - id: 1
-                    image: url/of/the/image.jpg
-                    username: john_doe
-                    e-mail: johndoe@trigger.com
-                    academic_status: Student 
-                    display_name: John Doe
-                    is_private: False
-                  - id: 28
-                    image: url/of/the/image2.jpg
-                    username: carlosbarbossa
-                    e-mail: carlosbarbossa@carlosbarbossa.com
-                    academic_status: Student 
-                    display_name: Carlos Barbossa
-                    is_private: False
-
+  
 
 
 
