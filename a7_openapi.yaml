@@ -22,6 +22,7 @@ tags:
   - name: 'M06: Search'
   - name: 'M07: Posts'
   - name: 'M08: Groups'
+  - name: 'M09: Notifications'
 
 paths:
 
