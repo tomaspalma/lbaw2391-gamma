@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/auth/login.js'])
+    @vite(['resources/css/app.css', 'resources/js/auth/seePassword.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/38229b6c34.js" crossorigin="anonymous"></script>
