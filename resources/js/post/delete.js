@@ -14,9 +14,9 @@ export function deletePostAction(deleteConfirmationTriggerButton) {
     confirmationModal.classList.remove("hidden");
 }
 
-const deleteConfirmationTriggerButton = document.querySelector(".delete-confirmation-trigger");
+const deletePostButton = document.querySelector(".delete-post-button");
 
-deleteConfirmationTriggerButton.addEventListener("click", (e) => {
+deletePostButton.addEventListener("click", (e) => {
     e.preventDefault();
-    deletePostAction(deleteConfirmationTriggerButton);
+    deletePostAction(deletePostButton);
 });

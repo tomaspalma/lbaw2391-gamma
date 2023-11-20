@@ -87,7 +87,6 @@ export async function searchPosts(query, searchPreviewContent) {
             const posts = await res.json();
 
             if (posts.length == 0) {
-                console.log("Hi there");
                 searchPreviewContent.innerHTML = getNoneFoundText("posts");
             } else {
                 searchPreviewContent.innerHTML = ``;
@@ -107,7 +106,7 @@ export async function searchPosts(query, searchPreviewContent) {
                         </div>
                         <header class="my-4">
                             <h1 class="text-2xl">
-                                <a href="/post/${post.title}"class="hover:underline">${post.title}</a>
+                                <a href="/post/${post.id}"class="hover:underline">${post.title}</a>
                             </h1>
                         </header>
                         <p class="my-4">

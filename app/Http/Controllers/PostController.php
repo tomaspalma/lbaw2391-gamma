@@ -138,8 +138,58 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
         $this->authorize('delete', $post);
+        
+        DB::transaction(function () use ($post) {
+            $this->delete_post($post->id);
+        });
+    }
 
-        $post->delete();
-        return redirect('/feed');
+    /**
+     * This should be used inside a transaction
+     *
+     * @$reaction_id The id of the user we want to delete
+     * */
+    private function delete_reaction($reaction_id)
+    {
+        DB::table('reaction_not')->where('reaction_id', $reaction_id)->delete();
+        DB::table('reaction')->where('id', $reaction_id)->delete();
+    }
+    
+    /**
+     * This should be used inside a transaction
+     * 
+     * @$comment_id The id of the comment we want to delete
+     */
+    private function delete_comment($comment_id)
+    {
+        $comment_reactions = DB::table('reaction')->where('comment_id', $comment_id)->get();
+        foreach ($comment_reactions as $reaction) {
+            $this->delete_reaction($reaction->id);
+        }
+        DB::table('comment_not')->where('comment_id', $comment_id)->delete();
+        DB::table('comment')->where('id', $comment_id)->delete();
+    }
+
+    /**
+     * This should be used inside a transaction
+     * 
+     * @$post_id The id of the post we want to delete
+     */
+
+    private function delete_post($post_id)
+    {
+        $post_reactions = DB::table('reaction')->where('post_id', $post_id)->get();
+        foreach ($post_reactions as $reaction) {
+            $this->delete_reaction($reaction->id);
+        }
+        $post_comments = DB::table('comment')->where('post_id', $post_id)->get();
+        foreach ($post_comments as $comment) {
+            $this->delete_comment($comment->id);
+        }
+        DB::table('post_tag_not')->where('post_id', $post_id)->delete();
+        DB::table('post_tag')->where('post_id', $post_id)->delete();
+        DB::table('post')->where('id', $post_id)->delete();
     }
 }
+
+

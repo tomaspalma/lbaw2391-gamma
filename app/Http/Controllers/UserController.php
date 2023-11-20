@@ -16,7 +16,6 @@ class UserController extends Controller
 {
     public function show(string $username): View
     {
-
         $user = User::where('username', $username)->firstOrFail();
 
         $posts = $user->publicPosts()->orderBy('date', 'desc')->get();
