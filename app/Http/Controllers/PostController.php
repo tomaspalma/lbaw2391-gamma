@@ -15,6 +15,8 @@ class PostController extends Controller
     public function showCreateForm(): View
     {
 
+        $this->authorize('create', Post::class);
+
         $groups = Auth::user()->groups;
 
         return view('pages.create_post', [
@@ -22,9 +24,10 @@ class PostController extends Controller
         ]);
     }
 
-    public function create(Request $request)
-    {
+    public function create(Request $request) {
 
+        $this->authorize('create', Post::class);
+        
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
@@ -59,12 +62,10 @@ class PostController extends Controller
         }
 
         $post = Post::findOrFail($id);
-        $comments = $post->comments()->get();
 
-        // if($post->is_private && $post->owner()->isNot(Auth::user())) {
-        //     // forbidenn. return to feed
-        //     return redirect('/feed');
-        // }
+        $this->authorize('view', $post);
+
+        $comments = $post->comments()->get();
 
         return view('pages.post', [
             'post' => $post,
@@ -83,19 +84,14 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
+        $this->authorize('update', $post);
 
-        if ($post->owner()->is(Auth::user())) {
-            // ok return edit form view
+        $groups = Auth::user()->groups;
 
-            $groups = Auth::user()->groups;
-
-            return view('pages.edit_post', [
-                'post' => $post,
-                'groups' => $groups
-            ]);
-        }
-        // forbiddem. return to feed
-        return redirect('/feed');
+        return view('pages.edit_post', [
+            'post' => $post,
+            'groups' => $groups
+        ]);
     }
 
     public function update(Request $request, string $id)
@@ -117,22 +113,17 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
+        $this->authorize('update', $post);
 
-        if ($post->owner()->is(Auth::user())) {
-            // ok return edit form view
-            $post->update([
-                'title' => $request->title,
-                'content' => $request->content,
-                'attachment' => $request->attachment,
-                'group_id' => $request->group,
-                'is_private' => $request->is_private
-            ]);
+        $post->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            'attachment' => $request->attachment,
+            'group_id' => $request->group,
+            'is_private' => $request->is_private
+        ]);
 
-            return redirect('/post/' . $id);
-        }
-
-        // forbidden. return to feed
-        return redirect('/feed');
+        return redirect('/post/'.$id);
     }
 
     public function delete(string $id)
@@ -146,13 +137,59 @@ class PostController extends Controller
 
         $post = Post::findOrFail($id);
 
+        $this->authorize('delete', $post);
+        
+        DB::transaction(function () use ($post) {
+            $this->delete_post($post->id);
+        });
+    }
 
-        if ($post->owner()->is(Auth::user())) {
-            $post->delete();
-            return redirect('/feed');
+    /**
+     * This should be used inside a transaction
+     *
+     * @$reaction_id The id of the user we want to delete
+     * */
+    private function delete_reaction($reaction_id)
+    {
+        DB::table('reaction_not')->where('reaction_id', $reaction_id)->delete();
+        DB::table('reaction')->where('id', $reaction_id)->delete();
+    }
+    
+    /**
+     * This should be used inside a transaction
+     * 
+     * @$comment_id The id of the comment we want to delete
+     */
+    private function delete_comment($comment_id)
+    {
+        $comment_reactions = DB::table('reaction')->where('comment_id', $comment_id)->get();
+        foreach ($comment_reactions as $reaction) {
+            $this->delete_reaction($reaction->id);
         }
+        DB::table('comment_not')->where('comment_id', $comment_id)->delete();
+        DB::table('comment')->where('id', $comment_id)->delete();
+    }
 
-        // forbidden. return to feed -
-        return redirect('/feed');
+    /**
+     * This should be used inside a transaction
+     * 
+     * @$post_id The id of the post we want to delete
+     */
+
+    private function delete_post($post_id)
+    {
+        $post_reactions = DB::table('reaction')->where('post_id', $post_id)->get();
+        foreach ($post_reactions as $reaction) {
+            $this->delete_reaction($reaction->id);
+        }
+        $post_comments = DB::table('comment')->where('post_id', $post_id)->get();
+        foreach ($post_comments as $comment) {
+            $this->delete_comment($comment->id);
+        }
+        DB::table('post_tag_not')->where('post_id', $post_id)->delete();
+        DB::table('post_tag')->where('post_id', $post_id)->delete();
+        DB::table('post')->where('id', $post_id)->delete();
     }
 }
+
+

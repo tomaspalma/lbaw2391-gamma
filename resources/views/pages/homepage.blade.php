@@ -9,6 +9,9 @@
 @include('partials.navbar')
 
 <main class="center">
+    @can('create', App\Models\Post::class)
+    <a href="{{ route('post.createForm') }}" class="my-4 block mx-auto px-4 py-2 bg-black text-white text-center rounded">Create Post</a> 
+    @endcan
     <ul class="tab-container center justify-center flex border border-black rounded shadow my-4">
         <li class="flex w-1/2 {{ $feed === 'popular' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
             <a href="/feed" class="hover:underline">Popular</a>
