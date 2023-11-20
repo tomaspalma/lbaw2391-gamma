@@ -394,8 +394,8 @@ paths:
   /api/admin/search/users/{query}:
 
     get:
-      operationId: R306
-      summary: 'R306: Previews the users search result to use for AJAX in the admin page.' 
+      operationId: R305
+      summary: 'R305: Previews the users search result to use for AJAX in the admin page.' 
       description: 'Allows the search for users. Access: ADM'
       parameters:
         - in: path
