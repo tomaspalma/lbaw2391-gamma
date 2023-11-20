@@ -60,7 +60,7 @@
                 @endguest
                 @auth
                 <li>
-                    <form method="GET" action="{{ route('logout') }}" class="block py-2 pl-3 pr-4 mb-0">
+                    <form method="POST" action="{{ route('logout') }}" class="block py-2 pl-3 pr-4 mb-0">
                         @csrf
                         <button type="submit">Logout</button>
                     </form>
