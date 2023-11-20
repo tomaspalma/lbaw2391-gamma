@@ -16,7 +16,7 @@ export default defineConfig({
                 "resources/js/admin/user/unblock.js",
                 "resources/js/admin/user/block.js",
                 "resources/js/profile_edit/validate_password.js",
-                "resources/js/auth/login.js",
+                "resources/js/auth/seePassword.js",
                 "resources/js/auth/register.js",
                 "resources/js/post/delete.js"
             ],
