@@ -88,7 +88,16 @@ function addNavbarSearchListener() {
         e.preventDefault();
 
         const query = searchForm["search"].value;
-        window.location.replace(`/search/${query}?toggled=${currentSearchPreview.split("-")[4]}`);
+        window.location.replace(`/search/${query}?toggled=${currentSearchPreview.split("-")[2]}`);
+    });
+
+    const mobileSearchForm = document.getElementById("mobile-search-form");
+
+    mobileSearchForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const query = mobileSearchForm["search"].value;
+        window.location.replace(`/search/${query}?toggled=${currentSearchPreview.split("-")[2]}`);
     });
 
     const mobileSearch = document.getElementById("mobile-search-trigger");
