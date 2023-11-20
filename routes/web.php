@@ -75,7 +75,7 @@ Route::controller(SearchController::class)->group(function () {
 Route::controller(AdminController::class)->middleware(['auth', EnsureUserIsAdmin::class])->group(function () {
     Route::prefix('/admin')->group(function () {
         Route::get("/user", 'show_admin_user');
-        Route::get("/user/create", 'show_create_user');
+        Route::get("/user/create", 'show_create_user')->name('admin_create_user');
     });
 });
 
