@@ -17,11 +17,12 @@
             @method('PUT')
 
             <div class="md:flex-1 px-3">
-                <div class="mb-4">                    
-                    <img src="{{ $user->image }}" alt="Profile Image" id="imagePreview"
-                        class="rounded-full w-32 h-32 md:w-48 md:h-48 cursor-pointer mx-auto" onclick="document.getElementById('imageInput').click()">
-                    <input type="file" name="image" id="imageInput" accept="image/*" class="hidden"
-                        onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
+                <div class="flex flex-col w-full items-center mb-2">
+                    <img src="{{ $user->image }}" alt="Profile Image" id="imagePreview" class="my-2 rounded-full w-20 h-20 md:w-32 md:h-32 object-cover">
+                    <input type="file" name="image" id="imageInput" accept="image/*" class="hidden" onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
+                     <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-md" onclick="document.getElementById('imageInput').click()">
+                        Change Avatar
+                    </button>
                 </div>
                 <div class="mb-4">
                     <label for="display_name" class="text-sm text-gray-600">Display Name</label>
@@ -73,7 +74,7 @@
                         class="mt-1 py-2 px-3 border rounded-md w-full">
                 </div>
                 <div class="mb-4">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
+                    <button type="submit" class="bg-black text-white px-4 py-2 rounded">Save Changes</button>
                 </div>
             </div>
         </form>
