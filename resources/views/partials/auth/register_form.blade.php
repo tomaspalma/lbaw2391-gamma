@@ -1,5 +1,11 @@
+@if (session('success'))
+<h1 class="text-2xl mt-2 text-center mb-4 text-green-700">
+    {{ session('success') }}
+</h1>
+@endif
+
 <div class="flex justify-center">
-    <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-center" action="{{ route('register') }}">
+    <form method="POST" class="border-2 border-gray-500 rounded-2 p-4 w-96 max-w-screen-md justify-center" action="{{ route('register') }}">
         {{ csrf_field() }}
         <input name="_token" value="{{ csrf_token() }}" hidden>
 
@@ -65,10 +71,13 @@
         </div>
 
         <div class="flex items-center">
-            <button class="bg-blue-500 text-white py-2 px-4 rounded" type="submit">
-                Register
+            <button class="bg-blue-500 text-white py-2 px-4 rounded {{$admin_page_version ? 'w-full' : ''}}" type="submit">
+                {{$admin_page_version ? "Create User" : "Register"}}
             </button>
+
+            @if(!$admin_page_version)
             <a class="ml-2 text-blue-500" href="{{ route('login') }}">Login</a>
+            @endif
         </div>
     </form>
 </div>

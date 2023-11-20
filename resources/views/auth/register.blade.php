@@ -9,7 +9,7 @@
 
 @include('partials.navbar')
 
-<div class="flex items-center justify-content: center min-h-screen">
+<div class="flex justify-content center">
     <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-self: center" action="{{ route('register') }}">
         {{ csrf_field() }}
         <input name="_token" value="{{ csrf_token() }}" hidden>
@@ -17,13 +17,13 @@
         <div class="mb-4">
             <label for="username" class="block text-sm font-medium text-gray-600">Username</label>
             <input class="mt-1 p-2 w-full border focus:ring-2" id="username" type="text" name="username" value="{{ old('username') }}" required autofocus>
-            
+
             <div id="username-error" class="text-red-500 text-sm"></div>
-            
+
             @if ($errors->has('username'))
-                <span class="text-red-500 text-sm">
-                    {{ $errors->first('username') }}
-                </span>
+            <span class="text-red-500 text-sm">
+                {{ $errors->first('username') }}
+            </span>
             @endif
         </div>
 
@@ -31,9 +31,9 @@
             <label for="display_name" class="block text-sm font-medium text-gray-600">Display Name</label>
             <input class="mt-1 p-2 w-full border focus:ring-2" id="display_name" type="text" name="display_name" value="{{ old('display_name') }}" required autofocus>
             @if ($errors->has('display_name'))
-                <span class="text-red-500 text-sm">
-                    {{ $errors->first('display_name') }}
-                </span>
+            <span class="text-red-500 text-sm">
+                {{ $errors->first('display_name') }}
+            </span>
             @endif
         </div>
 
@@ -45,9 +45,9 @@
 
 
             @if ($errors->has('email'))
-                <span class="text-red-500 text-sm">
-                    {{ $errors->first('email') }}
-                </span>
+            <span class="text-red-500 text-sm">
+                {{ $errors->first('email') }}
+            </span>
             @endif
         </div>
 
@@ -71,11 +71,11 @@
             <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
             <input class="mt-1 p-2 w-full border focus:ring-2" id="password" type="password" name="password" required>
 
-            
+
             @if ($errors->has('password'))
-                <span class="text-red-500 text-sm">
-                    {{ $errors->first('password') }}
-                </span>
+            <span class="text-red-500 text-sm">
+                {{ $errors->first('password') }}
+            </span>
             @endif
         </div>
 

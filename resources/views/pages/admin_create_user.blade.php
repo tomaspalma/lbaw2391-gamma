@@ -8,5 +8,5 @@
 
 <main class="center">
 
-    @include('partials.auth.register_form')
+    @include('partials.auth.register_form', ['admin_page_version' => true])
 </main>
