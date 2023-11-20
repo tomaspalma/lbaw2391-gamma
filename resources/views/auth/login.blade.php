@@ -4,7 +4,6 @@
     @vite(['resources/css/app.css', 'resources/js/auth/seePassword.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/38229b6c34.js" crossorigin="anonymous"></script>
 </head>
 
 @include('partials.navbar')
@@ -27,8 +26,11 @@
             <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
             <input class="mt-1 p-2 w-full border focus:ring-2" id="password" type="password" name="password" required>
             
-            <i class="fas fa-eye-slash" id="togglePassword" style="margin-top: -29px; margin-left: 310px;"></i>
-            
+            {{-- <i class="fas fa-eye-slash" id="togglePassword" style="margin-top: -29px; margin-left: 310px;"></i> --}}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-5 h-5 cursor-pointer" id="togglePassword" style="margin-top: -29px; margin-left: 310px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+            </svg>
+              
             @if ($errors->has('password'))
             <span class="text-red-500 text-sm">
                 {{ $errors->first('password') }}
