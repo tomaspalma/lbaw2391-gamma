@@ -83,6 +83,9 @@ const callbackTypesAction = {
         console.error("Error:", error);
       });
   },
+  delete_user_profile: (confirmationForm) => {
+    window.location.href = window.location.origin + "/feed";
+  },
 };
 
 if (confirmationForm) {

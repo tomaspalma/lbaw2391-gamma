@@ -22,6 +22,7 @@
                     <a href="{{ route('edit_profile',['username' => $user->username]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">Edit</a>
                     <a id="deleteLink" class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 hover:text-gray-900">Delete</a>
                 </div>
+                <input type="hidden" id="auth-user" value="{{ auth()->user()->username }}">
             </div>     
             @endcan
         </div>        
