@@ -11,10 +11,13 @@ class PostPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Post $post): Response
+    public function view(?User $user, Post $post): Response
     {
         // If post is private, only the owner and friends can see it (or an admin)
         if ($post->is_private) {
+            if ($user === null) {
+                return Response::deny('This post is private.');
+            }
             return ($user->id === $post->author || $user->friends->contains($post->author) || $user->is_admin()) 
                 ? Response::allow()
                 : Response::deny('This post is private.');
@@ -26,10 +29,10 @@ class PostPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): Response
+    public function create(?User $user): Response
     {
         // Only authenticated users can create posts
-        return $user->id !== null
+        return $user !== null
             ? Response::allow()
             : Response::deny('You must be logged in to create a post.');
     }
