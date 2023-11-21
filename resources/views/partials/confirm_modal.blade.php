@@ -8,10 +8,7 @@
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div class="p-6 text-center">
                 <div class="text-right">
-                    {{-- <i class="close-confirmation-modal fa-solid fa-x p-4 hover:cursor-pointer"></i> --}}
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="text-white close-confirmation-modal w-16 p-4 hover:cursor-pointer">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                      </svg>
+                    <i class="close-confirmation-modal fa-solid fa-x p-4 hover:cursor-pointer"></i>
                 </div>
                 <div class="flex justify-between">
                     <svg id="info-icon" class="mx-auto mb-4 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
