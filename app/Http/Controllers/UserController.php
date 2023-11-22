@@ -6,7 +6,7 @@ use Illuminate\View\View;
 
 use App\Models\User;
 use App\Models\AppBan;
-
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +24,16 @@ class UserController extends Controller
             'user' => $user,
             'posts' => $posts
         ]);
+    }
+
+    public static function reset_password(User $user, string $password)
+    {
+        $user->forceFill([
+            'password' => Hash::make($password)
+        ]);
+        $user->save();
+
+        event(new PasswordReset($user));
     }
 
     public function edit(Request $request, string $username)
@@ -213,4 +223,7 @@ class UserController extends Controller
             ->delete();
     }
 
+    public function send_reset_password(User $user)
+    {
+    }
 }
