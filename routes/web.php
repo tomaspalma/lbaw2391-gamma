@@ -25,7 +25,7 @@ use App\Http\Controllers\PostController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::redirect('/', '/feed');
 
 // Users
 Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
