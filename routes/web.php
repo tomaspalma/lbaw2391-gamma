@@ -99,6 +99,5 @@ Route::prefix('/api')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::get("/users/username/{username}", 'checkUsernameExists');
         Route::get("/users/email/{email}", 'checkEmailExists');
-        Route::post("/sendResetPassword", 'send_reset_password');
     });
 });
