@@ -1,6 +1,18 @@
 <head>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/search_input_preview.js', 'resources/js/components/navbar_mobile_menu.js'])
 </head>
+
+@auth
+@if(!Auth::user()->has_verified_email())
+<div class="email-verification-link">
+    You still haven't confirmed your email.
+    <form class="inline" method="POST" action="{{route('verification.send')}}">
+        @csrf
+        <button type="submit" class="hover:underline">Click here to resend</button>
+    </form>
+</div>
+@endif
+@endauth
 <nav class="bg-white border-black border-b mb-5 p-1.5">
     <div class="max-w-screen-xl flex flex-col md:flex-row flex-wrap justify-between mx-auto p-4">
         <a href="/" class="self-center text-2xl font-bold hover:underline">Gamma</a>
