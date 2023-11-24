@@ -4,10 +4,12 @@ use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
 
@@ -25,7 +27,7 @@ use App\Http\Controllers\PostController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::redirect('/', '/feed');
 
 // Users
 Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
@@ -77,6 +79,13 @@ Route::controller(AdminController::class)->middleware(['auth', EnsureUserIsAdmin
         Route::get("/user", 'show_admin_user');
         Route::get("/user/create", 'show_create_user')->name('admin_create_user');
     });
+});
+
+Route::controller(PasswordController::class)->group(function () {
+    Route::get('/forgot-password', 'show_forgot_password')->name('password.request');
+    Route::post('/forgot-password', 'send_forgot_password_request')->name('send_reset_password_request');
+    Route::get('/reset-password/{token}', 'show_reset_password')->name('password.reset');
+    Route::post('/reset-password/{token}', 'reset_password')->name('password.update');
 });
 
 Route::prefix('/api')->group(function () {
