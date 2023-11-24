@@ -21,7 +21,7 @@
             <img src="{{ $post->owner->image ?? 'hello' }}" class="rounded-full w-10 h-10">
             <a class="text-lg text-gray-600 hover:underline" href="{{ route('profile',['username' => $post->owner->username]) }}">{{ $post->owner->username }}</a>
             @if($post->group)
-            <a class="text-lg text-gray-600 hover:underline">@ {{ $post->group->name }}</a>
+                <a class="text-lg text-gray-600 hover:underline">@ {{ $post->group->name }}</a>
             @endif
         </div>
 
@@ -29,17 +29,18 @@
             {{ $post->content }}
         </div>
 
-        <div class="post-action-bar mt-4 flex justify-between items-center">
+        <div class="post-action-bar mt-4 flex justify-between items-center"></div>
 
-        </div>
-
-        <div class="flex justify-between items-center">
-            @canany(['update', 'delete'], $post)
+        @can('update', $post)
+            <div class="flex justify-between items-center">
                 <a href="{{ route('post.update', $post->id) }}" class="bg-black text-white py-2 px-4 rounded-md">Edit Post</a>
-
                 <button type="submit" class="delete-post-button bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
-            @endcanany
-        </div>
+            </div>
+        @elsecan('delete', $post)
+            <div class="flex justify-end items-center">
+                <button type="submit" class="delete-post-button bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
+            </div>
+        @endcan
     </div>
 
     <section class="border border-black p-4 my-4 max-w-3xl mx-auto rounded-md shadow-md">
