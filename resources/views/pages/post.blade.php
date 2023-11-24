@@ -13,7 +13,7 @@
         <div class="flex justify-between items-center">
             <h2 class="text-4xl font-bold">{{ $post->title }}</h2>
             <span class="text-gray-600">
-                <time>{{ $post->date }}</time>
+                <time>{{ $post->format_date() }}</time>
             </span>
         </div>
 

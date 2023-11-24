@@ -12,7 +12,7 @@
             @endif
         </div>
         <span>
-            <time>{{ $post->date }}</time>
+            <time>{{ $post->format_date() }}</time>
         </span>
     </div>
     <header class="my-4">
