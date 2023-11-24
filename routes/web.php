@@ -15,6 +15,7 @@ use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
 
 use App\Http\Controllers\PostController;
+use App\Http\Middleware\EnsurePostExists;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +74,9 @@ Route::controller(PostController::class)->group(function () {
         Route::get('/post/{id}/edit', 'showEditForm');
         Route::put('/post/{id}/edit', 'update')->name('post.update');
         Route::delete('/post/{id}', 'delete')->name('post.delete');
+        Route::get('/post/{id}/reaction', 'get_reactions')->name('post.reactions');
+        Route::post('/post/{id}/reaction', 'add_reaction')->name('post.add.reaction');
+        Route::delete('/post/{id}/reaction', 'delete_reaction')->name('post.remove.reaction');
     });
 });
 

@@ -1,5 +1,7 @@
 import { configureConfirmationForm, populateModalText } from "../components/confirmation_modal";
 
+console.log("Hello");
+
 const confirmationModal = document.getElementById("confirmation-modal");
 
 export function deletePostAction(deleteConfirmationTriggerButton) {

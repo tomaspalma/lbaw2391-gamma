@@ -29,10 +29,14 @@
             {{ $post->content }}
         </div>
 
-        <div class="post-action-bar mt-4 flex justify-between items-center"></div>
+        <div class="post-action-bar mt-4 flex justify-between items-center">
+            @auth
+                @include('partials.reactions', ['entity' => $post]) 
+            @endauth
+        </div>
 
         @can('update', $post)
-            <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center">
                 <a href="{{ route('post.update', $post->id) }}" class="bg-black text-white py-2 px-4 rounded-md">Edit Post</a>
                 <button type="submit" class="delete-post-button bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
             </div>
