@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/comment/add.js', 'resources/js/comment/delete.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
@@ -45,18 +45,32 @@
     <section class="border border-black p-4 my-4 max-w-3xl mx-auto rounded-md shadow-md">
         <h3 class="text-2xl font-bold mb-4">Comments</h3>
 
-        @forelse($comments as $comment)
-        <div class="flex space-x-4">
-            <img src="{{ $comment->author->image ?? 'hello' }}" class="rounded-full w-8 h-8">
-            <div>
-                <p class="text-gray-600">{{ $comment->owner->username }}</p>
-                <p>{{ $comment->content }}</p>
+        @can('create', App\Models\Comment::class)
+        <form id="comment-form" class="flex flex-col space-y-4">
+            @csrf
+            <input type="hidden" name="post_id" value="{{ $post->id }}">
+            <textarea name="content" class="border border-gray-300 rounded-md p-2" placeholder="Write a comment..."></textarea>
+            <button type="button" id="comment-button" class="bg-black text-white py-2 px-4 rounded-md">Comment</button>
+        </form>
+        @endcan
+
+        <div id="comments" class="mt-4">
+            @forelse($comments as $comment)
+            <div class="flex space-x-4">
+                <img src="{{ $comment->author->image ?? 'hello' }}" class="rounded-full self-center w-8 h-8">
+                <div class="grow">
+                    <p class="text-gray-600">{{ $comment->owner->username }}</p>
+                    <p>{{ $comment->content }}</p>
+                </div>
+                    @can('delete', $comment)
+                        <button type="button" class="delete-comment-button bg-red-500 text-white self-center py-1 px-2 rounded-md" comment-id="{{ $comment->id }}">Delete</button>
+                    @endcan
             </div>
+            <hr class="my-2">
+            @empty
+            <p>No comments yet.</p>
+            @endforelse
         </div>
-        <hr class="my-2">
-        @empty
-        <p>No comments yet.</p>
-        @endforelse
     </section>
     @include('partials.confirm_modal')
 </main>
