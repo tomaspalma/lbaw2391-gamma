@@ -3,7 +3,7 @@
 </head>
 
 @auth
-@if(!Auth::user()->has_verified_email())
+@if(!Auth::user()->has_verified_email() && !request()->session()->get('reset_new_validation'))
 <div class="email-verification-link">
     You still haven't confirmed your email.
     <form class="inline" method="POST" action="{{route('verification.send')}}">

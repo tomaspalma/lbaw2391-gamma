@@ -23,7 +23,8 @@ class EmailController extends Controller
     public function resend_verification(Request $request)
     {
         $request->user()->sendEmailVerificationNotification();
-
+        
+        $request->session()->put('reset_new_validation', true);
         return back()->with('message', 'A new verification link was sent!');
     }
 
