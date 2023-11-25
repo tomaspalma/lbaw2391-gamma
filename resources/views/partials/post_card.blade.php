@@ -23,7 +23,17 @@
     <p class="my-4">
         {{ $post->content }}
     </p>
-    @auth
-        @include('partials.reactions', ['entity' => $post])
-    @endauth
+    <div class="flex flex-col divide-y-2">
+        @auth
+            @include('partials.reactions', ['entity' => $post])
+        @endauth
+        <div class="flex flex-row space-x-2 items-center">
+            @foreach ($post->reactionsMap() as $icon => $metadata)
+                <div>
+                    <i class="fa-solid {{$icon}} {{$metadata[1]}}"></i>
+                    {{$metadata[0]}}
+                </div>
+            @endforeach
+        </div>
+    </div>
 </article>

@@ -16,6 +16,12 @@ use Illuminate\Validation\Rules\Enum;
 
 class PostController extends Controller
 {
+    public function get_reactions(Request $request, int $id) {
+        $post = Post::find($id);
+
+        return response()->json($post->reactionsMap());
+    }
+
     public function add_reaction(Request $request, int $id) {
         // $request->validate([
         //     'type' => Rule::in(['LIKE', 'HEART', 'DISLIKE', 'STAR'])

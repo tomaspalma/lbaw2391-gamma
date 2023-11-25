@@ -1,9 +1,9 @@
-<div id="reaction-popup" class="flex flex-row post-action-bar space-x-4">
+<div id="reaction-popup" class="flex flex-row post-action-bar space-x-4 mb-2">
     <button data-entity-id="{{$entity->id}}" data-reaction-type="LIKE" class="reaction text-blue-700 rounded-lg hover:bg-blue-400 hover:text-white p-2">
         <i class="fa-regular fa-thumbs-up"></i>
         Like
     </button>
-    <button data-entity-id="{{$entity->id}}"data-reaction-type="DISLIKE" class="reaction text-red-500 rounded-lg hover:bg-red-400 hover:text-white p-2">
+    <button data-entity-id="{{$entity->id}}"data-reaction-type="DISLIKE" class="reaction dislike-reaction text-red-500 rounded-lg hover:bg-red-400 hover:text-white p-2">
         <i class="fa-regular fa-thumbs-down"></i>
         Dislike
     </button>

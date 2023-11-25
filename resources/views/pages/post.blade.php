@@ -34,6 +34,13 @@
                 @include('partials.reactions', ['entity' => $post]) 
             @endauth
         </div>
+        
+        <div class="my-4">
+            @foreach ($post->reactionsMap() as $icon => $metadata)
+                <i class="fa-solid {{$icon}} {{$metadata[1]}}"></i>
+                {{$metadata[0]}}
+            @endforeach
+        </div>
 
         @can('update', $post)
         <div class="flex justify-between items-center">

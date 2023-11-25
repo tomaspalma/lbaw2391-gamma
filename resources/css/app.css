@@ -23,4 +23,19 @@ a {
 .email-verification-link {
     @apply bg-green-500 w-full p-4 text-center text-white;
 }
+.like-color {
+    @apply text-blue-700;
+}
+
+.heart-color {
+    @apply text-purple-700;
+}
+
+.star-color {
+    @apply text-yellow-700;
+}
+
+.dislike-color {
+    @apply text-red-500;
+}
 
