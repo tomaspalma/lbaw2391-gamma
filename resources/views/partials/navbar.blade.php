@@ -13,7 +13,7 @@
 </div>
 @endif
 @endauth
-<nav class="bg-white border-black border-b mb-5 p-1.5">
+<nav class="bg-white border-black border-b mb-5 p-1.5 shadow-md">
     <div class="max-w-screen-xl flex flex-col md:flex-row flex-wrap justify-between mx-auto p-4">
         <a href="/" class="self-center text-2xl font-bold hover:underline">Gamma</a>
         <div class="flex flex-col items-center md:order-1">
@@ -93,6 +93,5 @@
                 @endauth
             </ul>
         </div>
-
     </div>
 </nav>

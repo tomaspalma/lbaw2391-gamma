@@ -76,6 +76,22 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
     }
 
+    public function post_reaction(Post $post) 
+    {
+        $reactions = Reaction::where('post_id', $post->id)->where('author', $this->id)->get();
+        
+        $user_post_reactions = [];
+        
+        foreach ($reactions as $reaction) {
+            $user_post_reactions[$reaction->type->value] = [
+                $reaction->type->getViewIcon(), 
+                $reaction->type->getViewColor(),
+            ];
+        }
+
+        return $user_post_reactions; 
+    }
+
     public function friends()
     {
         return $this->belongsToMany(User::class, 'friends', 'friend1', 'friend2')

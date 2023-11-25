@@ -39,3 +39,34 @@ a {
     @apply text-red-500;
 }
 
+.like-highlighted {
+    @apply bg-blue-400 text-white;
+}
+
+.like-nonhighlighted {
+    @apply bg-white text-blue-700;
+}
+
+.dislike-highlighted {
+    @apply bg-red-400 text-white;
+}
+
+.dislike-nonhighlighted {
+    @apply bg-white text-red-500
+}
+
+.heart-highlighted {
+    @apply bg-purple-400 text-white;
+}
+
+.heart-nonhighlighted {
+    @apply bg-white text-purple-700;
+}
+
+.star-highlighted {
+    @apply bg-yellow-400 text-white;
+}
+
+.star-nonhighlighted {
+    @apply bg-white text-yellow-700;
+}

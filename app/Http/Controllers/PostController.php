@@ -28,18 +28,30 @@ class PostController extends Controller
         // ]);
         
         $post = Post::find($id);
+        
+        $reaction_type = $request->json('type');
 
-        $this->authorize('add_reaction', $post);
+        $this->authorize('add_reaction', [$post, $reaction_type]);
 
         Reaction::create([
             'author' => $request->user()->id,
             'post_id' => $id,
-            'type' => $request->json('type')
+            'type' => $reaction_type
         ]);
     }
 
-    public function remove_reaction(Request $request) {
+    public function remove_reaction(Request $request, int $id) 
+    {
+        $reaction = Reaction::where('author', $request->user()->id)
+            ->where('post_id', $id)
+            ->where('type', $request->json('type'))
+            ->get()[0];
 
+        if ($reaction !== null) 
+        {
+            DB::table('reaction_not')->where('reaction_id', $reaction->id)->delete();
+            $reaction->delete();
+        }
     }
 
     public function showCreateForm(): View

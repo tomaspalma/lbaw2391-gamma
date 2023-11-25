@@ -68,9 +68,9 @@ class PostPolicy
         return ($user->is_private) ? Response::deny('To create public posts you must change the visibility of your profile') : Response::allow();
     }
 
-    public function add_reaction(User $user, Post $post): Response
+    public function add_reaction(User $user, Post $post, string $reaction_type): Response
     {
-        $reaction = Reaction::where('author', '=', $user->id)->where('post_id', '=', $post->id)->get();
+        $reaction = Reaction::where('author', '=', $user->id)->where('post_id', '=', $post->id)->where('type', $reaction_type)->get();
         return count($reaction) !== 1
             ? Response::allow()
             : Response::deny('You already have one reaction to this post.');

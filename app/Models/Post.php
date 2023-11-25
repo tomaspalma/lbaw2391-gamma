@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\ReactionType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -57,7 +55,7 @@ class Post extends Model
             $icon = $reaction->type->getViewIcon();
             $color = $reaction->type->getViewColor();
             if (!isset($reactions[$icon])) {
-                $reactions[$icon] = [1, $color];
+                $reactions[$icon] = [1, $color, $reaction->type->value];
             } else {
                 $reactions[$icon][0] += 1;
             }

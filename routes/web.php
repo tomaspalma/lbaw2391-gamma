@@ -76,7 +76,7 @@ Route::controller(PostController::class)->group(function () {
         Route::delete('/post/{id}', 'delete')->name('post.delete');
         Route::get('/post/{id}/reaction', 'get_reactions')->name('post.reactions');
         Route::post('/post/{id}/reaction', 'add_reaction')->name('post.add.reaction');
-        Route::delete('/post/{id}/reaction', 'delete_reaction')->name('post.remove.reaction');
+        Route::delete('/post/{id}/reaction', 'remove_reaction')->name('post.remove.reaction');
     });
 });
 
