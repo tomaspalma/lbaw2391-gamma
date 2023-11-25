@@ -56,11 +56,11 @@
 
         <div id="comments" class="mt-4">
             @forelse($comments as $comment)
-            <div class="flex space-x-4">
-                <img src="{{ $comment->author->image ?? 'hello' }}" class="rounded-full self-center w-8 h-8">
+            <div class="flex max-w-full overflow-auto space-x-4">
+                <img src="{{ $comment->owner->image ?? 'hello' }}" class="rounded-full self-center w-8 h-8">
                 <div class="grow">
                     <p class="text-gray-600">{{ $comment->owner->username }}</p>
-                    <p>{{ $comment->content }}</p>
+                    <p class="">{{ $comment->content }}</p>
                 </div>
                     @can('delete', $comment)
                         <button type="button" class="delete-comment-button bg-red-500 text-white self-center py-1 px-2 rounded-md" comment-id="{{ $comment->id }}">Delete</button>
@@ -68,7 +68,7 @@
             </div>
             <hr class="my-2">
             @empty
-            <p>No comments yet.</p>
+            <p id="no-comment">No comments yet.</p>
             @endforelse
         </div>
     </section>

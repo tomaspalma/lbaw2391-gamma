@@ -35,28 +35,22 @@ class CommentController extends Controller
         return new CommentResource($comment);
     }
 
-    public function delete(Request $request)
+    public function delete(string $id)
     {
-        $request->validate([
-            'id' => 'required|integer'
-        ]);
-
-        $comment = Comment::findOrFail($request->id);
-
-        $this->authorize('delete', $comment);
-
-        if ($comment == null) {
-            return response()->json([
-                'message' => 'Comment not found'
-            ], 404);
+        // validate id
+        if (!is_numeric($id)) {
+            // not valid. return to feed
+            return redirect('/feed');
         }
 
+        $comment = Comment::findOrFail($id);
+
+        $this->authorize('delete', $comment);
 
         DB::transaction(function () use ($comment) {
             $this->delete_comment($comment->id);
         });
         
-
         $comment->delete();
 
         return response()->json([
@@ -64,6 +58,17 @@ class CommentController extends Controller
         ], 200);
     }
 
+    /**
+     * This should be used inside a transaction
+     * 
+     * @$reaction_id The id of the user we want to delete
+     * */
+    private function delete_reaction($reaction_id)
+    {
+        DB::table('reaction_not')->where('reaction_id', $reaction_id)->delete();
+        DB::table('reaction')->where('id', $reaction_id)->delete();
+    }
+    
     /**
      * This should be used inside a transaction
      * 

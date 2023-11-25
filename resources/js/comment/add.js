@@ -21,9 +21,14 @@ function addComment() {
             // add comment to the page
             response.json()
             .then((comment) =>{
-                console.log(comment.data.display_name);
+
+                // if there is no comment yet remove the no comment message
+                if(document.getElementById('no-comment')) {
+                    document.getElementById('no-comment').remove();
+                }
+
                 /*
-                <div class="flex space-x-4">
+                <div class="flex max-w-full overflow-auto space-x-4">
                     <img src="{{ $comment->author->image ?? 'hello' }}" class="rounded-full self-center w-8 h-8">
                     <div class="grow">
                         <p class="text-gray-600">{{ $comment->owner->username }}</p>
@@ -31,9 +36,10 @@ function addComment() {
                     </div>
                     <button type="button" class="delete-comment-button bg-red-500 text-white self-center py-1 px-2 rounded-md" comment-id="{{ $comment->id }}">Delete</button>
                 </div>
+                <hr class="my-2">
                 */
                 let commentDiv = document.createElement('div');
-                commentDiv.classList.add('flex', 'space-x-4');
+                commentDiv.classList.add('flex', 'max-w-full', 'overflow-auto', 'space-x-4');
                 let image = document.createElement('img');
                 image.setAttribute('src', comment.data.image);
                 image.classList.add('rounded-full', 'self-center', 'w-8', 'h-8');
@@ -55,6 +61,13 @@ function addComment() {
                 button.addEventListener('click', deleteComment);
                 commentDiv.appendChild(button);
                 document.getElementById('comments').appendChild(commentDiv);
+
+                let hr = document.createElement('hr');
+                hr.classList.add('my-2');
+                document.getElementById('comments').appendChild(hr);
+
+                // clear comment form
+                document.getElementById('comment-form').reset();
             })
 
         }

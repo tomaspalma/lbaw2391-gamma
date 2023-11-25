@@ -8,8 +8,18 @@ export function deleteComment(deleteButton) {
     })
     .then((response) => {
         if(response.ok) {
+            // delete hr between comment
+            document.querySelector(`[comment-id="${commentId}"]`).parentElement.nextElementSibling.remove();
             // delete comment from the page
             document.querySelector(`[comment-id="${commentId}"]`).parentElement.remove();
+
+            // if there is no comment left add the no comment message
+            if(document.getElementById('comments').childElementCount == 0) {
+                let p = document.createElement('p');
+                p.setAttribute('id', 'no-comment');
+                p.innerText = 'No comments yet.';
+                document.getElementById('comments').appendChild(p);
+            }
         }
     })
     .catch((error) => {
