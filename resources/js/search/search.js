@@ -3,6 +3,31 @@ import { unblockUserAction } from "../admin/user/unblock";
 
 const csrfMeta = document.querySelector("meta[name='csrf-token']");
 
+export function createPostCard(post) {
+    return `<article class="post-card border border-black rounded-md my-4 p-2 cursor-pointer">
+        <div class="flex align-middle justify-between space-x-4">
+            <div class="flex space-x-4">
+                <img src="${post.author.image}" class="rounded-full w-10 h-10">
+                    <a class="hover:underline" href="/user/${post.author.username}">
+                        ${post.author.username}
+                    </a>
+            </div>
+            <span>
+                <time>${post.date.split(" ")[0]}</time>
+            </span>
+        </div>
+        <header class="my-4">
+            <h1 class="text-2xl">
+                <a href="/post/${post.id}" class="hover:underline">${post.title}</a>
+            </h1>
+        </header>
+        <p class="my-4">
+            ${post.content}
+        </p>
+    </article> `;
+
+}
+
 export async function searchUsers(query, searchPreviewContent, admin_page) {
     const finalQuery = (query) ? `/${query}` : '';
     const url = (admin_page) ? `/api/admin/search/users${finalQuery}` : `/api/search/users${finalQuery}`;
@@ -21,7 +46,7 @@ export async function searchUsers(query, searchPreviewContent, admin_page) {
                 searchPreviewContent.innerHTML = "";
                 for (const user of users) {
                     searchPreviewContent.innerHTML += `
-        <article data-user-image="${user.image}" data-username="${user.username}" class="my-4 p-2 border-b flex justify-between align-middle space-x-2" >
+        <article data-user-image="${user.image}" data-username="${user.username}" class="my-4 p-2 border-b flex justify-between align-middle space-x-2">
             <div class="flex flex-row space-x-2 align-middle">
                 <img class="rounded-full w-10 h-10" src="${user.image}" alt="Profile Picture">
                     <h1>
@@ -91,28 +116,7 @@ export async function searchPosts(query, searchPreviewContent) {
             } else {
                 searchPreviewContent.innerHTML = ``;
                 for (const post of posts) {
-                    searchPreviewContent.innerHTML += `
-        <article class="post-card border border-black rounded-md my-4 p-2 cursor-pointer">
-                        <div class="flex align-middle justify-between space-x-4">
-                            <div class="flex space-x-4">
-                                <img src="${post.author.image}" class="rounded-full w-10 h-10">
-                                <a class="hover:underline" href="/user/${post.author.username}">
-                                    ${post.author.username}
-                                </a>
-                            </div>
-                            <span>
-                                <time>${post.date.split(" ")[0]}</time>
-                            </span>
-                        </div>
-                        <header class="my-4">
-                            <h1 class="text-2xl">
-                                <a href="/post/${post.id}"class="hover:underline">${post.title}</a>
-                            </h1>
-                        </header>
-                        <p class="my-4">
-                            ${post.content}
-                        </p>
-                    </article> `;
+                    searchPreviewContent.innerHTML += createPostCard(post);
                 }
             }
         }
@@ -138,7 +142,7 @@ export async function searchGroups(query, searchPreviewContent) {
                 searchPreviewContent.innerHTML = "";
                 for (const group of groups) {
                     searchPreviewContent.innerHTML += `
-        <article class="my-4 p-2 border-b" >
+        <article class="my-4 p-2 border-b">
             <h1>
                 <a href="/group/${group.name}" class="underline">${group.name}</a>
             </h1>
@@ -153,7 +157,7 @@ export async function searchGroups(query, searchPreviewContent) {
 }
 
 function getNoneFoundText(entity) {
-    return `<p class="text-center"> No ${entity} found.</p>`;
+    return `<p class="text-center">No ${entity} found.</p> `;
 }
 
 export async function getSearchResults(type, query, searchPreviewContent) {

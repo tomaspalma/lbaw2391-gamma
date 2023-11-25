@@ -96,6 +96,11 @@ Route::prefix('/api')->group(function () {
         Route::get('/admin/search/users/{query?}', 'adminFullTextUsers')->middleware(['auth', EnsureUserIsAdmin::class]);
     });
 
+    Route::controller(FeedController::class)->group(function () {
+        Route::get('/feed/popular', 'show_popular');
+        Route::get('/feed/personal', 'show_personal');
+    });
+
     Route::controller(UserController::class)->group(function () {
         Route::get("/users/username/{username}", 'checkUsernameExists');
         Route::get("/users/email/{email}", 'checkEmailExists');

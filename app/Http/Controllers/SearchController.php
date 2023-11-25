@@ -34,11 +34,11 @@ class SearchController extends Controller
         $groups = [];
 
         if ($query === null) {
-            $groups = Group::where('is_private', '<>', false)->get();
+            $groups = Group::where('is_private', '<>', false)->paginate(10);
         } else {
             $groups = Group::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-                ->get();
+                ->paginate(10);
         }
 
         return response()->json($groups);
@@ -56,7 +56,7 @@ class SearchController extends Controller
                 ->where('id', '<>', 0)
                 ->where('role', '<>', 1)
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-                ->get();
+                ->paginate(15);
         }
 
         $usersJson = [];
@@ -77,11 +77,11 @@ class SearchController extends Controller
                 $users = User::where('id', '<>', 0)
                     ->where('role', '<>', 1)
                     ->where('is_private', '=', false)
-                    ->get();
+                    ->paginate(10);
             } else {
                 $users = User::where('id', '<>', 0)
                     ->where('is_private', '=', false)
-                    ->get();
+                    ->paginate(10);
             }
 
             $usersJson = [];
@@ -113,11 +113,11 @@ class SearchController extends Controller
         $rawPosts = [];
 
         if ($query === null) {
-            $rawPosts = Post::where('is_private', '<>', false)->get();
+            $rawPosts = Post::where('is_private', '<>', false)->paginate(10);
         } else {
             $rawPosts = Post::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?) and not is_private', [$query])
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-                ->get();
+                ->paginate(10);
         }
 
         $finalPosts = [];
