@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FeedController;
+use App\Http\Controllers\PusherController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\LoginController;
@@ -103,6 +104,8 @@ Route::controller(PasswordController::class)->group(function () {
     Route::get('/reset-password/{token}', 'show_reset_password')->name('password.reset');
     Route::post('/reset-password/{token}', 'reset_password')->name('password.update');
 });
+
+Route::post('/pusher/auth', [PusherController::class, 'authenticate'])->middleware('auth');
 
 Route::prefix('/api')->group(function () {
     Route::controller(SearchController::class)->group(function () {

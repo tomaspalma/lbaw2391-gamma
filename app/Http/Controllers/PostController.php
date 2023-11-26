@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ReactionType;
+use App\Events\Reaction as EventsReaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -44,6 +45,8 @@ class PostController extends Controller
             'post_id' => $id,
             'type' => $reaction_type
         ]);
+
+        event(new EventsReaction($post->owner->username, $request->user(), $reaction_type, $id, null));
     }
 
     public function remove_reaction(Request $request, int $id) 
