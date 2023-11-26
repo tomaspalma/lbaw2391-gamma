@@ -23,7 +23,7 @@
     <p class="my-4">
         {{ $post->content }}
     </p>
-    @if($preview === "false")
+    @if($preview === false)
         @php
             $f = function($user, $post) {
                 return $user->post_reaction($post);

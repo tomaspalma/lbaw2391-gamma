@@ -17,7 +17,7 @@ use Illuminate\Validation\Rules\Enum;
 
 class PostController extends Controller
 {
-    public function show_post_card(int $id, string $preview) {
+    public function show_post_card(int $id, bool $preview) {
         $post = Post::find($id);
 
         return view('partials.post_card', ['post' => $post, 'preview' => $preview]);
@@ -39,13 +39,13 @@ class PostController extends Controller
         $reaction_type = $request->json('type');
 
         $this->authorize('add_reaction', [$post, $reaction_type]);
-
+        
         Reaction::create([
             'author' => $request->user()->id,
             'post_id' => $id,
             'type' => $reaction_type
         ]);
-
+            
         event(new EventsReaction($post->owner->username, $request->user(), $reaction_type, $id, null));
     }
 
@@ -58,8 +58,10 @@ class PostController extends Controller
 
         if ($reaction !== null) 
         {
-            DB::table('reaction_not')->where('reaction_id', $reaction->id)->delete();
-            $reaction->delete();
+            DB::transaction(function() use ($reaction) {
+                DB::table('reaction_not')->where('reaction_id', $reaction->id)->delete();
+                $reaction->delete();
+            });
         }
     }
 

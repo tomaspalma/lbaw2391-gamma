@@ -18,6 +18,5 @@ use Illuminate\Support\Facades\Broadcast;
 // });
 
 Broadcast::channel('user.{username}', function ($user, $username) {
-  // return $user->username === $username;
-    return true;
+    return $user->username === $username;
 });

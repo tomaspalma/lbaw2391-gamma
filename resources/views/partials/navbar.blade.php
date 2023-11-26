@@ -73,7 +73,7 @@
                 <li>
                     <form method="POST" action="{{ route('logout') }}" class="block py-2 pl-3 pr-4 mb-0">
                         @csrf
-                        <button type="submit">Logout</button>
+                        <button type="submit" class="hover:underline">Logout</button>
                     </form>
                 </li>
                 @endauth
