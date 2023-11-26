@@ -58,4 +58,12 @@ class PostPolicy
             ? Response::allow()
             : Response::deny('You must be the owner of this post to delete it.');
     }
+
+    /**
+     * Determine whether the user can have public posts.
+     */
+    public function publicPost(User $user): Response
+    {
+        return ($user->is_private) ? Response::deny('To create public posts you must change the visibility of your profile') : Response::allow();
+    }
 }
