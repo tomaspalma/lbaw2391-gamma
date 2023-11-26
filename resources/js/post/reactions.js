@@ -1,16 +1,5 @@
 import { getCsrfToken } from "../utils";
 
-const reactionPopupMenuToggles = document.querySelectorAll(".toggle-reaction-popup");
-for (const reactionPopupMenuToggle of reactionPopupMenuToggles) {
-    const reactionPopupMenu = reactionPopupMenuToggle.querySelector(".other-reactions-popup-menu");
-
-    reactionPopupMenuToggle.addEventListener("click", function() {
-        reactionPopupMenu.classList.contains("hidden")
-            ? reactionPopupMenu.classList.remove("hidden")
-            : reactionPopupMenu.classList.add("hidden");
-    });
-}
-
 function reactionAlreadyPresent(entityId, reactionType) {
     const article = document.querySelector(`[data-entity-id="${entityId}"]`);
     const reactionsList = article.querySelector(".reactions-list");
@@ -142,10 +131,27 @@ async function interactReaction(reaction) {
     }
 }
 
-const reactions = document.querySelectorAll(".reaction");
-for (const reaction of reactions) {
-    reaction.addEventListener("click", async () => {
-        console.log("clicked: ", reaction);
-        await interactReaction(reaction);
-    });
+export function initReactionJs() {
+    const reactionPopupMenuToggles = document.querySelectorAll(".toggle-reaction-popup");
+    for (const reactionPopupMenuToggle of reactionPopupMenuToggles) {
+        const reactionPopupMenu = reactionPopupMenuToggle.querySelector(".other-reactions-popup-menu");
+
+        reactionPopupMenuToggle.addEventListener("click", function() {
+            console.log("clicked");
+            reactionPopupMenu.classList.contains("hidden")
+                ? reactionPopupMenu.classList.remove("hidden")
+                : reactionPopupMenu.classList.add("hidden");
+        });
+    }
+
+
+    const reactions = document.querySelectorAll(".reaction");
+    for (const reaction of reactions) {
+        reaction.addEventListener("click", async () => {
+            console.log("clicked: ", reaction);
+            await interactReaction(reaction);
+        });
+    }
 }
+
+initReactionJs();

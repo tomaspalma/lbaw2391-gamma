@@ -16,6 +16,12 @@ use Illuminate\Validation\Rules\Enum;
 
 class PostController extends Controller
 {
+    public function show_post_card(int $id, string $preview) {
+        $post = Post::find($id);
+
+        return view('partials.post_card', ['post' => $post, 'preview' => $preview]);
+    }
+
     public function get_reactions(Request $request, int $id) {
         $post = Post::find($id);
 

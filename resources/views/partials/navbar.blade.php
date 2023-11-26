@@ -17,7 +17,6 @@
     <div class="max-w-screen-xl flex flex-col md:flex-row flex-wrap justify-between mx-auto p-4">
         <a href="/" class="self-center text-2xl font-bold hover:underline">Gamma</a>
         <div class="flex flex-col items-center md:order-1">
-
             <form id="mobile-search-form" class="relative md:hidden">
                 <input name="search" type="text" id="mobile-search-trigger" class="mt-4 md:hidden block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
             </form>

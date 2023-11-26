@@ -1,5 +1,5 @@
 <head>
-    @vite(['resources/css/app.css', 'resources/js/post/reactions.js'])
+    @vite(['resources/css/app.css'])
 </head>
 
 <article data-entity-id="{{$post->id}}" class="shadow-md post-card border border-black rounded-md my-4 p-2 cursor-pointer">
@@ -23,10 +23,12 @@
     <p class="my-4">
         {{ $post->content }}
     </p>
-    @php
-        $f = function($user, $post) {
-            return $user->post_reaction($post);
-        }
-    @endphp
-    @include('partials.reactions', ['entity' => $post, 'entity_function' => $f])
+    @if($preview === "false")
+        @php
+            $f = function($user, $post) {
+                return $user->post_reaction($post);
+            }
+        @endphp
+        @include('partials.reactions', ['entity' => $post, 'entity_function' => $f])
+    @endif
 </article>
