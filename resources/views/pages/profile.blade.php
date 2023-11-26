@@ -29,7 +29,7 @@
         <div class="mt-6 flex flex-col md:flex-row -mx-3">
             <div class="md:flex-1 px-3">
                 <div class="mb-4">
-                    <img src="{{$user->image}}" alt="User Profile"
+                    <img src="{{ $user->getProfileImage() }}" alt="User Profile"
                         class="rounded-full w-32 h-32 md:w-48 md:h-48 mx-auto">
                 </div>
                 <div class="flex items-end mb-4 justify-center">

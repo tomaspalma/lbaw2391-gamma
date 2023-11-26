@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\FileController;
+
 class UserController extends Controller
 {
     public function show(string $username): View
@@ -83,8 +85,7 @@ class UserController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('profile_images', 'public');
-            $user->image = asset('storage/' . $imagePath);
+            FileController::upload($request->file('image'), 'profile', $user->id);
         }
 
         // Save the changes
