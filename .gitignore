@@ -19,3 +19,5 @@ yarn-error.log
 /.vscode
 .php-cs-fixer.cache
 package-lock.json
+/public/profile/*
+/public/post/*
