@@ -54,7 +54,9 @@
         </div>
     </div>
     @forelse($posts as $post)
-        @include('partials.post_card', ['post'=> $post])
+        @can('view', $post)
+            @include('partials.post_card', ['post'=> $post])
+        @endcan
     @empty <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No posts found.</p>
     @endforelse
 </div>
