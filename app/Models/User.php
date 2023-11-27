@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Hash;
 
+use App\Http\Controllers\FileController;
+
 class User extends Authenticatable implements CanResetPassword
 {
     use HasApiTokens;
@@ -116,11 +118,8 @@ class User extends Authenticatable implements CanResetPassword
         return $this->hasOne(AppBan::class, 'banned_user_id');
     }
 
-    /**
-     * Get the cards for a user.
-     */
-    public function cards(): HasMany
+    public function getProfileImage()
     {
-        return $this->hasMany(Card::class);
+        return FileController::get('profile', $this->id);
     }
 }
