@@ -47,7 +47,7 @@
 
         @forelse($comments as $comment)
         <div class="flex space-x-4">
-            <img src="{{ $comment->author->getProfileImage() ?? 'hello' }}" class="rounded-full w-8 h-8">
+            <img src="{{ $comment->owner->getProfileImage() ?? 'hello' }}" class="rounded-full w-8 h-8">
             <div>
                 <p class="text-gray-600">{{ $comment->owner->username }}</p>
                 <p>{{ $comment->content }}</p>
