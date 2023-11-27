@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Passwords\CanResetPassword as PasswordsCanResetPassword;
 use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,12 +19,10 @@ use Laravel\Sanctum\HasApiTokens;
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Facades\Hash;
 
 use App\Http\Controllers\FileController;
 
-class User extends Authenticatable implements CanResetPassword
+class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
@@ -58,6 +57,7 @@ class User extends Authenticatable implements CanResetPassword
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verified_at'
     ];
 
     /**
@@ -81,6 +81,10 @@ class User extends Authenticatable implements CanResetPassword
         return $this->belongsToMany(User::class, 'friends', 'friend1', 'friend2')
             ->union($this->belongsToMany(User::class, 'friends', 'friend2', 'friend1'))
             ->where('id', '<>', $this->id);
+    }
+
+    public function has_verified_email(): bool {
+        return $this->email_verified_at !== null;
     }
 
     public function is_friend(User $user): bool
