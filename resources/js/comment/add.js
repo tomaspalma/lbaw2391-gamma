@@ -27,17 +27,6 @@ function addComment() {
                     document.getElementById('no-comment').remove();
                 }
 
-                /*
-                <div class="flex max-w-full overflow-auto space-x-4">
-                    <img src="{{ $comment->author->image ?? 'hello' }}" class="rounded-full self-center w-8 h-8">
-                    <div class="grow">
-                        <p class="text-gray-600">{{ $comment->owner->username }}</p>
-                        <p>{{ $comment->content }}</p>
-                    </div>
-                    <button type="button" class="delete-comment-button bg-red-500 text-white self-center py-1 px-2 rounded-md" comment-id="{{ $comment->id }}">Delete</button>
-                </div>
-                <hr class="my-2">
-                */
                 let commentDiv = document.createElement('div');
                 commentDiv.classList.add('flex', 'max-w-full', 'overflow-auto', 'space-x-4');
                 let image = document.createElement('img');

@@ -35,13 +35,8 @@ class CommentController extends Controller
         return new CommentResource($comment);
     }
 
-    public function delete(string $id)
+    public function delete(int $id)
     {
-        // validate id
-        if (!is_numeric($id)) {
-            // not valid. return to feed
-            return redirect('/feed');
-        }
 
         $comment = Comment::findOrFail($id);
 
