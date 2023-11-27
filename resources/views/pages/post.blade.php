@@ -13,12 +13,12 @@
         <div class="flex justify-between items-center">
             <h2 class="text-4xl font-bold">{{ $post->title }}</h2>
             <span class="text-gray-600">
-                <time>{{ $post->date }}</time>
+                <time>{{ $post->format_date() }}</time>
             </span>
         </div>
 
         <div class="flex space-x-4 mt-4">
-            <img src="{{ $post->owner->image ?? 'hello' }}" class="rounded-full w-10 h-10">
+            <img src="{{ $post->owner->getProfileImage() ?? 'hello' }}" class="rounded-full w-10 h-10">
             <a class="text-lg text-gray-600 hover:underline" href="{{ route('profile',['username' => $post->owner->username]) }}">{{ $post->owner->username }}</a>
             @if($post->group)
             <a class="text-lg text-gray-600 hover:underline">@ {{ $post->group->name }}</a>
@@ -57,7 +57,7 @@
         <div id="comments" class="mt-4">
             @forelse($comments as $comment)
             <div class="flex max-w-full overflow-auto space-x-4">
-                <img src="{{ $comment->owner->image ?? 'hello' }}" class="rounded-full self-center w-8 h-8">
+                <img src="{{ $comment->owner->getProfileImage() ?? 'hello' }}" class="rounded-full self-center w-8 h-8">
                 <div class="grow">
                     <p class="text-gray-600">{{ $comment->owner->username }}</p>
                     <p class="">{{ $comment->content }}</p>

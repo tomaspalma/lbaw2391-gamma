@@ -6,11 +6,13 @@ use Illuminate\View\View;
 
 use App\Models\User;
 use App\Models\AppBan;
-
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\FileController;
 
 class UserController extends Controller
 {
@@ -18,12 +20,22 @@ class UserController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        $posts = $user->publicPosts()->orderBy('date', 'desc')->get();
+        $posts = $user->posts()->orderBy('date', 'desc')->get();
 
         return view('pages.profile', [
             'user' => $user,
             'posts' => $posts
         ]);
+    }
+
+    public static function reset_password(User $user, string $password)
+    {
+        $user->forceFill([
+            'password' => Hash::make($password)
+        ]);
+        $user->save();
+
+        event(new PasswordReset($user));
     }
 
     public function edit(Request $request, string $username)
@@ -73,8 +85,7 @@ class UserController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('profile_images', 'public');
-            $user->image = asset('storage/' . $imagePath);
+            FileController::upload($request->file('image'), 'profile', $user->id);
         }
 
         // Save the changes
@@ -213,4 +224,7 @@ class UserController extends Controller
             ->delete();
     }
 
+    public function send_reset_password(User $user)
+    {
+    }
 }
