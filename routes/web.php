@@ -101,6 +101,10 @@ Route::prefix('/api')->group(function () {
         Route::get('/feed/personal', 'show_personal');
     });
 
+    Route::controller(PostController::class)->group(function() {
+        Route::get('/post/{id}/card/{preview}', 'show_post_card');
+    });
+
     Route::controller(UserController::class)->group(function () {
         Route::get("/users/username/{username}", 'checkUsernameExists');
         Route::get("/users/email/{email}", 'checkEmailExists');

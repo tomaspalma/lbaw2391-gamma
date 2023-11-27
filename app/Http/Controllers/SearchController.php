@@ -16,6 +16,21 @@ class SearchController extends Controller
 {
     public function showSearch(Request $request, string $query = null)
     {
+        $toggled = $request->input('toggled');
+
+        $entities = null;
+        switch($toggled) {
+            case 'users':
+                $entities = $this->fullTextUsers($request, $query);
+                break;
+            case 'posts':
+                $entities = $this->fullTextPosts($request, $query, false);
+                break;
+            case 'groups':
+                $entities = $this->fullTextGroups($request, $query);
+                break;
+        }
+
         return view('pages.search', [
             'query' => $query,
             'hidden' => false,
@@ -23,8 +38,9 @@ class SearchController extends Controller
             'previewMenuWidth' => 'w-full',
             'previewMenuPosAbs' => false,
             'previewMenuName' => 'main-search',
-            'toggled' => $request->input('toggled'),
-            'isMobile' => false
+            'toggled' => $toggled,
+            'isMobile' => false,
+            'entities' => $entities
         ]);
     }
 
@@ -41,7 +57,11 @@ class SearchController extends Controller
                 ->paginate(10);
         }
 
-        return response()->json($groups);
+        if($request->ajax()) {
+            return response()->json($groups);
+        } else {
+            return $groups;
+        }
     }
 
     /**
@@ -50,7 +70,7 @@ class SearchController extends Controller
     public function adminFullTextUsers(string $query = null)
     {
         if ($query === null) {
-            $users = User::where('id', '<>', 0)->where('role', '<>', 1)->get();
+            $users = User::where('id', '<>', 0)->where('role', '<>', 1)->paginate(15);
         } else {
             $users = User::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
                 ->where('id', '<>', 0)
@@ -84,12 +104,16 @@ class SearchController extends Controller
                     ->paginate(10);
             }
 
-            $usersJson = [];
-            for ($i = 0; $i < count($users); $i++) {
-                $usersJson[] = new UserResource($users[$i]);
-            }
+            if($request->ajax()) {
+                $usersJson = [];
+                for ($i = 0; $i < count($users); $i++) {
+                    $usersJson[] = new UserResource($users[$i]);
+                }
 
-            return response()->json($usersJson);
+                return response()->json($usersJson);
+            } else {
+                return $users;
+            }
         } else {
             $users = [];
 
@@ -97,18 +121,22 @@ class SearchController extends Controller
                 ->where('is_private', '=', false)
                 ->where('id', '<>', 0)
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-                ->get();
+                ->paginate(15);
+            
+            if($request->ajax()) {
+                $usersJson = [];
+                for ($i = 0; $i < count($users); $i++) {
+                    $usersJson[] = new UserResource($users[$i]);
+                }
 
-            $usersJson = [];
-            for ($i = 0; $i < count($users); $i++) {
-                $usersJson[] = new UserResource($users[$i]);
+                return response()->json($usersJson);
+            } else {
+                return $users;
             }
-
-            return response()->json($usersJson);
         }
     }
 
-    public function fullTextPosts(Request $request, string $query = null)
+    public function fullTextPosts(Request $request, string $query = null, bool $api = true)
     {
         $rawPosts = [];
 
@@ -119,12 +147,20 @@ class SearchController extends Controller
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
                 ->paginate(10);
         }
+        
+        if($api) {
+            $post_cards = [];
+            foreach($rawPosts as $post) {
+                $post_cards[] = view('partials.post_card', ['post' => new PostResource($post), 'preview' => true])->render(); 
+            }
 
-        $finalPosts = [];
-        for ($i = 0; $i < count($rawPosts); $i++) {
-            $finalPosts[] = new PostResource($rawPosts[$i]);
+            return response()->json($post_cards);
+        } else {
+            return $rawPosts;
         }
-
-        return response()->json($finalPosts);
     }
 }
+
+/*
+ ArgumentCountError: Too few arguments to function App\Http\Controllers\SearchController::fullTextPosts(), 2 passed in /home/tomaspalma/lbaw2391/vendor/laravel/framework/src/Illuminate/Routing/Controller.php on line 54 and exactly 3 expected in file /home/tomaspalma/lbaw2391/app/Http/Controllers/SearchController.php on line 139
+*/

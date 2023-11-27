@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,6 +13,12 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
+    public function show_post_card(int $id, string $preview) {
+        $post = Post::find($id);
+
+        return view('partials.post_card', ['post' => new PostResource($post), 'preview' => $preview]);
+    }
+
     public function showCreateForm(): View
     {
 

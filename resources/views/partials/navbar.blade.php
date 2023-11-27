@@ -24,7 +24,9 @@
             'previewMenuPosAbs' => false,
             'previewMenuName' => 'search-input',
             'toggled' => 'users',
-            'isMobile' => true
+            'isMobile' => true,
+            'entities' => [],
+            'query' => null,
             ])
 
             @include('partials.search.search_preview', [
@@ -34,7 +36,9 @@
             'previewMenuPosAbs' => true,
             'previewMenuName' => 'search-input',
             'toggled' => 'users',
-            'isMobile' => false
+            'isMobile' => false,
+            'entities' => [],
+            'query' => null
             ])
         </div>
         <div class="items-center w-full md:flex md:w-auto md:order-1">

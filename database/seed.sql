@@ -580,11 +580,11 @@ INSERT INTO users (id, username, email, password, academic_status, display_name,
         (11, 2, 'Python 6.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
         (12, 2, 'Python 7.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
         (13, 2, 'Python 8.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (14, 2, 'Python 8.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (15, 2, 'Python 8.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (16, 2, 'Python 8.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (17, 2, 'Python 8.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (18, 2, 'Python 8.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days');
+        (14, 2, 'Python 9.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (15, 2, 'Python 10.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (16, 2, 'Python 11.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (17, 2, 'Python 12.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (18, 2, 'Python 13.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days');
 
 
     INSERT INTO comment (id, post_id, author, content, date) VALUES
