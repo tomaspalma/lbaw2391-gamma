@@ -16,7 +16,9 @@ export function deletePostAction(deleteConfirmationTriggerButton) {
 
 const deletePostButton = document.querySelector(".delete-post-button");
 
-deletePostButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    deletePostAction(deletePostButton);
-});
+if(deletePostButton) {
+    deletePostButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        deletePostAction(deletePostButton);
+    });
+}
