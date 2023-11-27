@@ -5,6 +5,18 @@
 @tailwind utilities;
 
 a {
-    @apply hover:underline;
+    @apply hover:underline cursor-pointer;
+}
+
+.title {
+    @apply text-2xl;
+}
+
+.success {
+    @apply text-green-500;
+}
+
+.blue-link-color {
+    @apply text-blue-500;
 }
 

@@ -158,12 +158,22 @@ paths:
                   description: 'The user was not registered with success. Redirect to the login form'
                   value: '/login'
 
-  /api/sendResetPassword:
+  /forgot-password:
+
+    get:
+      operationId: R106
+      summary: 'R106: Forgot Password Form'
+      description: 'Get the view for the form where someone can submit a reset password request. Access: VST'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Forgot form password returned'
 
     post:
-      operationId: R106
-      summary: 'R106: Send Email Action'
-      description: 'Sends an email with a certain type. Access: VST'
+      operationId: R107
+      summary: 'R107: Send Forgot Password Email Action'
+      description: 'Sends an email with a link to a user to reset their password. Access: VST'
       tags:
         - 'M01: Authentication'
       requestBody:
@@ -181,11 +191,11 @@ paths:
         '200':
           description: 'OK. An email with a password link was sent.'
 
-  /resetPassword/{token}:
+  /reset-password/{token}:
 
     get:
-      operationId: R107
-      summary: 'R107: Register Form'
+      operationId: R108
+      summary: 'R108: Reset Password Form'
       description: 'Get the view for the form to reset the password. Access: VST'
       tags:
         - 'M01: Authentication'
@@ -200,8 +210,8 @@ paths:
           description: 'Reset the password form returned'
 
     post:
-      operationId: R108
-      summary: 'R108: Reset Password'
+      operationId: R109
+      summary: 'R109: Reset Password'
       description: 'Sends a reset password request. Access: VST'
       tags:
         - 'M01: Authentication'
@@ -218,11 +228,14 @@ paths:
             schema:
               type: object
               properties:
+                email:
+                  type: string
                 new_password:
                   type: string
                 confirm_new_password:
                   type: string
               required:
+                - email
                 - new_password
                 - confirm_new_password
       responses:
@@ -234,8 +247,8 @@ paths:
   /api/sendVerifyEmail:
 
     post:
-      operationId: R109
-      summary: 'R109: Send Email Action'
+      operationId: R110
+      summary: 'R110: Send Email Action'
       description: 'Sends an email with a certain type. Access: VST'
       tags:
         - 'M01: Authentication'
@@ -259,8 +272,8 @@ paths:
   /verifyEmail/{token}:
 
     get:
-      operationId: R110
-      summary: 'R110: Verify Email Form'
+      operationId: R111
+      summary: 'R111: Verify Email Form'
       description: 'Get the view for the form to reset the password. Access: VST'
       tags:
         - 'M01: Authentication'
@@ -275,8 +288,8 @@ paths:
           description: 'Reset the verify email form returned'
 
     post:
-      operationId: R111
-      summary: 'R111: Send Verify Email Request'
+      operationId: R112
+      summary: 'R112: Send Verify Email Request'
       description: 'Sends a verify email request to the server'
       parameters:
         - in: path

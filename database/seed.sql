@@ -1,6 +1,7 @@
 CREATE SCHEMA IF not exists lbaw2391;
 
 DROP TABLE IF exists users CASCADE;
+DROP TABLE IF exists password_reset_tokens CASCADE;
 DROP TABLE IF exists post CASCADE;
 DROP TABLE IF exists groups CASCADE;
 DROP TABLE IF exists group_owner CASCADE;
@@ -31,6 +32,7 @@ CREATE TYPE reaction_types AS ENUM ('LIKE', 'DISLIKE', 'HEART', 'STAR');
 -- Tables
 -----------------------------------------
 
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL CONSTRAINT unique_username UNIQUE,
@@ -41,6 +43,12 @@ CREATE TABLE users (
     display_name TEXT,
     is_private BOOLEAN DEFAULT true NOT NULL,
     role INTEGER NOT NULL
+);
+
+CREATE TABLE password_reset_tokens (
+    email TEXT PRIMARY KEY,
+    token TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now() CHECK (created_at <= now())
 );
 
 CREATE TABLE groups (
