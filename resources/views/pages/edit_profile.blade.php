@@ -75,8 +75,11 @@
                         class="mt-1 py-2 px-3 border rounded-md w-full">
                 </div>
                 @endcan
-                <div class="mb-4">
+                <div class="mt-8 flex">
                     <button type="submit" class="bg-black text-white px-4 py-2 rounded">Save Changes</button>
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded ml-2"
+                        onclick="window.location.href = '{{ route('profile', ['username' => $user->username]) }}'">
+                        Cancel
                 </div>
             </div>
         </form>
