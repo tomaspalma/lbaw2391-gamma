@@ -12,7 +12,12 @@
 <div class="max-w-screen-md mx-auto pb-4">
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black">
         <div class="flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-gray-700 text-center items-center">User Profile</h2>
+            <button class="text-black font-bold py-2 px-4 rounded opacity-0 cursor-default">
+                <i class="fas fa-ellipsis-v"></i>                     
+            </button>
+            <div class="flex-grow text-center">
+                <h2 class="text-2xl font-bold text-gray-700">Profile</h2>
+            </div>
             @can('update', $user)
             <div class="relative inline-block text-left">
                 <button id="dropdownButton" class="text-black font-bold py-2 px-4 rounded">
@@ -29,7 +34,7 @@
         <div class="mt-6 flex flex-col md:flex-row -mx-3">
             <div class="md:flex-1 px-3">
                 <div class="mb-4">
-                    <img src="{{$user->image}}" alt="User Profile"
+                    <img src="{{ $user->getProfileImage() }}" alt="User Profile"
                         class="rounded-full w-32 h-32 md:w-48 md:h-48 mx-auto">
                 </div>
                 <div class="flex items-end mb-4 justify-center">
@@ -54,7 +59,9 @@
         </div>
     </div>
     @forelse($posts as $post)
-        @include('partials.post_card', ['post'=> $post])
+        @can('view', $post)
+            @include('partials.post_card', ['post'=> $post])
+        @endcan
     @empty <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No posts found.</p>
     @endforelse
 </div>

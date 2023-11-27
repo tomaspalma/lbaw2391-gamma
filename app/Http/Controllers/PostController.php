@@ -36,6 +36,11 @@ class PostController extends Controller
             'is_private' => 'required|boolean'
         ]);
 
+        if(!$request->is_private)
+        {
+            $this->authorize('publicPost', Post::class);
+        }
+
         $last_id = DB::select('SELECT id FROM post ORDER BY id DESC LIMIT 1')[0]->id;
         $new_id = $last_id + 1;
 
@@ -114,6 +119,11 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
         $this->authorize('update', $post);
+
+        if(!$request->is_private)
+        {
+            $this->authorize('publicPost', Post::class);
+        }
 
         $post->update([
             'title' => $request->title,

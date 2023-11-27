@@ -4,10 +4,12 @@ use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
 
@@ -40,7 +42,7 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
 
 Route::controller(FeedController::class)->group(function () {
     Route::get('/feed', 'show_popular');
-    Route::get('/feed/personal', 'show_personal')->middleware('auth');
+    Route::get('/feed/personal', 'show_personal');
 });
 
 // Authentication
@@ -49,23 +51,28 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('/login', 'authenticate');
     Route::post('/logout', 'logout')->name('logout');
 });
+
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
 
-Route::controller(CheckEmailExistsController::class)->group(function () {
-    Route::get('/checkEmailExists', 'checkEmail');
+Route::controller(EmailController::class)->group(function () {
+    Route::get('/email/verify', 'show_email_verification_notice')->middleware('auth')->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', 'verify')->middleware(['auth', 'signed'])->name('verification.verify');
+    Route::post('/email/verification-notification', 'resend_verification')->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 });
 
 // Posts
 Route::controller(PostController::class)->group(function () {
-    Route::get('/post', 'showCreateForm')->name('post.createForm');
-    Route::post('/post', 'create')->name('post.create');
     Route::get('/post/{id}', 'showPost')->name('post.show');
-    Route::get('/post/{id}/edit', 'showEditForm');
-    Route::put('/post/{id}/edit', 'update')->name('post.update');
-    Route::delete('/post/{id}', 'delete')->name('post.delete');
+    Route::middleware('auth')->group(function () {
+        Route::get('/post', 'showCreateForm')->name('post.createForm')->middleware('verified');
+        Route::post('/post', 'create')->name('post.create')->middleware('verified');
+        Route::get('/post/{id}/edit', 'showEditForm');
+        Route::put('/post/{id}/edit', 'update')->name('post.update');
+        Route::delete('/post/{id}', 'delete')->name('post.delete');
+    });
 });
 
 Route::controller(SearchController::class)->group(function () {
@@ -77,6 +84,13 @@ Route::controller(AdminController::class)->middleware(['auth', EnsureUserIsAdmin
         Route::get("/user", 'show_admin_user');
         Route::get("/user/create", 'show_create_user')->name('admin_create_user');
     });
+});
+
+Route::controller(PasswordController::class)->group(function () {
+    Route::get('/forgot-password', 'show_forgot_password')->name('password.request');
+    Route::post('/forgot-password', 'send_forgot_password_request')->name('send_reset_password_request');
+    Route::get('/reset-password/{token}', 'show_reset_password')->name('password.reset');
+    Route::post('/reset-password/{token}', 'reset_password')->name('password.update');
 });
 
 Route::prefix('/api')->group(function () {

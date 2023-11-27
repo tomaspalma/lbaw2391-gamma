@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -46,7 +47,7 @@ class RegisterController extends Controller
         $last_id = DB::select('SELECT id FROM users ORDER BY id DESC LIMIT 1')[0]->id;
         $new_id = $last_id + 1;
 
-        User::create([
+        $user = User::create([
             'id' => $new_id,
             'username' => $request->username,
             'email' => $request->email,
@@ -65,8 +66,14 @@ class RegisterController extends Controller
                 ->withSuccess('User created with success');
         }
 
+
+        // So that the user received an verification email to their emails
+        event(new Registered($user));
+
         Auth::attempt($credentials);
         $request->session()->regenerate();
+
+
         return redirect('/feed');
     }
 }
