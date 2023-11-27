@@ -20,7 +20,7 @@ class UserController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        $posts = $user->publicPosts()->orderBy('date', 'desc')->get();
+        $posts = $user->posts()->orderBy('date', 'desc')->get();
 
         return view('pages.profile', [
             'user' => $user,

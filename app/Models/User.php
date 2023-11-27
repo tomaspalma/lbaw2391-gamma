@@ -103,10 +103,6 @@ class User extends Authenticatable implements CanResetPassword
         return $this->hasMany(Comment::class, "author");
     }
 
-    public function publicPosts(): HasMany
-    {
-        return $this->hasMany(Post::class, "author")->where("is_private", false);
-    }
     public function is_admin(): bool
     {
         return $this->role === 1;

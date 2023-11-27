@@ -34,7 +34,11 @@
             <div class="mb-4">
                 <label for="is_private" class="block text-sm font-medium text-gray-600">Privacy:</label>
                 <select name="is_private" id="is_private" class="mt-1 p-2 border border-gray-300 rounded-md w-full" required>
-                    <option value="0" {{ $post->is_private == 0 ? 'selected' : '' }}>Public</option>
+                    @can('publicPost', App\Models\Post::class)
+                        <option value="0" {{ $post->is_private == 0 ? 'selected' : '' }}>Public</option>
+                    @else
+                        <option value="0" disabled>Public</option>
+                    @endcan
                     <option value="1" {{ $post->is_private == 1 ? 'selected' : '' }}>Private</option>
                 </select>
             </div>
