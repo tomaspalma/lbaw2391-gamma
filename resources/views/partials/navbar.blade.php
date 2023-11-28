@@ -78,7 +78,7 @@
                 </li>
                 @endauth
                 <li>
-                    <a href="#" class="block py-2 pl-3 pr-4">
+                    <a href="/notifications" class="block py-2 pl-3 pr-4">
                         <i class="hidden md:inline fa-solid fa-bell"></i>
                         <span class="md:hidden">Notifications</span>
                     </a>

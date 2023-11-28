@@ -11,6 +11,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
@@ -64,6 +65,10 @@ Route::controller(EmailController::class)->group(function () {
     Route::get('/email/verify', 'show_email_verification_notice')->middleware('auth')->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', 'verify')->middleware(['auth', 'signed'])->name('verification.verify');
     Route::post('/email/verification-notification', 'resend_verification')->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+});
+
+Route::controller(NotificationController::class)->middleware('auth')->group(function () {
+    Route::get('/notifications', 'show_notifications');
 });
 
 // Posts

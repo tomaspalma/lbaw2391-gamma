@@ -1040,8 +1040,29 @@ paths:
                     description: A group dedicated to discussing the latest technology trends and innovations
                     is_private: True
     
-  
+   
+  /notifications:
 
+    get: 
+      operationId: R901
+      summary: 'R901: Notifications page'
+      description: 'Page where a user can view their notifications. Access: USR'
+      tags:
+        - 'M09: Notifications' 
+      responses:
+        '200':
+          description: 'OK. Show Search UI'
+        '302':
+          description: 'Redirect if user is logged out.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                '302 Success':
+                  description: 'OK. Redirect to login page.'
+                  value: '/login'
+         
 
 
         
