@@ -14,12 +14,21 @@ class GroupController extends Controller
     {   
         $group = Group::findOrFail($id);
         $posts = $group->posts();
+        $members = $group->users();
         return view('pages.group', ['feed' => 'posts',
         'posts' => $posts,
-        'group' => $id]);
+        'group' => $group,
+        'members' => $members]);
     }
 
     public function showGroupMembers(string $id): View{
-        return view('pages.group', ['feed' => 'members', 'members' => [], 'group' => $id]);
+
+        $group = Group::findOrFail($id);
+        $members = $group->users();
+        $posts = $group->posts();
+        return view('pages.group', ['feed' => 'members', 
+        'members' => $members,
+        'posts' => $posts,
+        'group' => $group]);
     }
 }
