@@ -29,7 +29,7 @@
             <p class="text-center">No posts found.</p>
         @else
             @for($i = 0; $i < count($posts); $i++) 
-                @include('partials.post_card', ['post'=> $posts[$i]])
+                @include('partials.post_card', ['post'=> $posts[$i], 'preview' => false])
             @endfor
         @endif
     @else

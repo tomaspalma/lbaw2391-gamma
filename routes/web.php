@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FeedController;
+use App\Http\Controllers\PusherController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\LoginController;
@@ -15,6 +16,7 @@ use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
 
 use App\Http\Controllers\PostController;
+use App\Http\Middleware\EnsurePostExists;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +75,9 @@ Route::controller(PostController::class)->group(function () {
         Route::get('/post/{id}/edit', 'showEditForm');
         Route::put('/post/{id}/edit', 'update')->name('post.update');
         Route::delete('/post/{id}', 'delete')->name('post.delete');
+        Route::get('/post/{id}/reaction', 'get_reactions')->name('post.reactions');
+        Route::post('/post/{id}/reaction', 'add_reaction')->name('post.add.reaction');
+        Route::delete('/post/{id}/reaction', 'remove_reaction')->name('post.remove.reaction');
     });
 });
 
@@ -100,12 +105,18 @@ Route::controller(PasswordController::class)->group(function () {
     Route::post('/reset-password/{token}', 'reset_password')->name('password.update');
 });
 
+Route::post('/pusher/auth', [PusherController::class, 'authenticate'])->middleware('auth');
+
 Route::prefix('/api')->group(function () {
     Route::controller(SearchController::class)->group(function () {
         Route::get('/search/groups/{query?}', 'fullTextGroups');
         Route::get('/search/users/{query?}', 'fullTextUsers');
         Route::get('/search/posts/{query?}', 'fullTextPosts');
         Route::get('/admin/search/users/{query?}', 'adminFullTextUsers')->middleware(['auth', EnsureUserIsAdmin::class]);
+    });
+
+    Route::controller(PostController::class)->group(function() {
+        Route::get('/post/{id}/card/{preview}', 'show_post_card');
     });
 
     Route::controller(UserController::class)->group(function () {

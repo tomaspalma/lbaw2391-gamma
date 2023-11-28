@@ -1,6 +1,4 @@
 @extends('layouts.head')
-
-
 <head>
     @vite(['resources/css/app.css', 'resources/js/components/dropdown_dots.js', 'resources/js/profile/delete.js'])
 </head>
@@ -60,7 +58,7 @@
     </div>
     @forelse($posts as $post)
         @can('view', $post)
-            @include('partials.post_card', ['post'=> $post])
+            @include('partials.post_card', ['post'=> $post, 'preview' => false])
         @endcan
     @empty <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No posts found.</p>
     @endforelse

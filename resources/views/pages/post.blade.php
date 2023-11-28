@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/comment/add.js', 'resources/js/comment/delete.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/post/reactions.js', 'resources/js/comment/add.js', 'resources/js/comment/delete.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
@@ -9,7 +9,7 @@
 @include('partials.navbar')
 
 <main class="center">
-    <div post-id="{{$post->id}}" class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
+    <div data-entity-id="{{$post->id}}" post-id="{{$post->id}}" class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
         <div class="flex justify-between items-center">
             <h2 class="text-4xl font-bold">{{ $post->title }}</h2>
             <span class="text-gray-600">
@@ -29,10 +29,19 @@
             {{ $post->content }}
         </div>
 
-        <div class="post-action-bar mt-4 flex justify-between items-center"></div>
+        <div class="post-action-bar mt-4 flex justify-between items-center">
+            @php
+                $f = function($user, $post) {
+                    return $user->post_reaction($post);
+                }
+            @endphp
+            @auth
+                @include('partials.reactions', ['entity' => $post, 'entity_function' => $f]) 
+            @endauth
+        </div>
 
         @can('update', $post)
-            <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center">
                 <a href="{{ route('post.update', $post->id) }}" class="bg-black text-white py-2 px-4 rounded-md">Edit Post</a>
                 <button type="submit" class="delete-post-button bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
             </div>

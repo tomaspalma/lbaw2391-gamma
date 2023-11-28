@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -47,6 +46,22 @@ class Post extends Model
     public function reactions(): HasMany
     {
         return $this->hasMany(Reaction::class, "post_id");
+    }
+
+    public function reactionsMap(): array 
+    {
+        $reactions = [];
+        foreach ($this->reactions as $reaction) {
+            $icon = $reaction->type->getViewIcon();
+            $color = $reaction->type->getViewColor();
+            if (!isset($reactions[$icon])) {
+                $reactions[$icon] = [1, $color, $reaction->type->value];
+            } else {
+                $reactions[$icon][0] += 1;
+            }
+        }
+        
+        return $reactions;
     }
 
     public function comments(): HasMany
