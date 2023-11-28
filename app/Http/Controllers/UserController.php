@@ -13,9 +13,40 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\FileController;
+use App\Models\Appeal;
 
 class UserController extends Controller
 {
+    /**
+      * Returns a view with the form where a user can appeal their app ban
+      */
+    public function show_appban_appeal_form(string $username) {
+        $this->authorize('can_appeal_appban', User::where('username', $username)->get()[0]);
+
+        return view('pages.appban_appeal', ['username' => $username]);
+    }
+
+    public function appeal_appban(Request $request, string $username) {
+        $request->validate([
+            'appeal' => 'required|string|max:512'
+        ]);
+        
+        $user = User::where('username', $username)->get()[0];
+
+        $this->authorize('can_appeal_appban', $user);
+
+        DB::transaction(function() use ($user, $request) {
+            $appban = AppBan::where('banned_user_id', $user->id)->get()[0];
+
+            $appeal = Appeal::create([
+                'reason' => $request->input('reason')
+            ]);
+            
+            $appban->appeal = $appeal->id; 
+            $appban->save();
+        });
+    }
+
     public function show(string $username): View
     {
         $user = User::where('username', $username)->firstOrFail();

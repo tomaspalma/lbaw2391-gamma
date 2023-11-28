@@ -182,9 +182,7 @@ CREATE TABLE app_ban(
     reason TEXT NOT NULL,
     admin_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     banned_user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
-
     appeal INTEGER REFERENCES appeal(id) ON UPDATE CASCADE,
-
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
