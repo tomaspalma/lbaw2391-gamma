@@ -8,6 +8,7 @@ use App\Http\Controllers\FeedController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\GroupController;
 use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
 
@@ -66,6 +67,11 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/post/{id}/edit', 'showEditForm');
     Route::put('/post/{id}/edit', 'update')->name('post.update');
     Route::delete('/post/{id}', 'delete')->name('post.delete');
+});
+
+Route::controller(GroupController::class)->group(function () {
+    Route::get('/group/{id}', 'showGroupForm')->name('groupPosts');
+    Route::get('/group/{id}/members', 'showGroupMembers')->name('groupMembers');
 });
 
 Route::controller(SearchController::class)->group(function () {

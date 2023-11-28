@@ -11,16 +11,15 @@ class Group extends Model
     use HasFactory;
 
     protected $hidden = [
+        'id',
+        'name',
+        'description',
+        'is_private',
         'tsvectors'
     ];
 
-    /**
-     *   Get posts of a group
-     *
-     * @return Array with the posts of a group
-     */
-    public function posts(): HasMany
-    {
-        return $this->hasMany(Post::class);
+    public function posts(): HasMany {
+        return $this->hasMany(Post::class, "group_id");
     }
+    
 }
