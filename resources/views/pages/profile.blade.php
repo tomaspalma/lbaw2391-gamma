@@ -33,7 +33,7 @@
             <div class="md:flex-1 px-3">
                 <div class="mb-4">
                     <img src="{{ $user->getProfileImage() }}" alt="User Profile"
-                        class="rounded-full w-32 h-32 md:w-48 md:h-48 mx-auto">
+                        class="rounded-full w-32 h-32 md:w-48 md:h-48 mx-auto object-cover">
                 </div>
                 <div class="flex items-end mb-4 justify-center">
                     <label class="text-xl font-bold text-gray-700">{{$user->display_name}}</label>
