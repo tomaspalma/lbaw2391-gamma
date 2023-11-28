@@ -19,4 +19,5 @@ yarn-error.log
 /.vscode
 .php-cs-fixer.cache
 package-lock.json
+public/media/*
 .prettierrc
