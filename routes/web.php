@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PasswordController;
@@ -73,6 +74,12 @@ Route::controller(PostController::class)->group(function () {
         Route::put('/post/{id}/edit', 'update')->name('post.update');
         Route::delete('/post/{id}', 'delete')->name('post.delete');
     });
+});
+
+// Comments
+Route::controller(CommentController::class)->group(function () {
+    Route::post('/comment', 'create')->name('comment.create');
+    Route::delete('/comment/{id}', 'delete')->name('comment.delete');
 });
 
 Route::controller(SearchController::class)->group(function () {
