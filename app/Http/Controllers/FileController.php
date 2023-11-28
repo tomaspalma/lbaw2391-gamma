@@ -32,7 +32,7 @@ class FileController extends Controller
 
     private static function defaultAsset(string $type)
     {
-        return asset($type . '/' . self::$default);
+        return asset('media/' . $type . '/' . self::$default);
     }
 
     private static function getFileName(string $type, int $id)
@@ -80,7 +80,7 @@ class FileController extends Controller
         // Validation: file exists
         $fileName = self::getFileName($type, $id);
         if ($fileName) {
-            return asset($type . '/' . $fileName);
+            return asset('media/' . $type . '/' . $fileName);
         }
 
         // Not found: returns default asset
