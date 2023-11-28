@@ -41,7 +41,8 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
     Route::delete('/users/{username}', 'delete_user');
     Route::post('/users/{username}/block', 'block_user');
     Route::post('/users/{username}/unblock', 'unblock_user');
-    Route::get('/api/users/{username}', 'checkUsernameExists');
+    Route::get('/users/{username}/appban/appeal', 'show_appban_appeal_form')->name('appban_appeal_form.show');
+    Route::post('/users/{username}/appban/appeal', 'appeal_appban');
 });
 
 Route::controller(FeedController::class)->group(function () {
