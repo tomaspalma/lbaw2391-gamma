@@ -1,3 +1,4 @@
+import { toggleBlockTriggerButtons } from "../admin/user/block";
 import { deleteUserAction } from "../admin/user/delete";
 import { unblockUserAction } from "../admin/user/unblock";
 import { initReactionJs } from "../post/reactions";
@@ -28,6 +29,7 @@ export async function searchUsers(query, searchPreviewContent, preview, admin_pa
             if (userCards.length == 0) {
                 searchPreviewContent.innerHTML = getNoneFoundText("users");
             } else {
+                console.log("What the fuck?");
                 searchPreviewContent.innerHTML = "";
                 for (const userCard of userCards) {
                     searchPreviewContent.innerHTML += userCard;
@@ -49,6 +51,8 @@ export async function searchUsers(query, searchPreviewContent, preview, admin_pa
                     });
                 }
 
+                const blockConfirmationTriggerButtons = document.querySelectorAll(".block-reason-trigger");
+                toggleBlockTriggerButtons(blockConfirmationTriggerButtons);
             }
         }
     }).catch((err) => {

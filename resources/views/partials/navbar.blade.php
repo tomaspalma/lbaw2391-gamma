@@ -55,11 +55,6 @@
         <div class="items-center w-full md:flex md:w-auto md:order-1">
             <i id="hamburger-toggle" class="md:hidden block fa-solid fa-bars mt-4 cursor-pointer"></i>
             <ul id="navbar-menu" class="hidden md:flex flex flex-col justify-center align-middle items-center p-4 md:p-0 mt-4 font-medium bg-gray-50 md:flex-row md:space-x-2 md:mt-0 md:border-0 md:bg-white">
-                <li>
-                    <a href="/feed" class="block py-2 pl-3 pr-4">
-                        Home
-                    </a>
-                </li>
                 @if(Auth::user() ? Auth::user()->is_admin() : 0)
                 <li>
                     <a href="/admin/user" class="block py-2 pl-3 pr-4">Admin</a>

@@ -2,7 +2,7 @@
 
 @include('partials.navbar')
 
-<h1 class="text-center title">App Ban Appeal</h1>
+<h1 class="text-center title">You were banned from Gamma</h1>
 <div class="flex justify-center">
     <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-center mt-4" action="{{route('appban_appeal_form.show', ['username' => request()->route('username')])}}">
         @csrf
