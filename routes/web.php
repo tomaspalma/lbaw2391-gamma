@@ -18,6 +18,7 @@ use App\Http\Middleware\EnsureUserIsAdmin;
 
 use App\Http\Controllers\PostController;
 use App\Http\Middleware\EnsurePostExists;
+use App\Http\Middleware\EnsureUserIsNotAppBanned;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,16 +37,18 @@ Route::redirect('/', '/feed');
 // Users
 Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
     Route::get('/users/{username}', 'show')->name('profile');
-    Route::get('/users/{username}/edit', 'edit')->name('edit_profile');
-    Route::put('/users/{username}/edit', 'update')->name('profile_update');
-    Route::delete('/users/{username}', 'delete_user');
-    Route::post('/users/{username}/block', 'block_user');
-    Route::post('/users/{username}/unblock', 'unblock_user');
+    Route::middleware([EnsureUserIsNotAppBanned::class])->group(function() {
+        Route::get('/users/{username}/edit', 'edit')->name('edit_profile');
+        Route::put('/users/{username}/edit', 'update')->name('profile_update');
+        Route::delete('/users/{username}', 'delete_user');
+        Route::post('/users/{username}/block', 'block_user');
+        Route::post('/users/{username}/unblock', 'unblock_user');
+    });
     Route::get('/users/{username}/appban/appeal', 'show_appban_appeal_form')->name('appban_appeal_form.show');
     Route::post('/users/{username}/appban/appeal', 'appeal_appban');
 });
 
-Route::controller(FeedController::class)->group(function () {
+Route::controller(FeedController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get('/feed', 'show_popular');
     Route::get('/feed/personal', 'show_personal');
 });
@@ -68,14 +71,14 @@ Route::controller(EmailController::class)->group(function () {
     Route::post('/email/verification-notification', 'resend_verification')->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 });
 
-Route::controller(NotificationController::class)->middleware('auth')->group(function () {
+Route::controller(NotificationController::class)->middleware(['auth', EnsureUserIsNotAppBanned::class])->group(function () {
     Route::get('/notifications', 'show_notifications');
 });
 
 // Posts
 Route::controller(PostController::class)->group(function () {
     Route::get('/post/{id}', 'showPost')->name('post.show');
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', EnsureUserIsNotAppBanned::class])->group(function () {
         Route::get('/post', 'showCreateForm')->name('post.createForm')->middleware('verified');
         Route::post('/post', 'create')->name('post.create')->middleware('verified');
         Route::get('/post/{id}/edit', 'showEditForm');
