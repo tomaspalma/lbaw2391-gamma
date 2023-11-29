@@ -82,7 +82,7 @@
                         <div class="relative flex flex-row md:flex-col space-x-1 md:space-x-0">
                             <i class="hidden md:inline fa-solid fa-bell text-2xl"></i>
                             <span class="md:hidden">Notifications</span>
-                            <span id="notitication-counter" class="hidden text-xs md:absolute md:bottom-3 md:left-1.5 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full">1</span>
+                            <span id="notification-counter" class="hidden text-xs md:absolute md:bottom-3 md:left-1.5 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full">1</span>
                         </div>
                     </a>
                 </li>
