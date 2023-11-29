@@ -2,14 +2,19 @@ import { configureConfirmationForm, populateModalText } from "../../components/c
 
 const confirmationModal = document.getElementById("confirmation-modal");
 
-const unblockConfirmationTriggerButtons = document.querySelectorAll(".unblock-confirmation-trigger");
-for (const unblockConfirmationTriggerButton of unblockConfirmationTriggerButtons) {
-    unblockConfirmationTriggerButton.addEventListener("click", (e) => {
-        e.preventDefault();
 
-        unblockUserAction(unblockConfirmationTriggerButton);
-    });
+export function toggleUnblockConfirmationButtons(unblockConfirmationTriggerButtons) {
+    for (const unblockConfirmationTriggerButton of unblockConfirmationTriggerButtons) {
+        unblockConfirmationTriggerButton.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            unblockUserAction(unblockConfirmationTriggerButton);
+        });
+    }
 }
+
+const unblockConfirmationTriggerButtons = document.querySelectorAll(".unblock-confirmation-trigger");
+toggleUnblockConfirmationButtons(unblockConfirmationTriggerButtons);
 
 export function unblockUserAction(unblockConfirmationTriggerButton) {
     const username = unblockConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-username");

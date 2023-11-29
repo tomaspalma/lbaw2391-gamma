@@ -164,7 +164,9 @@ CREATE TABLE reaction_not(
 
 CREATE TABLE appeal(
     id SERIAL PRIMARY KEY,
-    reason TEXT NOT NULL
+    reason TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now() CHECK(created_at <= now()),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() CHECK(updated_at <= now())
 );
 
 CREATE TABLE group_ban(

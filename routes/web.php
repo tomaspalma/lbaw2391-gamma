@@ -44,6 +44,7 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
         Route::post('/users/{username}/block', 'block_user');
         Route::post('/users/{username}/unblock', 'unblock_user');
     });
+    
     Route::get('/users/{username}/appban/appeal', 'show_appban_appeal_form')->name('appban_appeal_form.show');
     Route::post('/users/{username}/appban/appeal', 'appeal_appban');
 });
@@ -104,6 +105,7 @@ Route::controller(AdminController::class)->middleware(['auth', EnsureUserIsAdmin
     Route::prefix('/admin')->group(function () {
         Route::get("/user", 'show_admin_user');
         Route::get("/user/create", 'show_create_user')->name('admin_create_user');
+        Route::get("/user/appeals", 'show_user_appeals')->name('admin.show_user_appeals');
     });
 });
 

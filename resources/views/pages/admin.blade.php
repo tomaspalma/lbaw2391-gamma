@@ -7,8 +7,9 @@
 @include('partials.navbar')
 
 <main class="center mx-4">
-    <div class="flex justify-center mb-2">
+    <div class="flex justify-center mb-2 space-x-2">
         <a target="_blank" href="{{url('/admin/user/create')}}">Create user</a>
+        <a href="{{route('admin.show_user_appeals')}}">Appeals</a>
     </div>
     <div class="flex justify-center">
         <form id="search-form" class="w-1/2 ">

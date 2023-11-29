@@ -11,8 +11,6 @@ class Appeal extends Model
 
     protected $table = 'appeal';
 
-    public $timestamps = false;
-
     protected $fillable = [
         'reason'
     ];
