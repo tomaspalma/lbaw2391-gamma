@@ -1065,4 +1065,25 @@ paths:
          
 
 
-        
+  /api/notifications/{filter}:
+    get: 
+      operationId: R902
+      summary: 'R902: Notifications cards'
+      description: 'Returns cards for the notifications that match the filter or all of them if filter is null. Access: USR'
+      parameters:
+        - in: path
+          name: filter
+          schema:
+            type: string
+          required: true
+          examples:
+            reactions:
+              value: reactions
+            comments:
+              value: comments
+      tags:
+        - 'M09: Notifications' 
+      responses:
+        '200':
+          description: 'HTML with the notification cards'
+
