@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\FileController;
-use App\Models\Appeal;
+use App\Models\AppBanAppeal;
 
 class UserController extends Controller
 {
@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function appeal_appban(Request $request, string $username) {
         $request->validate([
-            'appeal' => 'required|string|max:512'
+            'reason' => 'required|string|max:512'
         ]);
         
         $user = User::where('username', $username)->get()[0];
@@ -38,13 +38,15 @@ class UserController extends Controller
         DB::transaction(function() use ($user, $request) {
             $appban = AppBan::where('banned_user_id', $user->id)->get()[0];
 
-            $appeal = Appeal::create([
+            $appeal = AppBanAppeal::create([
                 'reason' => $request->input('reason')
             ]);
             
             $appban->appeal = $appeal->id; 
             $appban->save();
         });
+
+        return redirect('/');
     }
 
     public function show(string $username): View
@@ -249,6 +251,8 @@ class UserController extends Controller
             ->where('friend1', '=', $user_id)
             ->orWhere('friend2', '=', $user_id)
             ->delete();
+
+        AppBan::where('banned_user_id', $user_id)->delete();
 
         DB::table('users')
             ->where('id', '=', $user_id)

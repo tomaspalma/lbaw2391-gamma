@@ -29,7 +29,6 @@ export async function searchUsers(query, searchPreviewContent, preview, admin_pa
             if (userCards.length == 0) {
                 searchPreviewContent.innerHTML = getNoneFoundText("users");
             } else {
-                console.log("What the fuck?");
                 searchPreviewContent.innerHTML = "";
                 for (const userCard of userCards) {
                     searchPreviewContent.innerHTML += userCard;

@@ -87,12 +87,13 @@ class SearchController extends Controller
                 ->paginate(15);
         }
 
-        $usersJson = [];
+        $userCardsJson = [];
         for ($i = 0; $i < count($users); $i++) {
-            $usersJson[] = new UserResource($users[$i]);
+            // @include('partials.user_card', [ 'user'=> $appeal->appban->user, 'adminView' => true, 'appealView' => true])
+            $userCardsJson[] = view('partials.user_card', ['user' => new UserResource($users[$i]), 'adminView' => true])->render();
         }
 
-        return response()->json($usersJson);
+        return response()->json($userCardsJson);
     }
 
     public function fullTextUsers(Request $request, string $query = null)

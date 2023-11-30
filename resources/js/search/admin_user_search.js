@@ -11,7 +11,6 @@ searchInput.addEventListener("input", function(e) {
         deleteUserForm.addEventListener("submit", function(e) {
             e.preventDefault();
 
-
             deleteUserForm.querySelector("button").addEventListener("click", function(e) {
                 e.preventDefault();
             });
