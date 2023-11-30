@@ -68,7 +68,7 @@ Route::controller(EmailController::class)->group(function () {
 });
 
 Route::controller(NotificationController::class)->middleware('auth')->group(function () {
-    Route::get('/notifications/{filter?}', 'show_notifications');
+    Route::get('/notifications', 'show_notifications');
 });
 
 // Posts

@@ -71,6 +71,6 @@ a {
     @apply bg-white text-yellow-700;
 }
 
-.unread-notification {
+.read-notification {
     @apply bg-gray-50;
 }

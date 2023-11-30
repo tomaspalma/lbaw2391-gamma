@@ -11,17 +11,17 @@ class NotificationController extends Controller
         if($filter === 'reactions') {
             $notifications = $request->user()->reaction_notifications();
         } else if($filter === 'comments') {
-            $notifications = $request->user()->comment_notifications();
+            $notifications = $request->user()->uncomment_notifications();
         } else {
             $notifications = $request->user()->normal_notifications();
         }
 
         if($request->is("api*")) {
-            return view('partials.notifications.notification_card_holder', ['notifications' => $notifications]);
+            return view('partials.notifications.notification_card_holder', ['notifications' => $notifications])->render();
         } else {
             return view('pages.notifications', [
                 'notifications' => $notifications
-            ])->render();
+            ]);
         }
     }
 }

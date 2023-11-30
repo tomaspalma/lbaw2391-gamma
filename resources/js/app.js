@@ -28,9 +28,16 @@ const notificationCounter = document.getElementById("notification-counter");
 const channel = pusher.subscribe(`private-user.${getUsername()}`);
 channel.bind('reaction-notification', function(data) {
     console.log(data);
-    if (data.message.user.username !== data.author) {
+    const message = data.message;
+    if (message.user.username !== data.author) {
         notificationCounter.classList.remove("hidden");
         const counter = parseInt(notificationCounter.textContent, 10);
         notificationCounter.textContent = (counter + 1);
+
+        if (onNotificationsPage()) {
+            const notificationsCards = document.getElementById("notification-cards");
+
+            notificationsCards.insertAdjacentHTML('afterbegin', message.reaction_not_view);
+        }
     }
 });
