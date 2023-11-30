@@ -17,9 +17,17 @@ const pusher = new Pusher(pusherAppKey, {
     debug: true
 });
 
+function onNotificationsPage() {
+    const url = window.location.href;
+    const urlParts = url.split("/");
+
+    return urlParts[urlParts.length - 1] === 'notifications';
+}
+
 const notificationCounter = document.getElementById("notification-counter");
 const channel = pusher.subscribe(`private-user.${getUsername()}`);
 channel.bind('reaction-notification', function(data) {
+    console.log(data);
     if (data.message.user.username !== data.author) {
         notificationCounter.classList.remove("hidden");
         const counter = parseInt(notificationCounter.textContent, 10);

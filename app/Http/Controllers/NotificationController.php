@@ -15,9 +15,13 @@ class NotificationController extends Controller
         } else {
             $notifications = $request->user()->normal_notifications();
         }
-        
-        return view('pages.notifications', [
-            'notifications' => $notifications
-        ])->render();
+
+        if($request->is("api*")) {
+            return view('partials.notifications.notification_card_holder', ['notifications' => $notifications]);
+        } else {
+            return view('pages.notifications', [
+                'notifications' => $notifications
+            ])->render();
+        }
     }
 }

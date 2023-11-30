@@ -83,11 +83,11 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     }
 
     public function reaction_notifications() {
-        return ReactionNot::paginate(15);
+        return ReactionNot::paginate(15)->sortByDesc('date');
     }
 
     public function comment_notification() {
-        return CommentNot::paginate(15);
+        return CommentNot::paginate(15)->sortByDesc('date');
     }
 
     public function post_reaction(Post $post) 
