@@ -70,3 +70,7 @@ a {
 .star-nonhighlighted {
     @apply bg-white text-yellow-700;
 }
+
+.unread-notification {
+    @apply bg-gray-50;
+}

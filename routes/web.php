@@ -68,7 +68,7 @@ Route::controller(EmailController::class)->group(function () {
 });
 
 Route::controller(NotificationController::class)->middleware('auth')->group(function () {
-    Route::get('/notifications', 'show_notifications');
+    Route::get('/notifications/{filter?}', 'show_notifications');
 });
 
 // Posts
@@ -128,6 +128,10 @@ Route::prefix('/api')->group(function () {
 
     Route::controller(PostController::class)->group(function () {
         Route::get('/post/{id}/card/{preview}', 'show_post_card');
+    });
+
+    Route::controller(NotificationController::class)->middleware('auth')->group(function () {
+        Route::get('/notifications/{filter?}', 'show_notifications');
     });
 
     Route::controller(UserController::class)->group(function () {

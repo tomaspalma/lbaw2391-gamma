@@ -13,6 +13,15 @@ class ReactionNot extends Model
 
     protected $table = 'reaction_not';
 
+    public $timestamps = false;
+    
+    /*
+      * Translates the type of the reaction to the corresponding verb
+      */
+    public function verb(): string {
+         return $this->reaction->type->getVerb();
+    }
+
     public function reaction(): BelongsTo {
         return $this->belongsTo(Reaction::class);
     }

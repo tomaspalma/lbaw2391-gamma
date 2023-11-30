@@ -77,17 +77,17 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     }
 
     public function normal_notifications() {
-        $result = $this->reaction_notifications()->merge($this->comment_notification())->sortByDesc('date');
+        $result = $this->comment_notification()->concat($this->reaction_notifications())->sortByDesc('date');
         
         return $result;
     }
 
     public function reaction_notifications() {
-        return DB::table('reaction_not')->get();
+        return ReactionNot::paginate(15);
     }
 
     public function comment_notification() {
-        return DB::table('comment_not')->get();
+        return CommentNot::paginate(15);
     }
 
     public function post_reaction(Post $post) 
