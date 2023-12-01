@@ -89,6 +89,8 @@ Route::controller(PostController::class)->group(function () {
 // Comments
 Route::controller(CommentController::class)->group(function () {
     Route::post('/comment', 'create')->name('comment.create');
+    Route::get('/comment/{id}/edit', 'showEditForm');
+    Route::put('/comment/{id}/edit', 'update')->name('comment.update');
     Route::delete('/comment/{id}', 'delete')->name('comment.delete');
 });
 

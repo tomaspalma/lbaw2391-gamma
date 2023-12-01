@@ -23,7 +23,7 @@ class CommentResource extends JsonResource
             'username' => $user->username,
             'image' => $user->getProfileImage(),
             'content' => $this->content,
-            'date' => $this->date
+            'date' => $this->format_date()
         ];
     }
 }
