@@ -112,10 +112,10 @@ class SearchController extends Controller
                     ->paginate(10);
             }
 
-            if ($request->ajax()) {
+            if ($request->is("api*")) {
                 $usersJson = [];
-                for ($i = 0; $i < count($users); $i++) {
-                    $usersJson[] = new UserResource($users[$i]);
+                foreach ($users as $user) {
+                    $usersJson[] = view('partials.user_card', ['user' => $user, 'adminView' => false])->render();
                 }
 
                 return response()->json($usersJson);
@@ -133,8 +133,8 @@ class SearchController extends Controller
 
             if ($request->is('api*')) {
                 $usersJson = [];
-                for ($i = 0; $i < count($users); $i++) {
-                    $usersJson[] = new UserResource($users[$i]);
+                foreach ($users as $user) {
+                    $usersJson[] = view('partials.user_card', ['user' => $user, 'adminView' => false])->render();
                 }
 
                 return response()->json($usersJson);

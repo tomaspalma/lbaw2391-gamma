@@ -23,44 +23,16 @@ export async function searchUsers(query, searchPreviewContent, preview, admin_pa
     }).then(async (res) => {
 
         if (res.ok) {
-            const users = await res.json();
+            const userCards = await res.json();
 
-            if (users.length == 0) {
+            if (userCards.length == 0) {
                 searchPreviewContent.innerHTML = getNoneFoundText("users");
             } else {
                 searchPreviewContent.innerHTML = "";
-                for (const user of users) {
-                    searchPreviewContent.innerHTML += `
-        <article data-user-image="${user.image}" data-username="${user.username}" class="my-4 p-2 border-b flex justify-between align-middle space-x-2">
-            <div class="flex flex-row space-x-2 align-middle">
-                <img class="rounded-full w-10 h-10" src="${user.image}" alt="Profile Picture">
-                    <h1>
-                        <a href="/users/${user.username}" class="underline">
-                            ${user.username}
-                        </a>
-                    </h1>
-            </div>
-    ${admin_page ?
-                            `<div class="order-3 space-x-8">
-        <button>
-            <a target="_blank" href="/users/${user.username}/edit">Edit</a>
-        </button>
-        <button class="block-reason-trigger" ${user.is_app_banned ? 'hidden' : ''}>
-            Block
-        </button>
-        <button class="unblock-confirmation-trigger" ${user.is_app_banned ? '' : 'hidden'} >
-            Unblock
-        </button>
-        <button class="delete-confirmation-trigger">
-            Delete
-        </button>
-    </div>` : ''
-                        }
-</article> `;
-
+                for (const userCard of userCards) {
+                    searchPreviewContent.innerHTML += userCard;
                 }
 
-                console.log(searchPreviewContent.innerHTML);
                 const deleteTriggerBtns = searchPreviewContent.querySelectorAll(".delete-confirmation-trigger");
                 for (const deleteTriggerBtn of deleteTriggerBtns) {
                     deleteTriggerBtn.addEventListener("click", (e) => {
