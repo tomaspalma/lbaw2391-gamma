@@ -1,4 +1,4 @@
-export function addPaginationListener(url, content, normalizationCallback) {
+export async function addPaginationListener(url, content, separator, normalizationCallback) {
     let page = 2;
     let enough = false;
 
@@ -8,7 +8,7 @@ export function addPaginationListener(url, content, normalizationCallback) {
         if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 900) {
             scrolls += 1;
             if (scrolls == 1 && !enough) {
-                fetch(`${url}?page=${page}`).then(async (res) => {
+                fetch(`${url}${separator}page=${page}`).then(async (res) => {
                     if (res.ok) {
                         const entities = await res.json();
 
@@ -20,7 +20,9 @@ export function addPaginationListener(url, content, normalizationCallback) {
                             content.innerHTML += entityCard;
                         }
 
-                        normalizationCallback();
+                        if (normalizationCallback) {
+                            normalizationCallback();
+                        }
 
                         page += 1;
                         scrolls = 0;

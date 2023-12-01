@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/main_search/scroll.js'])
     <meta name="search" content="{{ $query ? $query : '' }}">
 </head>
 

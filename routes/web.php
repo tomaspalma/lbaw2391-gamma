@@ -118,6 +118,7 @@ Route::prefix('/api')->group(function () {
         Route::get('/search/users/{query?}', 'fullTextUsers');
         Route::get('/search/posts/{query?}', 'fullTextPosts');
         Route::get('/admin/search/users/{query?}', 'adminFullTextUsers')->middleware(['auth', EnsureUserIsAdmin::class]);
+        Route::get("/search/{query?}", 'showSearch');
     });
 
     Route::controller(FeedController::class)->group(function () {

@@ -23,8 +23,7 @@ export async function searchUsers(query, searchPreviewContent, preview, admin_pa
     }).then(async (res) => {
 
         if (res.ok) {
-            const json = await res.json();
-            const users = json.data;
+            const users = await res.json();
 
             if (users.length == 0) {
                 searchPreviewContent.innerHTML = getNoneFoundText("users");

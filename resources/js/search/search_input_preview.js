@@ -1,6 +1,5 @@
 import { getSearchResults } from "./search";
 
-
 const searchMenuName = 'search-input';
 
 let currentSearchPreview = `${searchMenuName}-users-preview-results`;

@@ -14,12 +14,16 @@ use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
 {
+    private $pagination_limits = [
+        'posts' => 10
+    ];
+
     public function showSearch(Request $request, string $query = null)
     {
         $toggled = $request->input('toggled');
 
         $entities = null;
-        switch($toggled) {
+        switch ($toggled) {
             case 'users':
                 $entities = $this->fullTextUsers($request, $query);
                 break;
@@ -31,17 +35,21 @@ class SearchController extends Controller
                 break;
         }
 
-        return view('pages.search', [
-            'query' => $query,
-            'hidden' => false,
-            'previewMenuShadow' => false,
-            'previewMenuWidth' => 'w-full',
-            'previewMenuPosAbs' => false,
-            'previewMenuName' => 'main-search',
-            'toggled' => $toggled,
-            'isMobile' => false,
-            'entities' => $entities
-        ]);
+        if ($request->is("api*")) {
+            return $entities;
+        } else {
+            return view('pages.search', [
+                'query' => $query,
+                'hidden' => false,
+                'previewMenuShadow' => false,
+                'previewMenuWidth' => 'w-full',
+                'previewMenuPosAbs' => false,
+                'previewMenuName' => 'main-search',
+                'toggled' => $toggled,
+                'isMobile' => false,
+                'entities' => $entities
+            ]);
+        }
     }
 
 
@@ -50,14 +58,14 @@ class SearchController extends Controller
         $groups = [];
 
         if ($query === null) {
-            $groups = Group::where('is_private', '<>', false)->paginate(10);
+            $groups = Group::where('is_private', false)->paginate(10);
         } else {
             $groups = Group::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
                 ->paginate(10);
         }
 
-        if($request->ajax()) {
+        if ($request->ajax()) {
             return response()->json($groups);
         } else {
             return $groups;
@@ -104,7 +112,7 @@ class SearchController extends Controller
                     ->paginate(10);
             }
 
-            if($request->ajax()) {
+            if ($request->ajax()) {
                 $usersJson = [];
                 for ($i = 0; $i < count($users); $i++) {
                     $usersJson[] = new UserResource($users[$i]);
@@ -122,8 +130,8 @@ class SearchController extends Controller
                 ->where('id', '<>', 0)
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
                 ->paginate(15);
-            
-            if($request->ajax()) {
+
+            if ($request->is('api*')) {
                 $usersJson = [];
                 for ($i = 0; $i < count($users); $i++) {
                     $usersJson[] = new UserResource($users[$i]);
@@ -141,17 +149,17 @@ class SearchController extends Controller
         $rawPosts = [];
 
         if ($query === null) {
-            $rawPosts = Post::where('is_private', '<>', false)->paginate(10);
+            $rawPosts = Post::where('is_private', '<>', false)->paginate($this->pagination_limits['posts']);
         } else {
             $rawPosts = Post::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?) and not is_private', [$query])
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-                ->paginate(10);
+                ->paginate($this->pagination_limits['posts']);
         }
-        
-        if($api) {
+
+        if ($request->is('api*')) {
             $post_cards = [];
-            foreach($rawPosts as $post) {
-                $post_cards[] = view('partials.post_card', ['post' => new PostResource($post), 'preview' => true])->render(); 
+            foreach ($rawPosts as $post) {
+                $post_cards[] = view('partials.post_card', ['post' => new PostResource($post), 'preview' => true])->render();
             }
 
             return response()->json($post_cards);
@@ -160,7 +168,3 @@ class SearchController extends Controller
         }
     }
 }
-
-/*
- ArgumentCountError: Too few arguments to function App\Http\Controllers\SearchController::fullTextPosts(), 2 passed in /home/tomaspalma/lbaw2391/vendor/laravel/framework/src/Illuminate/Routing/Controller.php on line 54 and exactly 3 expected in file /home/tomaspalma/lbaw2391/app/Http/Controllers/SearchController.php on line 139
-*/
