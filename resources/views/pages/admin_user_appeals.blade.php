@@ -1,8 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/admin_user_search.js', 
-        'resources/js/admin/user/block.js', 'resources/js/admin/user/show_appeal_reason.js'])
+    @vite(['resources/js/search/admin_user_search.js'])
 </head>
 
 @include('partials.navbar')

@@ -2,7 +2,15 @@
 
 @include('partials.navbar')
 
+
+@if ($alreadyAppealed)
+<h1 class="text-center title">You appealed your app ban</h1>
+<p class="text-center">You will have to wait for the administrator's response.</p>
+@else
 <h1 class="text-center title">You were banned from Gamma</h1>
+<p class="text-center">
+    Reason: {{$reason}}
+</p>
 <div class="flex justify-center">
     <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-center mt-4" action="{{route('appban_appeal_form.show', ['username' => request()->route('username')])}}">
         @csrf
@@ -22,3 +30,4 @@
         </div>
     </form>
 </div>
+@endif

@@ -1,13 +1,11 @@
 import { toggleDropdownArrow } from "../../components/dropdown";
 
-function toggleAppbanAppealReasonDropdown(dropdowns) {
-
+export function toggleAppbanAppealReasonDropdown(dropdownArrows) {
+    for (const dropdownArrow of dropdownArrows) {
+        const parentArticle = dropdownArrow.parentElement.parentElement.parentElement;
+        toggleDropdownArrow(dropdownArrow, parentArticle.querySelector(".appban-appeal-reason"));
+    }
 }
 
 const dropdownArrows = document.querySelectorAll(".appban-dropdown-arrow");
-for (const dropdownArrow of dropdownArrows) {
-    const parentArticle = dropdownArrow.parentElement.parentElement.parentElement;
-    toggleDropdownArrow(dropdownArrow, parentArticle.querySelector(".appban-appeal-reason"));
-}
-
-toggleAppbanAppealReasonDropdown();
+toggleAppbanAppealReasonDropdown(dropdownArrows);

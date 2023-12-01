@@ -2,7 +2,8 @@ console.log("Hello");
 
 export function toggleDropdownArrow(arrow, elementToShow) {
     arrow.addEventListener("click", function() {
-        if(elementToShow.classList.contains("hidden")) {
+        console.log("clicked");
+        if (elementToShow.classList.contains("hidden")) {
             elementToShow.classList.remove("hidden");
 
             arrow.classList.remove("fa-angle-down");

@@ -23,4 +23,8 @@ class AppBan extends Model
     public function user(): BelongsTo {
         return $this->belongsTo(User::class, 'banned_user_id');
     }
+
+    public function appeal_model(): BelongsTo {
+        return $this->belongsTo(AppBanAppeal::class, 'appeal');
+    }
 }

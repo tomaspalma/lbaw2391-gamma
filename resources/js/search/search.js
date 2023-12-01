@@ -1,5 +1,6 @@
 import { toggleBlockTriggerButtons } from "../admin/user/block";
 import { deleteUserAction } from "../admin/user/delete";
+import { toggleAppbanAppealReasonDropdown } from "../admin/user/show_appeal_reason";
 import { unblockUserAction } from "../admin/user/unblock";
 import { initReactionJs } from "../post/reactions";
 
@@ -52,6 +53,8 @@ export async function searchUsers(query, searchPreviewContent, preview, admin_pa
 
                 const blockConfirmationTriggerButtons = document.querySelectorAll(".block-reason-trigger");
                 toggleBlockTriggerButtons(blockConfirmationTriggerButtons);
+
+                toggleAppbanAppealReasonDropdown(document.querySelectorAll(".appban-dropdown-arrow"));
             }
         }
     }).catch((err) => {

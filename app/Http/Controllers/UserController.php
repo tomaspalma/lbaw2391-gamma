@@ -10,7 +10,6 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\FileController;
 use App\Models\AppBanAppeal;
@@ -18,31 +17,49 @@ use App\Models\AppBanAppeal;
 class UserController extends Controller
 {
     /**
-      * Returns a view with the form where a user can appeal their app ban
-      */
-    public function show_appban_appeal_form(string $username) {
-        $this->authorize('can_appeal_appban', User::where('username', $username)->get()[0]);
-
-        return view('pages.appban_appeal', ['username' => $username]);
-    }
-
-    public function appeal_appban(Request $request, string $username) {
-        $request->validate([
-            'reason' => 'required|string|max:512'
-        ]);
-        
+     * Returns a view with the form where a user can appeal their app ban
+     */
+    public function show_appban_appeal_form(string $username): View
+    {
         $user = User::where('username', $username)->get()[0];
 
         $this->authorize('can_appeal_appban', $user);
 
-        DB::transaction(function() use ($user, $request) {
+        $reason = $user->app_ban->reason;
+
+        $appeal = $user->app_ban->appeal;
+
+        return view(
+            'pages.appban_appeal',
+            [
+                'username' => $username,
+                'reason' => $reason,
+                'alreadyAppealed' => isset($appeal)
+            ]
+        );
+    }
+
+    /**
+     * Executes the action of submitting an appeal
+     */
+    public function appeal_appban(Request $request, string $username): RedirectResponse
+    {
+        $request->validate([
+            'reason' => 'required|string|max:512'
+        ]);
+
+        $user = User::where('username', $username)->get()[0];
+
+        $this->authorize('can_appeal_appban', $user);
+
+        DB::transaction(function () use ($user, $request) {
             $appban = AppBan::where('banned_user_id', $user->id)->get()[0];
 
             $appeal = AppBanAppeal::create([
                 'reason' => $request->input('reason')
             ]);
-            
-            $appban->appeal = $appeal->id; 
+
+            $appban->appeal = $appeal->id;
             $appban->save();
         });
 
@@ -133,7 +150,16 @@ class UserController extends Controller
         $user = User::where('username', '=', $username)->get()[0];
 
         if ($user->is_app_banned()) {
-            AppBan::where('banned_user_id', $user->id)->delete();
+            DB::transaction(function () use ($user) {
+                $app_ban = AppBan::where('banned_user_id', $user->id)->get()[0];
+
+                $appeal = AppBanAppeal::find($app_ban->appeal);
+                $app_ban->delete();
+
+                if (isset($appeal)) {
+                    $appeal->delete();
+                }
+            });
         }
     }
 
