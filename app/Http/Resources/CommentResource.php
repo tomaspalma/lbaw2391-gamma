@@ -2,12 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-use App\Models\User;
-
-class PostResource extends JsonResource
+class CommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,13 +19,11 @@ class PostResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'author' => $user,
-            'title' => $this->title,
+            'display_name' => $user->display_name,
+            'username' => $user->username,
+            'image' => $user->getProfileImage(),
             'content' => $this->content,
-            'is_private' => $this->is_private,
-            'attachment' => $this->attachment,
-            'date' => $this->date,
-            'reactions' => $this->reactionsMap()
+            'date' => $this->date
         ];
     }
 }

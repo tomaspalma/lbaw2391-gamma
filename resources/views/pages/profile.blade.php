@@ -1,6 +1,4 @@
 @extends('layouts.head')
-
-
 <head>
     @vite(['resources/css/app.css', 'resources/js/components/dropdown_dots.js', 'resources/js/profile/delete.js'])
 </head>
@@ -35,7 +33,7 @@
             <div class="md:flex-1 px-3">
                 <div class="mb-4">
                     <img src="{{ $user->getProfileImage() }}" alt="User Profile"
-                        class="rounded-full w-32 h-32 md:w-48 md:h-48 mx-auto">
+                        class="rounded-full w-32 h-32 md:w-48 md:h-48 mx-auto object-cover">
                 </div>
                 <div class="flex items-end mb-4 justify-center">
                     <label class="text-xl font-bold text-gray-700">{{$user->display_name}}</label>
@@ -60,7 +58,7 @@
     </div>
     @forelse($posts as $post)
         @can('view', $post)
-            @include('partials.post_card', ['post'=> $post])
+            @include('partials.post_card', ['post'=> $post, 'preview' => false])
         @endcan
     @empty <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No posts found.</p>
     @endforelse

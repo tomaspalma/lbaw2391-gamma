@@ -1,1 +1,25 @@
+import Pusher from 'pusher-js';
+import { getCsrfToken, getUsername } from './utils';
+
 import './bootstrap';
+
+const pusherAppKey = "42e95b477c2a2640c461";
+const cluster = "eu";
+
+const pusher = new Pusher(pusherAppKey, {
+    cluster: cluster,
+    encrypted: true,
+    auth: {
+        headers: {
+            'X-CSRF-Token': getCsrfToken()
+        },
+    },
+    debug: true
+});
+
+const channel = pusher.subscribe(`private-user.${getUsername()}`);
+channel.bind('reaction-notification', function(data) {
+    if (data.message.user.username !== data.author) {
+        console.log(data);
+    }
+});

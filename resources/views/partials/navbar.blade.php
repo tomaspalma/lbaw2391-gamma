@@ -1,11 +1,22 @@
 <head>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/search_input_preview.js', 'resources/js/components/navbar_mobile_menu.js'])
 </head>
-<nav class="bg-white border-black border-b mb-5 p-1.5">
+
+@auth
+@if(!Auth::user()->has_verified_email() && !request()->session()->get('reset_new_validation'))
+<div class="email-verification-link">
+    You still haven't confirmed your email.
+    <form class="inline" method="POST" action="{{route('verification.send')}}">
+        @csrf
+        <button type="submit" class="hover:underline">Click here to resend</button>
+    </form>
+</div>
+@endif
+@endauth
+<nav class="bg-white border-black border-b mb-5 p-1.5 shadow-md">
     <div class="max-w-screen-xl flex flex-col md:flex-row flex-wrap justify-between mx-auto p-4">
         <a href="/" class="self-center text-2xl font-bold hover:underline">Gamma</a>
         <div class="flex flex-col items-center md:order-1">
-
             <form id="mobile-search-form" class="relative md:hidden">
                 <input name="search" type="text" id="mobile-search-trigger" class="mt-4 md:hidden block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
             </form>
@@ -66,14 +77,17 @@
                 <li>
                     <form method="POST" action="{{ route('logout') }}" class="block py-2 pl-3 pr-4 mb-0">
                         @csrf
-                        <button type="submit">Logout</button>
+                        <button type="submit" class="hover:underline">Logout</button>
                     </form>
                 </li>
                 @endauth
                 <li>
-                    <a href="#" class="block py-2 pl-3 pr-4">
-                        <i class="hidden md:inline fa-solid fa-bell"></i>
-                        <span class="md:hidden">Notifications</span>
+                    <a href="/notifications" class="block py-2 pl-3 pr-4">
+                        <div class="relative flex flex-row md:flex-col space-x-1 md:space-x-0">
+                            <i class="hidden md:inline fa-solid fa-bell text-2xl"></i>
+                            <span class="md:hidden">Notifications</span>
+                            <span id="notification-counter" class="hidden text-xs md:absolute md:bottom-3 md:left-1.5 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full">1</span>
+                        </div>
                     </a>
                 </li>
                 @auth
@@ -85,6 +99,5 @@
                 @endauth
             </ul>
         </div>
-
     </div>
 </nav>

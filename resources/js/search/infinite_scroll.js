@@ -1,4 +1,4 @@
-export function addPaginationListener(url, content) {
+export function addPaginationListener(url, content, normalizationCallback) {
     let page = 2;
     let enough = false;
 
@@ -19,6 +19,8 @@ export function addPaginationListener(url, content) {
                         for (const entityCard of entities) {
                             content.innerHTML += entityCard;
                         }
+
+                        normalizationCallback();
 
                         page += 1;
                         scrolls = 0;

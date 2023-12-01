@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
+use App\Enums\ReactionType;
+use App\Events\Reaction as EventsReaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -10,13 +12,60 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
+use App\Models\Reaction;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class PostController extends Controller
 {
-    public function show_post_card(int $id, string $preview) {
+    public function show_post_card(int $id, bool $preview)
+    {
         $post = Post::find($id);
 
         return view('partials.post_card', ['post' => new PostResource($post), 'preview' => $preview]);
+    }
+
+    public function get_reactions(Request $request, int $id)
+    {
+        $post = Post::find($id);
+
+        return response()->json($post->reactionsMap());
+    }
+
+    public function add_reaction(Request $request, int $id)
+    {
+        // $request->validate([
+        //     'type' => Rule::in(['LIKE', 'HEART', 'DISLIKE', 'STAR'])
+        // ]);
+
+        $post = Post::find($id);
+
+        $reaction_type = $request->json('type');
+
+        $this->authorize('add_reaction', [$post, $reaction_type]);
+
+        Reaction::create([
+            'author' => $request->user()->id,
+            'post_id' => $id,
+            'type' => $reaction_type
+        ]);
+
+        event(new EventsReaction($post->owner->username, $request->user(), $reaction_type, $id, null));
+    }
+
+    public function remove_reaction(Request $request, int $id)
+    {
+        $reaction = Reaction::where('author', $request->user()->id)
+            ->where('post_id', $id)
+            ->where('type', $request->json('type'))
+            ->get()[0];
+
+        if ($reaction !== null) {
+            DB::transaction(function () use ($reaction) {
+                DB::table('reaction_not')->where('reaction_id', $reaction->id)->delete();
+                $reaction->delete();
+            });
+        }
     }
 
     public function showCreateForm(): View
@@ -31,10 +80,11 @@ class PostController extends Controller
         ]);
     }
 
-    public function create(Request $request) {
+    public function create(Request $request)
+    {
 
         $this->authorize('create', Post::class);
-        
+
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
@@ -43,8 +93,7 @@ class PostController extends Controller
             'is_private' => 'required|boolean'
         ]);
 
-        if(!$request->is_private)
-        {
+        if (!$request->is_private) {
             $this->authorize('publicPost', Post::class);
         }
 
@@ -127,8 +176,7 @@ class PostController extends Controller
 
         $this->authorize('update', $post);
 
-        if(!$request->is_private)
-        {
+        if (!$request->is_private) {
             $this->authorize('publicPost', Post::class);
         }
 
@@ -140,7 +188,7 @@ class PostController extends Controller
             'is_private' => $request->is_private
         ]);
 
-        return redirect('/post/'.$id);
+        return redirect('/post/' . $id);
     }
 
     public function delete(string $id)
@@ -155,7 +203,7 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
         $this->authorize('delete', $post);
-        
+
         DB::transaction(function () use ($post) {
             $this->delete_post($post->id);
         });
@@ -171,10 +219,10 @@ class PostController extends Controller
         DB::table('reaction_not')->where('reaction_id', $reaction_id)->delete();
         DB::table('reaction')->where('id', $reaction_id)->delete();
     }
-    
+
     /**
      * This should be used inside a transaction
-     * 
+     *
      * @$comment_id The id of the comment we want to delete
      */
     private function delete_comment($comment_id)
@@ -189,7 +237,7 @@ class PostController extends Controller
 
     /**
      * This should be used inside a transaction
-     * 
+     *
      * @$post_id The id of the post we want to delete
      */
 
@@ -208,5 +256,3 @@ class PostController extends Controller
         DB::table('post')->where('id', $post_id)->delete();
     }
 }
-
-

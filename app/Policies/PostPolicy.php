@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Post;
+use App\Models\Reaction;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -66,5 +67,24 @@ class PostPolicy
     public function publicPost(User $user): Response
     {
         return ($user->is_private) ? Response::deny('To create public posts you must change the visibility of your profile') : Response::allow();
+    }
+
+    public function add_reaction(User $user, Post $post, string $reaction_type): Response
+    {
+        $reaction = Reaction::where('author', '=', $user->id)->where('post_id', '=', $post->id)->where('type', $reaction_type)->get();
+        return count($reaction) !== 1
+            ? Response::allow()
+            : Response::deny('You already have one reaction to this post.');
+    }
+    
+    /**
+      * Determines whether a user can remove a reaction from a post
+    */
+    public function remove_reaction(User $user): Response
+    {
+        $reaction = Reaction::where('author', '=', $user->id)->get();
+        return count($reaction) === 1 
+            ? Response::allow()
+            : Response::deny('You do not have any reactions on this post.');
     }
 }

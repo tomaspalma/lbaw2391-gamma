@@ -269,41 +269,60 @@ paths:
         '404':
           description: 'Error. Email doesnt exist.'
 
-  /verifyEmail/{token}:
+  /email/verify:
 
     get:
       operationId: R111
       summary: 'R111: Verify Email Form'
-      description: 'Get the view for the form to reset the password. Access: VST'
+      description: 'Get the view for the text to inform a user they have not verified their email yet. Access: USR'
       tags:
         - 'M01: Authentication'
-      parameters:
-        - in: path
-          name: token
-          schema:
-            type: string
-          required: true
       responses:
         '200':
-          description: 'Reset the verify email form returned'
-
-    post:
+          description: 'Email validation notice returned'
+  
+  /email/verify/{id}/{hash}:
+    
+    get:
       operationId: R112
-      summary: 'R112: Send Verify Email Request'
-      description: 'Sends a verify email request to the server'
+      summary: 'R112: Verifies email'
+      description: 'When a user goes to this page, their email is verified if it was not already. Access: USR'
+      tags:
+        - 'M01: Authentication'
       parameters:
         - in: path
-          name: token
+          name: id
+          description: 'Id of the user'
           schema:
             type: string
           required: true
+        - in: path
+          name: hash
+          description: 'Composed of an hash of the user email address and a signature of it'
+          schema:
+            type: string
+          required: true
+          examples:
+            example1:
+              value: 'afb80b714d7f9139dda0889ec723f26394e06651?expires=1700877924&signature=e12b6a2b6936b90227b6f11ad22443cb3d53161a0ebf68ac0121f1ddb9541f3e'
+              summary: 'We pass an hash and its signature, as well as the expiration time'
+      responses:
+        '200':
+          description: 'Email is sucessfully verified'
+  
+  /email/verification-notification:
+    
+    post:
+      operationId: R113
+      summary: 'R113: Resends email verification email'
+      description: 'If the previous link expires, the user can request a new one. Access: USR'
       tags:
         - 'M01: Authentication'
       responses:
         '200':
-          description: 'OK. Email verified.'
+          description: 'Verification email is successfully resent'
 
-  /feed/:
+  /feed:
 
     get:
       operationId: R201
@@ -1021,8 +1040,29 @@ paths:
                     description: A group dedicated to discussing the latest technology trends and innovations
                     is_private: True
     
-  
+   
+  /notifications:
 
+    get: 
+      operationId: R901
+      summary: 'R901: Notifications page'
+      description: 'Page where a user can view their notifications. Access: USR'
+      tags:
+        - 'M09: Notifications' 
+      responses:
+        '200':
+          description: 'OK. Show Search UI'
+        '302':
+          description: 'Redirect if user is logged out.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                '302 Success':
+                  description: 'OK. Redirect to login page.'
+                  value: '/login'
+         
 
 
         

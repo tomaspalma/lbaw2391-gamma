@@ -42,7 +42,8 @@ CREATE TABLE users (
     academic_status TEXT,
     display_name TEXT,
     is_private BOOLEAN DEFAULT true NOT NULL,
-    role INTEGER NOT NULL
+    role INTEGER NOT NULL,
+    email_verified_at TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE password_reset_tokens (
@@ -540,12 +541,12 @@ CREATE TRIGGER add_friend
     WHEN (NEW.is_accepted = true)
     EXECUTE FUNCTION add_friend();
 
-INSERT INTO users (id, username, email, password, academic_status, display_name, is_private, role, image) VALUES 
-        (0, 'deleted_user', 'deleted_user', 'password1', 'Undergraduate', 'John Doe', true, 2, 'tHMLkLWZFQhuzM3hSzpOtKsuIMG4X2FcUKrikcGA.png'),
-        (1, 'johndoe', 'johndoe@example.com', '$2y$10$oI17OO.VH15Kn0i6S840ce6BB.9AH6iAjTfUeCDgz1zVzQbNJ4iiG', 'Undergraduate', 'John Doe', true, 2, 'tHMLkLWZFQhuzM3hSzpOtKsuIMG4X2FcUKrikcGA.png'),
-        (2, 'alanturing', 'alanturing@example.com', 'password2', 'Professor', 'Alan Turing', false, 2, null),
-        (3, 'adalovelace', 'adalovelace@example.com', 'password3', 'Graduate', 'Ada Lovelace', true, 2, null),
-        (4, 'admin', 'admin@example.com', '$2y$10$ehcHOK3hnZA7L4h5PvpQge3VfdFbaSxryczs9GzK9lUDNxMcKoWua', 'Administrator', 'Admin User', false, 1, null);
+    INSERT INTO users (id, username, email, password, academic_status, display_name, is_private, role, image, email_verified_at) VALUES 
+        (0, 'deleted_user', 'deleted_user', 'password1', 'Undergraduate', 'John Doe', true, 2, null, '2023-11-23 14:18:29+00'),
+        (1, 'johndoe', 'johndoe@example.com', '$2y$10$oI17OO.VH15Kn0i6S840ce6BB.9AH6iAjTfUeCDgz1zVzQbNJ4iiG', 'Undergraduate', 'John Doe', true, 2, 'tHMLkLWZFQhuzM3hSzpOtKsuIMG4X2FcUKrikcGA.png', '2023-11-23 14:18:29+00'),
+        (2, 'alanturing', 'alanturing@example.com', 'password2', 'Professor', 'Alan Turing', false, 2, null, '2023-11-23 14:18:29+00'),
+        (3, 'adalovelace', 'adalovelace@example.com', 'password3', 'Graduate', 'Ada Lovelace', true, 2, null, '2023-11-23 14:18:29+00'),
+        (4, 'admin', 'admin@example.com', '$2y$10$ehcHOK3hnZA7L4h5PvpQge3VfdFbaSxryczs9GzK9lUDNxMcKoWua', 'Administrator', 'Admin User', false, 1, null, '2023-11-23 14:18:29+00');
 
     INSERT INTO friend_request(user_id, friend_id, is_accepted, date) VALUES
         (2, 3, true, '1940-01-28 12:00:00'),

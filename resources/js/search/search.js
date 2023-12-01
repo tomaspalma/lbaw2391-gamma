@@ -1,5 +1,6 @@
 import { deleteUserAction } from "../admin/user/delete";
 import { unblockUserAction } from "../admin/user/unblock";
+import { initReactionJs } from "../post/reactions";
 
 const csrfMeta = document.querySelector("meta[name='csrf-token']");
 
@@ -101,6 +102,8 @@ export async function searchPosts(query, searchPreviewContent, preview) {
                 for (const postCards of posts) {
                     searchPreviewContent.innerHTML += postCards;
                 }
+
+                initReactionJs();
             }
         }
     }).catch((err) => {

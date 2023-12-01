@@ -24,13 +24,16 @@
         @endauth
     </ul>
 
+    @if($email_verified)
     @if(count($posts) == 0)
     <p class="text-center">No posts found.</p>
     @else
     <div id="posts">
-        @for($i = 0; $i < count($posts); $i++) @include('partials.post_card', ['post'=> $posts[$i]])
+        @for($i = 0; $i < count($posts); $i++) @include('partials.post_card', ['post'=> $posts[$i], 'preview' => false])
             @endfor
             @endif
+            @else
+            @include('partials.auth.email_validation_notice_text')
+            @endif
     </div>
-
 </main>

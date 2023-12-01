@@ -24,6 +24,10 @@ export default defineConfig({
                 "resources/js/components/navbar_mobile_menu.js",
                 "resources/js/components/dropdown_dots.js",
                 "resources/js/profile/delete.js",
+                "resources/js/comment/add.js",
+                "resources/js/comment/delete.js",
+                "resources/js/post/reactions.js",
+                "resources/js/utils.js",
             ],
             refresh: true,
         }),
@@ -34,3 +38,5 @@ export default defineConfig({
         },
     },
 });
+
+
