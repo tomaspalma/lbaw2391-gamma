@@ -5,14 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Post;
+use App\Models\Reaction;
 use App\Models\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
 class FeedController extends Controller
 {
-    public function show_personal()
+    public function show_personal(Request $request)
     {
+        if (!$request->user()->has_verified_email()) {
+            return view('pages.homepage', [
+                'feed' => 'personal',
+                'posts' => [],
+                'email_verified' => false
+            ]);
+        }
         /*
          * Posts made by friends and groups they belong
          *
@@ -32,6 +40,7 @@ class FeedController extends Controller
         return view('pages.homepage', [
             'feed' => 'personal',
             'posts' => $posts,
+            'email_verified' => true
         ]);
     }
 
@@ -44,8 +53,8 @@ class FeedController extends Controller
 
         return view('pages.homepage', [
             'feed' => 'popular',
-            'posts' => $posts
+            'posts' => $posts,
+            'email_verified' => true
         ]);
     }
-
 }

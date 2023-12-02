@@ -14,7 +14,7 @@ async function checkEmailExists(data) {
     const errorMessage = document.getElementById("email-error");
 
     try {
-        const response = await fetch('api/users/email/' + data);
+        const response = await fetch('/api/users/email/' + data);
         const responseData = await response.json();
 
         if (responseData.length === 0) {
@@ -34,7 +34,7 @@ async function checkUsernameExists(data) {
     const element = document.getElementById("username");
     const errorMessage = document.getElementById("username-error");
     try {
-        const response = await fetch('api/users/username/' + data);
+        const response = await fetch('/api/users/username/' + data);
         const responseData = await response.json();
 
         if (responseData.length === 0) {

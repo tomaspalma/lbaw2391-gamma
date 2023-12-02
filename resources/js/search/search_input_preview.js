@@ -23,7 +23,7 @@ const borderColor = "border-black";
 function showSearchPreview(searchPreviewResults, target, previewContent) {
     searchPreviewResults.style.display = 'block';
 
-    getSearchResults(currentSearchPreview, target.value, previewContent);
+    getSearchResults(currentSearchPreview, target.value, previewContent, true);
 }
 
 for (const previewOption of previewOptions) {
@@ -37,7 +37,7 @@ for (const previewOption of previewOptions) {
         if (!previewOption.classList.contains(borderType) && !previewOption.classList.contains(borderColor)) {
             previewOption.classList.add(borderType, borderColor);
 
-            getSearchResults(previewOption.id, search.value, searchPreviewContent);
+            getSearchResults(previewOption.id, search.value, searchPreviewContent, true);
         }
 
         currentSearchPreview = `${previewOption.id}`;
@@ -57,7 +57,7 @@ for (const previewOption of mobilePreviewOptions) {
         if (!previewOption.classList.contains(borderType) && !previewOption.classList.contains(borderColor)) {
             previewOption.classList.add(borderType, borderColor);
 
-            getSearchResults(corrected_id, mobileSearch.value, mobileSearchPreviewContent);
+            getSearchResults(corrected_id, mobileSearch.value, mobileSearchPreviewContent, true);
         }
 
         currentSearchPreview = corrected_id;

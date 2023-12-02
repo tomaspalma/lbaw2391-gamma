@@ -25,7 +25,8 @@ class PostResource extends JsonResource
             'content' => $this->content,
             'is_private' => $this->is_private,
             'attachment' => $this->attachment,
-            'date' => $this->date
+            'date' => $this->date,
+            'reactions' => $this->reactionsMap()
         ];
     }
 }

@@ -11,17 +11,15 @@
         <div class="flex justify-between items-center">
             <h2 class="text-2xl font-bold text-gray-700 mx-auto">Edit Profile</h2>
         </div>
-        <form action="{{ route('profile_update', ['username' => $user->username]) }}" method="post"
+        <form action="{{ route('profile_update', ['username' => $user->username]) }}" method="POST"
             enctype="multipart/form-data" class="mt-6 flex flex-col md:flex-row -mx-3" id="edit_profile_form">
             @csrf
             @method('PUT')
-
             <div class="md:flex-1 px-3">
-                <div class="mb-4">                    
-                    <img src="{{ $user->image }}" alt="Profile Image" id="imagePreview"
-                        class="rounded-full w-32 h-32 md:w-48 md:h-48 cursor-pointer mx-auto" onclick="document.getElementById('imageInput').click()">
-                    <input type="file" name="image" id="imageInput" accept="image/*" class="hidden"
-                        onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
+                <div class="flex flex-col w-full items-center mb-2"> 
+                    <img src="{{ $user->getProfileImage() }}" alt="Profile Image" id="imagePreview" class="my-2 rounded-full w-20 h-20 md:w-32 md:h-32 object-cover">
+                    <input type="file" name="image" id="image" class="hidden" onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
+                    <button type="button" class=" bg-gray-600 text-white px-4 py-2 rounded" onclick="document.getElementById('image').click()">Upload</button>
                 </div>
                 <div class="mb-4">
                     <label for="display_name" class="text-sm text-gray-600">Display Name</label>
@@ -74,8 +72,11 @@
                         class="mt-1 py-2 px-3 border rounded-md w-full">
                 </div>
                 @endcan
-                <div class="mb-4">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
+                <div class="mt-8 flex">
+                    <button type="submit" class="bg-black text-white px-4 py-2 rounded">Save Changes</button>
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded ml-2"
+                        onclick="window.location.href = '{{ route('profile', ['username' => $user->username]) }}'">
+                        Cancel
                 </div>
             </div>
         </form>

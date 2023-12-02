@@ -15,12 +15,17 @@ export default defineConfig({
                 "resources/js/admin/user/delete.js",
                 "resources/js/admin/user/unblock.js",
                 "resources/js/admin/user/block.js",
-                "resources/js/profile_edit/validate_password.js",
                 "resources/js/auth/seePassword.js",
                 "resources/js/auth/register.js",
                 "resources/js/post/delete.js",
                 "resources/js/edit_profile/edit_profile.js",
                 "resources/js/components/navbar_mobile_menu.js",
+                "resources/js/components/dropdown_dots.js",
+                "resources/js/profile/delete.js",
+                "resources/js/comment/add.js",
+                "resources/js/comment/delete.js",
+                "resources/js/post/reactions.js",
+                "resources/js/utils.js",
             ],
             refresh: true,
         }),
@@ -31,3 +36,5 @@ export default defineConfig({
         },
     },
 });
+
+

@@ -17,6 +17,8 @@ class Comment extends Model
 
     protected $table = 'comment';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'id',
         'post_id',

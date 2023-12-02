@@ -3,6 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\Passwords\CanResetPassword as PasswordsCanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,13 +19,15 @@ use Laravel\Sanctum\HasApiTokens;
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-class User extends Authenticatable
+use App\Http\Controllers\FileController;
+
+class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
+    use PasswordsCanResetPassword;
 
     // Don't add create and update timestamps in database.
     public $timestamps = false;
@@ -50,6 +57,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verified_at'
     ];
 
     /**
@@ -68,11 +76,31 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
     }
 
+    public function post_reaction(Post $post) 
+    {
+        $reactions = Reaction::where('post_id', $post->id)->where('author', $this->id)->get();
+        
+        $user_post_reactions = [];
+        
+        foreach ($reactions as $reaction) {
+            $user_post_reactions[$reaction->type->value] = [
+                $reaction->type->getViewIcon(), 
+                $reaction->type->getViewColor(),
+            ];
+        }
+
+        return $user_post_reactions; 
+    }
+
     public function friends()
     {
         return $this->belongsToMany(User::class, 'friends', 'friend1', 'friend2')
             ->union($this->belongsToMany(User::class, 'friends', 'friend2', 'friend1'))
             ->where('id', '<>', $this->id);
+    }
+
+    public function has_verified_email(): bool {
+        return $this->email_verified_at !== null;
     }
 
     public function is_friend(User $user): bool
@@ -95,10 +123,6 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class, "author");
     }
 
-    public function publicPosts(): HasMany
-    {
-        return $this->hasMany(Post::class, "author")->where("is_private", false);
-    }
     public function is_admin(): bool
     {
         return $this->role === 1;
@@ -114,11 +138,8 @@ class User extends Authenticatable
         return $this->hasOne(AppBan::class, 'banned_user_id');
     }
 
-    /**
-     * Get the cards for a user.
-     */
-    public function cards(): HasMany
+    public function getProfileImage()
     {
-        return $this->hasMany(Card::class);
+        return FileController::get('profile', $this->id);
     }
 }
