@@ -16,11 +16,27 @@ use App\Http\Controllers\FileController;
 
 class UserController extends Controller
 {
+    /**
+     * Method used in the AJAX api endpoint to show the posts of a user
+     */
+    public function show_user_posts(string $username, string $filter = null)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+        $posts = $user->posts()->orderBy('date', 'desc')->paginate(2);
+
+        $post_cards = [];
+        foreach ($posts as $post) {
+            $post_cards[] = view('partials.post_card', ['post' => $post, 'preview' => false])->render();
+        }
+
+        return response()->json($post_cards);
+    }
+
     public function show(string $username): View
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        $posts = $user->posts()->orderBy('date', 'desc')->get();
+        $posts = $user->posts()->orderBy('date', 'desc')->paginate(2);
 
         return view('pages.profile', [
             'user' => $user,

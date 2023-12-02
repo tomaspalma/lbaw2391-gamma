@@ -137,5 +137,6 @@ Route::prefix('/api')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::get("/users/username/{username}", 'checkUsernameExists');
         Route::get("/users/email/{email}", 'checkEmailExists');
+        Route::get("/users/{username}/posts/{filter?}", 'show_user_posts');
     });
 });
