@@ -8,6 +8,13 @@ use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
+    public function can_have_appeal_removed(User $user): Response
+    {
+        $appeal = $user->app_ban->appeal_model;
+
+        return $appeal === null ? Response::allow() : Response::deny("User does not have any appeals");
+    }
+
     /**
      * Determine whether or not the user has an app ban, e.g. if they have a ban to appeal from
      */

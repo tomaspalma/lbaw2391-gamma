@@ -2,7 +2,6 @@ console.log("Hello");
 
 export function toggleDropdownArrow(arrow, elementToShow) {
     arrow.addEventListener("click", function() {
-        console.log("clicked");
         if (elementToShow.classList.contains("hidden")) {
             elementToShow.classList.remove("hidden");
 
