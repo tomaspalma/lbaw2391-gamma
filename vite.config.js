@@ -11,6 +11,8 @@ export default defineConfig({
                 "resources/js/search/search.js",
                 "resources/js/search/main_search_preview.js",
                 "resources/js/search/admin_user_search.js",
+                "resources/js/search/infinite_scroll.js",
+                "resources/js/search/feed/scroll.js",
                 "resources/js/components/confirmation_modal.js",
                 "resources/js/admin/user/delete.js",
                 "resources/js/admin/user/unblock.js",
@@ -26,6 +28,7 @@ export default defineConfig({
                 "resources/js/comment/delete.js",
                 "resources/js/post/reactions.js",
                 "resources/js/utils.js",
+                "resources/js/notifications/filter.js"
             ],
             refresh: true,
         }),

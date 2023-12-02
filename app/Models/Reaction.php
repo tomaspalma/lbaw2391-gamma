@@ -25,7 +25,7 @@ class Reaction extends Model
         'type' => ReactionType::class,
     ];
 
-    public function author() : BelongsTo 
+    public function owner() : BelongsTo 
     {
         return $this->belongsTo(User::class, 'author');
     }

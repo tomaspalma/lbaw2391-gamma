@@ -17,9 +17,30 @@ const pusher = new Pusher(pusherAppKey, {
     debug: true
 });
 
+function onNotificationsPage() {
+    const url = window.location.href;
+    const urlParts = url.split("/");
+
+    return urlParts[urlParts.length - 1] === 'notifications';
+}
+
+const notificationCounter = document.getElementById("notification-counter");
 const channel = pusher.subscribe(`private-user.${getUsername()}`);
 channel.bind('reaction-notification', function(data) {
-    if (data.message.user.username !== data.author) {
-        console.log(data);
+    console.log(data);
+    const message = data.message;
+    if (message.user.username !== data.author) {
+        notificationCounter.classList.remove("hidden");
+        const counter = parseInt(notificationCounter.textContent, 10);
+        notificationCounter.textContent = (counter + 1);
+
+        if (onNotificationsPage()) {
+            const notificationsCards = document.getElementById("notification-cards");
+            console.log(notificationsCards.children);
+
+            notificationsCards.insertAdjacentHTML('afterbegin', message.reaction_not_view);
+
+            console.log(notificationsCards.children);
+        }
     }
 });

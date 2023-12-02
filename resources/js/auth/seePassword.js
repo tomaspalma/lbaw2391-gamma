@@ -3,22 +3,22 @@ const toggleButton = document.getElementById("togglePassword");
 const passwordConfirmInput = document.getElementById("password-confirm");
 const toggleButtonConfirm = document.getElementById("togglePasswordConfirm");
 
-toggleButton.addEventListener("click", function () {
+toggleButton.addEventListener("click", function() {
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        toggleButton.classList = "fa-solid fa-eye";
+        toggleButton.classList = "fa-solid fa-eye cursor-pointer";
     } else {
         passwordInput.type = "password";
-        toggleButton.classList = "fas fa-eye-slash";
+        toggleButton.classList = "fas fa-eye-slash cursor-pointer";
     }
 });
 
-toggleButtonConfirm.addEventListener("click", function () {
+toggleButtonConfirm.addEventListener("click", function() {
     if (passwordConfirmInput.type === "password") {
         passwordConfirmInput.type = "text";
-        toggleButtonConfirm.classList = "fa-solid fa-eye";
+        toggleButtonConfirm.classList = "fa-solid fa-eye cursor-pointer";
     } else {
         passwordConfirmInput.type = "password";
-        toggleButtonConfirm.classList = "fas fa-eye-slash";
+        toggleButtonConfirm.classList = "fas fa-eye-slash cursor-pointer";
     }
 });

@@ -73,8 +73,8 @@
             <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
             <input class="mt-1 p-2 w-full border focus:ring-2" id="password" type="password" name="password" required>
 
-            <i class="fas fa-eye-slash" id="togglePassword" style="margin-top: -29px; margin-left: 310px;"></i>
-            
+            <i class="fas fa-eye-slash cursor-pointer" id="togglePassword" style="margin-top: -29px; margin-left: 310px;"></i>
+
             @if ($errors->has('password'))
             <span class="text-red-500 text-sm">
                 {{ $errors->first('password') }}
@@ -87,16 +87,16 @@
             <label for="password-confirm" class="block text-sm font-medium text-gray-600">Confirm Password</label>
             <input class="mt-1 p-2 w-full border focus:ring-2" id="password-confirm" type="password" name="password_confirmation" required>
 
-            <i class="fas fa-eye-slash" id="togglePasswordConfirm" style="margin-top: -29px; margin-left: 310px;"></i>
+            <i class="fas fa-eye-slash cursor-pointer" id="togglePasswordConfirm" style="margin-top: -29px; margin-left: 310px;"></i>
 
-        <div class="flex items-center">
-            <button class="bg-blue-500 text-white py-2 px-4 rounded {{$admin_page_version ? 'w-full' : ''}}" type="submit">
-                {{$admin_page_version ? "Create User" : "Register"}}
-            </button>
+            <div class="flex items-center">
+                <button class="bg-blue-500 text-white py-2 px-4 rounded {{$admin_page_version ? 'w-full' : ''}}" type="submit">
+                    {{$admin_page_version ? "Create User" : "Register"}}
+                </button>
 
-            @if(!$admin_page_version)
-            <a class="ml-2 text-blue-500" href="{{ route('login') }}">Login</a>
-            @endif
-        </div>
+                @if(!$admin_page_version)
+                <a class="ml-2 text-blue-500" href="{{ route('login') }}">Login</a>
+                @endif
+            </div>
     </form>
 </div>

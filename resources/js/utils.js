@@ -3,6 +3,11 @@ export function getCsrfToken() {
     return metaTag;
 }
 
+export function getCurrentSearchQuery() {
+    const searchTag = document.querySelector('meta[name="search"]');
+    return searchTag.getAttribute("content");
+}
+
 export function getUsername() {
     const username = document.querySelector("meta[name='username']").getAttribute("content");
 
