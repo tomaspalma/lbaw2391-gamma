@@ -130,6 +130,10 @@ Route::prefix('/api')->group(function () {
         Route::get('/post/{id}/card/{preview}', 'show_post_card');
     });
 
+    Route::controller(NotificationController::class)->middleware('auth')->group(function () {
+        Route::get('/notifications/{filter?}', 'show_notifications');
+    });
+
     Route::controller(UserController::class)->group(function () {
         Route::get("/users/username/{username}", 'checkUsernameExists');
         Route::get("/users/email/{email}", 'checkEmailExists');

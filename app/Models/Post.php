@@ -48,7 +48,7 @@ class Post extends Model
         return $this->hasMany(Reaction::class, "post_id");
     }
 
-    public function reactionsMap(): array 
+    public function reactionsMap(): array
     {
         $reactions = [];
         foreach ($this->reactions as $reaction) {
@@ -60,7 +60,7 @@ class Post extends Model
                 $reactions[$icon][0] += 1;
             }
         }
-        
+
         return $reactions;
     }
 
@@ -75,30 +75,35 @@ class Post extends Model
         $now = new \DateTime();
         $interval = $dateTime->diff($now);
         if ($interval->y > 0) {
-            if ($interval->y == 1)
+            if ($interval->y == 1) {
                 return $interval->y . " year ago";
-            else
+            } else {
                 return $interval->y . " years ago";
-        } else if ($interval->m > 0) {
-            if ($interval->m == 1)
+            }
+        } elseif ($interval->m > 0) {
+            if ($interval->m == 1) {
                 return $interval->m . " month ago";
-            else
+            } else {
                 return $interval->m . " months ago";
-        } else if ($interval->d > 0) {
-            if ($interval->d == 1)
+            }
+        } elseif ($interval->d > 0) {
+            if ($interval->d == 1) {
                 return $interval->d . " day ago";
-            else
+            } else {
                 return $interval->d . " days ago";
-        } else if ($interval->h > 0) {
-            if ($interval->h == 1)
+            }
+        } elseif ($interval->h > 0) {
+            if ($interval->h == 1) {
                 return $interval->h . " hour ago";
-            else
+            } else {
                 return $interval->h . " hours ago";
-        } else if ($interval->i > 0) {
-            if ($interval->i == 1)
+            }
+        } elseif ($interval->i > 0) {
+            if ($interval->i == 1) {
                 return $interval->i . " minute ago";
-            else
+            } else {
                 return $interval->i . " minutes ago";
+            }
         } else {
             return "Just now";
         }

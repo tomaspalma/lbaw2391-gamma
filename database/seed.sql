@@ -151,13 +151,15 @@ CREATE TABLE friend_request_not(
 CREATE TABLE comment_not(
     id SERIAL PRIMARY KEY, 
     comment_id INTEGER REFERENCES comment(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now()),
+    read BOOLEAN DEFAULT false
 );
 
 CREATE TABLE reaction_not(
     id SERIAL PRIMARY KEY, 
     reaction_id INTEGER REFERENCES reaction(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now()),
+    read BOOLEAN DEFAULT false
 );
 
 CREATE TABLE appeal(
