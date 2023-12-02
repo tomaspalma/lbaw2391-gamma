@@ -42,7 +42,7 @@
                     </span>
                 </div>
                 @if(auth()->user() && auth()->user()->id != $user->id && !auth()->user()->is_friend($user) && !auth()->user()->has_sent_pending_friend_request($user))
-                    <form action="{{ route('add_friend_request', ['username' => $user->username]) }}" id="friendForm" method="POST">
+                    <form action="{{ route('add_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="post">
                         @csrf
                         <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                             Add Friend
@@ -50,18 +50,16 @@
                     </form>
                 @else
                     @if(auth()->user() && auth()->user()->id != $user->id && auth()->user()->has_sent_pending_friend_request($user)) 
-                        <form action="{{ route('remove_friend_request', ['username' => $user->username]) }}" id="friendForm" method="POST">
+                        <form action="{{ route('remove_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                             @csrf
-                            @method('DELETE')
                             <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                                 Cancel Friend Request
                             </button>
                         </form>
                     @else 
                         @if(auth()->user() && auth()->user()->id != $user->id && auth()->user()->is_friend($user))
-                            <form action="{{ route('remove_friend', ['username' => $user->username]) }}" id="friendForm" method="POST">
+                            <form action="{{ route('remove_friend', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                                 @csrf
-                                @method('DELETE')
                                 <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                                     Remove Friend
                                 </button>
@@ -69,6 +67,7 @@
                         @endif
                     @endif
                 @endif
+
                 <div class="mb-4">
                     <label class="text-sm text-gray-600">Username</label>
                     <div class="font-semibold text-gray-800" id="username">{{$user->username}}</div>

@@ -27,11 +27,9 @@ class FriendController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        $friendRequests = $user->received_pending_friend_requests()
-            ->with('user')
-            ->get();
+        $friendRequests = $user->received_pending_friend_requests();
 
-        return view('pages.friends', ['user' => $user, 'friendRequests' => $friendRequests, 'tab' => 'friend_requests']);
+        return view('pages.friends', ['user' => $user, 'friendRequests' => $friendRequests, 'tab' => 'requests']);
     }
 
     public function add_friend_request(Request $request, string $username)
@@ -43,7 +41,15 @@ class FriendController extends Controller
                 'user_id' => Auth::id(),
                 'friend_id' => $user->id
             ]);
+        } else {
+            return response()->json([
+                'message' => 'Friend request already sent.'
+            ], 400);
         }
+
+        return response()->json([
+            'message' => 'Friend request sent.'
+        ], 200);
     }
 
     public function remove_friend(Request $request, string $username)
@@ -63,14 +69,21 @@ class FriendController extends Controller
     public function remove_friend_request($username)
     {
         $user = User::where('username', $username)->firstOrFail();
-        if (FriendRequest::where('user_id', Auth::id())->where('friend_id', $user->id) == null) {
-            return redirect()->back()->with('message', 'Friend request does not exist.');
-        }
-        FriendRequest::where('user_id', Auth::id())
+        $friendRequest = FriendRequest::where('user_id', Auth::id())
             ->where('friend_id', $user->id)
-            ->delete();
+            ->first();
 
-        return redirect()->back()->with('message', 'Friend request removed.');
+        if ($friendRequest == null) {
+            return response()->json([
+                'message' => 'Friend request does not exist.'
+            ], 404);
+        }
+
+        $friendRequest->delete();
+
+        return response()->json([
+            'message' => 'Friend request removed.'
+        ], 200);
     }
 
     public function accept_friend_request($username)

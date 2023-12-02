@@ -144,16 +144,18 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return FileController::get('profile', $this->id);
     }
 
-    public function sent_pending_friend_requests(): BelongsToMany
+    public function sent_pending_friend_requests()
     {
-        return $this->belongsToMany(User::class, 'friend_request', 'user_id', 'friend_id')
-            ->wherePivot('is_accepted', false);
+        return FriendRequest::where('user_id', $this->id)
+            ->where('is_accepted', false)
+            ->get();
     }
 
-    public function received_pending_friend_requests(): BelongsToMany
+    public function received_pending_friend_requests()
     {
-        return $this->belongsToMany(User::class, 'friend_request', 'friend_id', 'user_id')
-            ->wherePivot('is_accepted', false);
+        return FriendRequest::where('friend_id', $this->id)
+            ->where('is_accepted', false)
+            ->get();
     }
 
     public function has_sent_pending_friend_request(User $user): bool
