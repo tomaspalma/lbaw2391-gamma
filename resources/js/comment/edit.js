@@ -24,6 +24,7 @@ export function editComment(saveButton) {
     fetch('/comment/' + commentId + '/edit', {
         method: 'PUT',
         headers: {
+            'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({
@@ -38,7 +39,7 @@ export function editComment(saveButton) {
                 contentPara.textContent = comment.data.content;
                 contentPara.classList.remove('hidden');
                 dropDown.classList.remove('hidden');
-                saveButton.classList.add('hidden');
+                saveButton.target.classList.add('hidden');
                 editInput.classList.add('hidden');
             });
         }

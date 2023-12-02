@@ -32,6 +32,7 @@ function addComment() {
                 let commentDiv = document.createElement('div');
                 commentDiv.classList.add('grid', 'grid-cols-2');
 
+                // Head of comment, contains image, username and date
                 let headDiv = document.createElement('div');
                 headDiv.classList.add('flex', 'flex-row', 'flex-nowrap', 'gap-x-4');
                 let image = document.createElement('img');
@@ -50,8 +51,9 @@ function addComment() {
                 headDiv.appendChild(para);
                 headDiv.appendChild(span);
 
+                // Dropdown button and content of comment
                 let buttonDiv = document.createElement('div');
-                buttonDiv.classList.add('flex', 'gap-x-1', 'justify-self-end', 'relative');
+                buttonDiv.classList.add('dropdown', 'flex', 'gap-x-1', 'justify-self-end', 'relative');
                 let button = document.createElement('button');
                 button.classList.add('dropdownButton', 'text-black', 'font-bold', 'py-2', 'px-4', 'rounded');
                 let i = document.createElement('i');
@@ -72,9 +74,9 @@ function addComment() {
                 dropdownDiv.classList.add('dropdownContent', 'absolute', 'right-0', 'mt-2', 'w-56', 'rounded-md', 'shadow-lg', 'bg-white', 'ring-1', 'ring-black', 'ring-opacity-5');
                 dropdownDiv.style.display = 'none';
                 let editLink = document.createElement('a');
-                editLink.setAttribute('href', '/comment/' + comment.data.id + '/edit');
-                editLink.classList.add('block', 'px-4', 'py-2', 'text-sm', 'text-gray-700', 'hover:bg-gray-100', 'hover:text-gray-900', 'hover:no-underline');
+                editLink.classList.add('edit-comment-button', 'block', 'px-4', 'py-2', 'text-sm', 'text-gray-700', 'cursor-pointer', 'hover:bg-gray-100', 'hover:text-gray-900', 'hover:no-underline');
                 editLink.textContent = 'Edit';
+                editLink.addEventListener('click', editCommentForm);
                 let deleteLink = document.createElement('a');
                 deleteLink.classList.add('delete-comment-button', 'block', 'px-4', 'py-2', 'text-sm', 'text-gray-700', 'cursor-pointer', 'hover:bg-gray-100', 'hover:text-gray-900', 'hover:no-underline');
                 deleteLink.setAttribute('comment-id', comment.data.id);
@@ -82,8 +84,8 @@ function addComment() {
                 deleteLink.addEventListener('click', deleteComment);
                 dropdownDiv.appendChild(editLink);
                 dropdownDiv.appendChild(deleteLink);
-                dropdownDiv.addEventListener('click', function (event) {
-                    const isClickInside = dropdownDiv.contains(event.target);
+                document.addEventListener('click', function (event) {
+                    const isClickInside = dropdownDiv.contains(event.target) || button.contains(event.target);
                     
                     if (!isClickInside) {
                         dropdownDiv.style.display = "none";
@@ -94,13 +96,29 @@ function addComment() {
                 buttonDiv.appendChild(button);
                 buttonDiv.appendChild(dropdownDiv);
 
+                // Hidden save button
+                let saveButton = document.createElement('button');
+                saveButton.classList.add('save-comment', 'hidden', 'justify-self-end', 'text-black', 'font-bold', 'py-2', 'px-4', 'rounded');
+                saveButton.setAttribute('comment-id', comment.data.id);
+                saveButton.textContent = 'Save';
+                saveButton.addEventListener('click', editComment);
+
+                // Content of comment
                 let contentPara = document.createElement('p');
-                contentPara.classList.add('col-span-2', 'break-words');
+                contentPara.classList.add('comment-content', 'col-span-2', 'break-words');
                 contentPara.textContent = comment.data.content;
+
+                // Hidden edit comment form
+                let textarea = document.createElement('textarea');
+                textarea.classList.add('edit-comment', 'hidden', 'col-span-2', 'break-words', 'hidden');
+                textarea.setAttribute('comment-id', comment.data.id);
+                textarea.setAttribute('name', 'content');
 
                 commentDiv.appendChild(headDiv);
                 commentDiv.appendChild(buttonDiv);
+                commentDiv.appendChild(saveButton);
                 commentDiv.appendChild(contentPara);
+                commentDiv.appendChild(textarea);
 
                 let hr = document.createElement('hr');
                 hr.classList.add('my-2');
