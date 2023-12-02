@@ -6,20 +6,22 @@
             <time>{{ $comment->format_date() }} </time>
         </span>
     </div>
-    <div class="flex gap-x-1 justify-self-end relative">
+    <div class="dropdown flex gap-x-1 justify-self-end relative">
         @can('delete', $comment)
         <button class="dropdownButton text-black font-bold py-2 px-4 rounded">
                 <i class="fas fa-ellipsis-v"></i>                     
         </button>
         <div class="dropdownContent absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5" style="display:none;">
             @can('update', $comment)
-            <a href="{{ route('comment.update', $comment->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:no-underline">Edit</a>
+            <a class="edit-comment-button block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:no-underline">Edit</a>
             @endcan
             <a class="delete-comment-button block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 hover:text-gray-900 hover:no-underline"
             comment-id="{{ $comment->id }}">Delete</a>
         </div>
         @endcan
     </div>
-    <p class="col-span-2 break-words">{{ $comment->content }}</p>
+    <button class="save-comment hidden justify-self-end text-black font-bold py-2 px-4 rounded" comment-id="{{ $comment->id }}">Save</button>
+    <p class="comment-content col-span-2 break-words">{{ $comment->content }}</p>
+    <textarea class="edit-comment col-span-2 break-words hidden" name="content" rows="3"></textarea>
 </div>
 <hr class="my-2">

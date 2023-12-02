@@ -59,7 +59,7 @@ class CommentController extends Controller
         $comment->content = $request->content;
         $comment->save();
 
-        return redirect('/post/' . $comment->post_id);
+        return new CommentResource($comment);
     }
 
     public function delete(int $id)

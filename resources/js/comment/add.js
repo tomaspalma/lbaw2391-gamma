@@ -1,4 +1,6 @@
 import { deleteComment } from './delete.js';
+import { editCommentForm } from './edit.js';
+import { editComment } from './edit.js';
 
 function addComment() {
     let form = document.getElementById('comment-form');
@@ -125,4 +127,14 @@ if(commentButton) {
 let deleteCommentButtons = document.getElementsByClassName('delete-comment-button');
 for(const deleteButton of deleteCommentButtons) {
     deleteButton.addEventListener('click', deleteComment);
+}
+
+const editCommentButtons = document.getElementsByClassName('edit-comment-button');
+for(const editButton of editCommentButtons) {
+    editButton.addEventListener('click', editCommentForm);
+}
+
+const saveCommentButtons = document.getElementsByClassName('save-comment');
+for(const saveButton of saveCommentButtons) {
+    saveButton.addEventListener('click', editComment);
 }
