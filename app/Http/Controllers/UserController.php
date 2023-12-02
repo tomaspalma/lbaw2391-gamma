@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AppBanUserAppeal;
+use App\Events\BanAppUserAppeal;
 use Illuminate\View\View;
 
 use App\Models\User;
@@ -16,6 +18,21 @@ use App\Models\AppBanAppeal;
 
 class UserController extends Controller
 {
+    public function remove_appeal(string $username)
+    {
+        $user = User::where('username', $username)->get()[0];
+
+        // $this->authorize('can_have_appeal_removed', $user);
+        DB::transaction(function () use ($user) {
+            $appeal = $user->app_ban->appeal_model;
+
+            $user->app_ban->appeal = null;
+            $user->app_ban->save();
+
+            $appeal->delete();
+        });
+    }
+
     /**
      * Returns a view with the form where a user can appeal their app ban
      */
@@ -26,7 +43,6 @@ class UserController extends Controller
         $this->authorize('can_appeal_appban', $user);
 
         $reason = $user->app_ban->reason;
-
         $appeal = $user->app_ban->appeal;
 
         return view(
@@ -42,7 +58,7 @@ class UserController extends Controller
     /**
      * Executes the action of submitting an appeal
      */
-    public function appeal_appban(Request $request, string $username): RedirectResponse
+    public function appeal_appban(Request $request, string $username)
     {
         $request->validate([
             'reason' => 'required|string|max:512'
@@ -52,7 +68,7 @@ class UserController extends Controller
 
         $this->authorize('can_appeal_appban', $user);
 
-        DB::transaction(function () use ($user, $request) {
+        DB::transaction(function () use ($user, $request, $appeal) {
             $appban = AppBan::where('banned_user_id', $user->id)->get()[0];
 
             $appeal = AppBanAppeal::create([

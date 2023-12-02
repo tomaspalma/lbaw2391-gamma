@@ -19,6 +19,21 @@ if (leaveModalButtons) {
 }
 
 const callbackTypesAction = {
+    remove_appeal: (form) => {
+        const username = form.action.split("/")[5];
+        const userCard = document.querySelector(
+            `article[data-username="${username}"]`
+        );
+
+        const appealCounter = document.getElementById("appeal-counter");
+        const content = document.getElementById("content");
+        if (content.children.length === 1) {
+            content.innerHTML = "<p class='text-center'>No appeals found.</p>"
+            appealCounter.textContent = "0";
+        }
+
+        userCard.remove();
+    },
     delete_user: (confirmationForm) => {
         const username = confirmationForm.action.split("/")[4];
         const userCard = document.querySelector(
@@ -160,8 +175,6 @@ export function overrideConfirmationForm(
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        console.log("Form submitted");
 
         const formData = new FormData();
 

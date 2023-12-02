@@ -15,7 +15,9 @@
 
         @auth
         <li class="flex w-1/2 p-2 justify-center">
-            <a href="/admin/user/appeals" class="hover:underline">Appeals</a>
+            <a href="/admin/user/appeals" class="hover:underline">
+                Appeals (<span id="appeal-counter">{{$appeal_number}}</span>)
+            </a>
         </li>
         @endauth
     </ul>

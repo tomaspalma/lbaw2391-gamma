@@ -19,4 +19,8 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('user.{username}', function ($user, $username) {
     return $user->username === $username;
+}));
+
+Broadcast::channel('admin', function ($user) {
+    return $user->is_admin();
 });

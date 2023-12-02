@@ -1,5 +1,5 @@
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/components/confirmation_modal.js', 'resources/js/components/navbar_mobile_menu.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/components/navbar_mobile_menu.js'])
 </head>
 
 <div id="confirmation-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 z-40 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">

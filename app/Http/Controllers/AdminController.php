@@ -11,16 +11,23 @@ class AdminController extends Controller
 {
     public function show_user_appeals(Request $request) {
         $appeals = AppBanAppeal::paginate(15);
-
-        return view('pages.admin_user_appeals', ['appeals' => $appeals]);
+        
+        $appeal_number = count(AppBanAppeal::get());
+            
+        return view('pages.admin_user_appeals', [
+            'appeals' => $appeals,
+            'appeal_number' => $appeal_number
+        ]);
     }
 
     public function show_admin_user(Request $request)
     {
         $users = User::all();
+        $appeal_number = count(AppBanAppeal::get());
 
         return view('pages.admin', [
-            'users' => $users
+            'users' => $users,
+            'appeal_number' => $appeal_number
         ]);
     }
 
