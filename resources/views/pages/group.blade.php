@@ -12,7 +12,7 @@
 @include('partials.navbar')
 
 <div class="grid grid-cols-12">
-    <main class="col-span-12 md:col-span-9 mx-auto">
+    <main class="col-span-12 md:col-span-8 justify">
         @can('create', App\Models\Post::class)
         <a href="{{ route('post.createForm') }}" class="my-4 block mx-auto px-4 py-2 bg-black text-white text-center rounded">Create Post</a> 
         @endcan
@@ -37,6 +37,11 @@
         @endif
 
         @if($feed === 'members')
+            <select name="type" class="mt-1 p-2 w-full border focus:ring-2">
+                <option value="allUsers" selected>All Users</option>
+                <option value="groupOwners">Group Owners</option>
+                <option value="members">Members</option>
+            </select>
             @if($members->count() == 0)
                 <p class="text-center">No members found.</p>
             @else
@@ -49,9 +54,7 @@
 
     </main>
 
-    </main>
-  <aside class="col-span-12 md:col-span-3 self-start items-start content-start mr-10">
-    <aside class="border-2 border-gray-500 p-10 w-96 rounded-lg col-span-12 md:col-span-3 self-start items-start content-start mr-2 md:mr-5">
+    <aside class="border-2 border-gray-500 p-10 w-96 rounded-lg col-span-10 md:col-span-3 self-start items-start content-start mr-2 md:mr-5">
 
         <h2 class="text-3xl font-bold mb-4">{{$group->name}}</h2>
 
