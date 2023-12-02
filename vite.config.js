@@ -24,6 +24,7 @@ export default defineConfig({
                 "resources/js/profile/delete.js",
                 "resources/js/comment/add.js",
                 "resources/js/comment/delete.js",
+                "resources/js/comment/edit.js",
                 "resources/js/post/reactions.js",
                 "resources/js/utils.js",
             ],
