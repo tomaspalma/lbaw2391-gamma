@@ -1,7 +1,3 @@
-<head>
-    @vite(['resources/css/app.css'])
-</head>
-
 <article data-entity-id="{{$post->id}}" class="shadow-md post-card border border-black rounded-md my-4 p-2 cursor-pointer">
     <div class="flex align-middle justify-between space-x-4">
         <div class="flex space-x-4">
@@ -24,11 +20,11 @@
         {{ $post->content }}
     </p>
     @if($preview === false)
-        @php
-            $f = function($user, $post) {
-                return $user->post_reaction($post);
-            }
-        @endphp
-        @include('partials.reactions', ['entity' => $post, 'entity_function' => $f])
+    @php
+    $f = function($user, $post) {
+    return $user->post_reaction($post);
+    }
+    @endphp
+    @include('partials.reactions', ['entity' => $post, 'entity_function' => $f])
     @endif
 </article>

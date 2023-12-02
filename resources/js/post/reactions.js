@@ -131,13 +131,14 @@ async function interactReaction(reaction) {
     }
 }
 
-export function initReactionJs() {
-    const reactionPopupMenuToggles = document.querySelectorAll(".toggle-reaction-popup");
+export function initReactionJs(entityCard) {
+    const parent = entityCard ? entityCard : document;
+
+    const reactionPopupMenuToggles = parent.querySelectorAll(".toggle-reaction-popup");
     for (const reactionPopupMenuToggle of reactionPopupMenuToggles) {
         const reactionPopupMenu = reactionPopupMenuToggle.querySelector(".other-reactions-popup-menu");
 
         reactionPopupMenuToggle.addEventListener("click", function() {
-            console.log("clicked");
             reactionPopupMenu.classList.contains("hidden")
                 ? reactionPopupMenu.classList.remove("hidden")
                 : reactionPopupMenu.classList.add("hidden");
@@ -145,10 +146,9 @@ export function initReactionJs() {
     }
 
 
-    const reactions = document.querySelectorAll(".reaction");
+    const reactions = parent.querySelectorAll(".reaction");
     for (const reaction of reactions) {
         reaction.addEventListener("click", async () => {
-            console.log("clicked: ", reaction);
             await interactReaction(reaction);
         });
     }

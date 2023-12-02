@@ -159,7 +159,7 @@ class SearchController extends Controller
         if ($request->is('api*')) {
             $post_cards = [];
             foreach ($rawPosts as $post) {
-                $post_cards[] = view('partials.post_card', ['post' => new PostResource($post), 'preview' => true])->render();
+                $post_cards[] = view('partials.post_card', ['post' => $post, 'preview' => false])->render();
             }
 
             return response()->json($post_cards);

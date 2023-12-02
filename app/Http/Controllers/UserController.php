@@ -16,32 +16,25 @@ use App\Http\Controllers\FileController;
 
 class UserController extends Controller
 {
-    /**
-     * Method used in the AJAX api endpoint to show the posts of a user
-     */
-    public function show_user_posts(string $username, string $filter = null)
+    public function show(Request $request, string $username, string $filter = null)
     {
         $user = User::where('username', $username)->firstOrFail();
-        $posts = $user->posts()->orderBy('date', 'desc')->paginate(2);
 
-        $post_cards = [];
-        foreach ($posts as $post) {
-            $post_cards[] = view('partials.post_card', ['post' => $post, 'preview' => false])->render();
+        $posts = $user->posts()->orderBy('date', 'desc')->paginate(10);
+
+        if ($request->is("api*")) {
+            $post_cards = [];
+            foreach ($posts as $post) {
+                $post_cards[] = view('partials.post_card', ['post' => $post, 'preview' => false])->render();
+            }
+
+            return response()->json($post_cards);
+        } else {
+            return view('pages.profile', [
+                'user' => $user,
+                'posts' => $posts
+            ]);
         }
-
-        return response()->json($post_cards);
-    }
-
-    public function show(string $username): View
-    {
-        $user = User::where('username', $username)->firstOrFail();
-
-        $posts = $user->posts()->orderBy('date', 'desc')->paginate(2);
-
-        return view('pages.profile', [
-            'user' => $user,
-            'posts' => $posts
-        ]);
     }
 
     public static function reset_password(User $user, string $password)
