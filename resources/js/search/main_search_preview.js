@@ -24,8 +24,6 @@ function showSearchPreview(searchPreviewResults, searchValue) {
 
     const previewOptions = searchPreviewResults.querySelectorAll(".preview-results-option");
 
-    getSearchResults(currentSearchPreview, searchValue, searchPreviewContent, false);
-
     for (const previewOption of previewOptions) {
         previewOption.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -37,7 +35,7 @@ function showSearchPreview(searchPreviewResults, searchValue) {
             if (!previewOption.classList.contains(borderType) && !previewOption.classList.contains(borderColor)) {
                 previewOption.classList.add(borderType, borderColor);
 
-                getSearchResults(previewOption.id, searchValue, searchPreviewContent, false);
+                window.location.replace("/");
             }
 
             currentSearchPreview = previewOption.id;

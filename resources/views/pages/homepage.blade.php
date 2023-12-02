@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite('resources/css/app.css')
+    @vite(['resources/css/app.css', 'resources/js/search/feed/scroll.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
@@ -25,15 +25,15 @@
     </ul>
 
     @if($email_verified)
-        @if(count($posts) == 0)
-            <p class="text-center">No posts found.</p>
-        @else
-            @for($i = 0; $i < count($posts); $i++) 
-                @include('partials.post_card', ['post'=> $posts[$i], 'preview' => false])
-            @endfor
-        @endif
+    @if(count($posts) == 0)
+    <p class="text-center">No posts found.</p>
     @else
-        @include('partials.auth.email_validation_notice_text')
-    @endif
-
+    <div id="posts">
+        @for($i = 0; $i < count($posts); $i++) @include('partials.post_card', ['post'=> $posts[$i], 'preview' => false])
+            @endfor
+            @endif
+            @else
+            @include('partials.auth.email_validation_notice_text')
+            @endif
+    </div>
 </main>

@@ -576,7 +576,16 @@ CREATE TRIGGER add_friend
         (6, 1, 'History of Computer Science Lecture', 'Attended a fascinating lecture on the history of computer science today.', null, 1, false, NOW() - INTERVAL '6 days'),
         (7, 3, 'Challenges in Quantum Computing', 'Exploring the challenges and opportunities in the field of quantum computing.', null, 2, false, NOW() - INTERVAL '7 days'),
         (8, 4, 'Future of AI and Society', 'A sneak peek into the future of AI and its implications for society.', null, null, true, NOW() - INTERVAL '8 days'),
-        (9, 2, 'Python 4.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days');
+        (9, 2, 'Python 4.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (10, 2, 'Python 5.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (11, 2, 'Python 6.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (12, 2, 'Python 7.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (13, 2, 'Python 8.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (14, 2, 'Python 9.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (15, 2, 'Python 10.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (16, 2, 'Python 11.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (17, 2, 'Python 12.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
+        (18, 2, 'Python 13.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days');
 
 
     INSERT INTO comment (id, post_id, author, content, date) VALUES
