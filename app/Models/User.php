@@ -76,20 +76,20 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
     }
 
-    public function post_reaction(Post $post) 
+    public function post_reaction(Post $post)
     {
         $reactions = Reaction::where('post_id', $post->id)->where('author', $this->id)->get();
-        
+
         $user_post_reactions = [];
-        
+
         foreach ($reactions as $reaction) {
             $user_post_reactions[$reaction->type->value] = [
-                $reaction->type->getViewIcon(), 
+                $reaction->type->getViewIcon(),
                 $reaction->type->getViewColor(),
             ];
         }
 
-        return $user_post_reactions; 
+        return $user_post_reactions;
     }
 
     public function friends()
@@ -99,7 +99,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->where('id', '<>', $this->id);
     }
 
-    public function has_verified_email(): bool {
+    public function has_verified_email(): bool
+    {
         return $this->email_verified_at !== null;
     }
 
@@ -142,4 +143,28 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     {
         return FileController::get('profile', $this->id);
     }
+
+    public function sent_pending_friend_requests(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'friend_request', 'user_id', 'friend_id')
+            ->wherePivot('is_accepted', false);
+    }
+
+    public function received_pending_friend_requests(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'friend_request', 'friend_id', 'user_id')
+            ->wherePivot('is_accepted', false);
+    }
+
+    public function has_sent_pending_friend_request(User $user): bool
+    {
+        return $this->sent_pending_friend_requests()->where('friend_id', $user->id)->exists();
+    }
+
+    public function has_received_pending_friend_request(User $user): bool
+    {
+        return $this->received_pending_friend_requests()->where('user_id', $user->id)->exists();
+    }
+
+
 }

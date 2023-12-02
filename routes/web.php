@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\FriendController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FeedController;
@@ -41,7 +42,17 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
     Route::delete('/users/{username}', 'delete_user');
     Route::post('/users/{username}/block', 'block_user');
     Route::post('/users/{username}/unblock', 'unblock_user');
-    Route::get('/api/users/{username}', 'checkUsernameExists');
+});
+
+// Friends
+Route::controller(FriendController::class)->middleware(EnsureUserExists::class)->group(function () {
+    Route::get('/users/{username}/friends', 'show_friends')->name('friends_page');
+    Route::get('/users/{username}/friends/requests', 'show_friend_requests');
+    Route::post('/api/users/{username}/friends/requests', 'add_friend_request')->name('add_friend_request');
+    Route::put('/api/users/{username}/friends/requests', 'decline_friend_request')->name('decline_friend_request');
+    Route::delete('/api/users/{username}/friends/requests', 'remove_friend_request')->name('remove_friend_request');
+    Route::post('/api/users/{username}/friends/', 'accept_friend_request')->name('accept_friend_request');
+    Route::delete('/api/users/{username}/friends', 'remove_friend')->name('remove_friend');
 });
 
 Route::controller(FeedController::class)->group(function () {
@@ -120,7 +131,7 @@ Route::prefix('/api')->group(function () {
         Route::get('/admin/search/users/{query?}', 'adminFullTextUsers')->middleware(['auth', EnsureUserIsAdmin::class]);
     });
 
-    Route::controller(PostController::class)->group(function() {
+    Route::controller(PostController::class)->group(function () {
         Route::get('/post/{id}/card/{preview}', 'show_post_card');
     });
 

@@ -77,6 +77,14 @@
                     </form>
                 </li>
                 @endauth
+                @auth
+                <li class="flex items-center space-x-0">
+                    <a href="/users/{{Auth::user()->username}}/friends" class="block py-2 pl-3 pr-1">
+                        <i class="fa-solid fa-user-group text-2xl"></i>
+                        <span class="md:hidden">Friends</span>
+                    </a>
+                </li>
+                @endauth
                 <li>
                     <a href="/notifications" class="block py-2 pl-3 pr-4">
                         <div class="relative flex flex-row md:flex-col space-x-1 md:space-x-0">

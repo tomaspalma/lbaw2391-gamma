@@ -1,6 +1,6 @@
 @extends('layouts.head')
 <head>
-    @vite(['resources/css/app.css', 'resources/js/components/dropdown_dots.js', 'resources/js/profile/delete.js'])
+    @vite(['resources/css/app.css', 'resources/js/components/dropdown_dots.js', 'resources/js/profile/delete.js', 'resources/js/profile/friends.js'])
 </head>
 
 @include('partials.navbar')
@@ -41,9 +41,37 @@
                         {{$user->is_private ? 'Private' : 'Public'}}
                     </span>
                 </div>
+                @if(auth()->user() && auth()->user()->id != $user->id && !auth()->user()->is_friend($user) && !auth()->user()->has_sent_pending_friend_request($user))
+                    <form action="{{ route('add_friend_request', ['username' => $user->username]) }}" id="friendForm" method="POST">
+                        @csrf
+                        <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                            Add Friend
+                        </button>
+                    </form>
+                @else
+                    @if(auth()->user() && auth()->user()->id != $user->id && auth()->user()->has_sent_pending_friend_request($user)) 
+                        <form action="{{ route('remove_friend_request', ['username' => $user->username]) }}" id="friendForm" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                                Cancel Friend Request
+                            </button>
+                        </form>
+                    @else 
+                        @if(auth()->user() && auth()->user()->id != $user->id && auth()->user()->is_friend($user))
+                            <form action="{{ route('remove_friend', ['username' => $user->username]) }}" id="friendForm" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                                    Remove Friend
+                                </button>
+                            </form>
+                        @endif
+                    @endif
+                @endif
                 <div class="mb-4">
                     <label class="text-sm text-gray-600">Username</label>
-                    <div class="font-semibold text-gray-800">{{$user->username}}</div>
+                    <div class="font-semibold text-gray-800" id="username">{{$user->username}}</div>
                 </div>
                 <div class="mb-4">
                     <label class="text-sm text-gray-600">Email</label>
@@ -60,6 +88,6 @@
         @can('view', $post)
             @include('partials.post_card', ['post'=> $post, 'preview' => false])
         @endcan
-    @empty <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No posts found.</p>
+    @empty <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No friends found.</p>
     @endforelse
 </div>

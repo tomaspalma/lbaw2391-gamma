@@ -144,7 +144,7 @@ CREATE TABLE group_request_not(
 
 CREATE TABLE friend_request_not(
     id SERIAL PRIMARY KEY, 
-    friend_request INTEGER REFERENCES friend_request(id) ON UPDATE CASCADE,
+    friend_request INTEGER REFERENCES friend_request(id) ON UPDATE CASCADE ON DELETE CASCADE,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
