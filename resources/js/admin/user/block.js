@@ -2,20 +2,22 @@ import { overrideConfirmationForm, populateModalText } from "../../components/co
 
 const confirmationModal = document.getElementById("confirmation-modal");
 
-const blockConfirmationTriggerButtons = document.querySelectorAll(".block-reason-trigger");
-for (const blockConfirmationTriggerButton of blockConfirmationTriggerButtons) {
-    console.log("Block confirmation trigger button, ", blockConfirmationTriggerButton);
-    blockConfirmationTriggerButton.addEventListener("click", (e) => {
-        e.preventDefault();
+export function toggleBlockTriggerButtons(blockConfirmationTriggerButtons) {
+    for (const blockConfirmationTriggerButton of blockConfirmationTriggerButtons) {
+        blockConfirmationTriggerButton.addEventListener("click", (e) => {
+            e.preventDefault();
 
-        blockUserAction(blockConfirmationTriggerButton);
-    });
+            blockUserAction(blockConfirmationTriggerButton);
+        });
+    }
 }
 
+const blockConfirmationTriggerButtons = document.querySelectorAll(".block-reason-trigger");
+toggleBlockTriggerButtons(blockConfirmationTriggerButtons);
+
 export function blockUserAction(blockConfirmationTriggerButton) {
-    let username = blockConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-username");
-    console.log("HUGDFHGUOD: ", username);
-    const profileImage = blockConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-user-image");
+    let username = blockConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-username");
+    const profileImage = blockConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-user-image");
 
     const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 

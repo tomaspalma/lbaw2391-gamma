@@ -18,6 +18,7 @@ use App\Http\Middleware\EnsureUserIsAdmin;
 
 use App\Http\Controllers\PostController;
 use App\Http\Middleware\EnsurePostExists;
+use App\Http\Middleware\EnsureUserIsNotAppBanned;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,15 +37,19 @@ Route::redirect('/', '/feed');
 // Users
 Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
     Route::get('/users/{username}', 'show')->name('profile');
-    Route::get('/users/{username}/edit', 'edit')->name('edit_profile');
-    Route::put('/users/{username}/edit', 'update')->name('profile_update');
-    Route::delete('/users/{username}', 'delete_user');
-    Route::post('/users/{username}/block', 'block_user');
-    Route::post('/users/{username}/unblock', 'unblock_user');
-    Route::get('/api/users/{username}', 'checkUsernameExists');
+    Route::middleware([EnsureUserIsNotAppBanned::class])->group(function () {
+        Route::get('/users/{username}/edit', 'edit')->name('edit_profile');
+        Route::put('/users/{username}/edit', 'update')->name('profile_update');
+        Route::delete('/users/{username}', 'delete_user');
+        Route::post('/users/{username}/block', 'block_user');
+        Route::post('/users/{username}/unblock', 'unblock_user');
+    });
+
+    Route::get('/users/{username}/appban/appeal', 'show_appban_appeal_form')->name('appban_appeal_form.show');
+    Route::post('/users/{username}/appban/appeal', 'appeal_appban');
 });
 
-Route::controller(FeedController::class)->group(function () {
+Route::controller(FeedController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get('/feed', 'show_popular');
     Route::get('/feed/personal', 'show_personal');
 });
@@ -67,14 +72,14 @@ Route::controller(EmailController::class)->group(function () {
     Route::post('/email/verification-notification', 'resend_verification')->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 });
 
-Route::controller(NotificationController::class)->middleware('auth')->group(function () {
+Route::controller(NotificationController::class)->middleware(['auth', EnsureUserIsNotAppBanned::class])->group(function () {
     Route::get('/notifications', 'show_notifications');
 });
 
 // Posts
 Route::controller(PostController::class)->group(function () {
     Route::get('/post/{id}', 'showPost')->name('post.show');
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', EnsureUserIsNotAppBanned::class])->group(function () {
         Route::get('/post', 'showCreateForm')->name('post.createForm')->middleware('verified');
         Route::post('/post', 'create')->name('post.create')->middleware('verified');
         Route::get('/post/{id}/edit', 'showEditForm');
@@ -100,6 +105,7 @@ Route::controller(AdminController::class)->middleware(['auth', EnsureUserIsAdmin
     Route::prefix('/admin')->group(function () {
         Route::get("/user", 'show_admin_user');
         Route::get("/user/create", 'show_create_user')->name('admin_create_user');
+        Route::get("/user/appeals", 'show_user_appeals')->name('admin.show_user_appeals');
     });
 });
 
@@ -137,5 +143,8 @@ Route::prefix('/api')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::get("/users/username/{username}", 'checkUsernameExists');
         Route::get("/users/email/{email}", 'checkEmailExists');
+        Route::middleware(EnsureUserIsAdmin::class)->group(function () {
+            Route::delete("/users/{username}/appeal", 'remove_appeal')->name('admin.remove_appeal');
+        });
     });
 });
