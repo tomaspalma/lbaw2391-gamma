@@ -36,8 +36,11 @@ channel.bind('reaction-notification', function(data) {
 
         if (onNotificationsPage()) {
             const notificationsCards = document.getElementById("notification-cards");
+            console.log(notificationsCards.children);
 
             notificationsCards.insertAdjacentHTML('afterbegin', message.reaction_not_view);
+
+            console.log(notificationsCards.children);
         }
     }
 });

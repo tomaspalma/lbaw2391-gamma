@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 use App\Http\Controllers\FileController;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 {
@@ -76,34 +77,56 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
     }
 
-    public function normal_notifications() {
+    public function normal_notifications()
+    {
         $result = $this->comment_notification()->concat($this->reaction_notifications())->sortByDesc('date');
-        
+
         return $result;
     }
 
-    public function reaction_notifications() {
-        return ReactionNot::paginate(15)->sortByDesc('date');
+
+    public function reaction_notifications()
+    {
+        return ReactionNot::with('reaction')
+            ->whereHas('reaction', function ($query) {
+                $query->where(function ($subQuery) {
+                    $subQuery->where('author', Auth::user()->id)
+                        ->orWhereHas('post', function ($postQuery) {
+                            $postQuery->where('author', Auth::user()->id);
+                        })
+                        ->orWhereHas('comment', function ($commentQuery) {
+                            $commentQuery->where('author', Auth::user()->id);
+                        });
+                });
+            })
+            ->paginate(15)
+            ->sortByDesc('date');
     }
 
-    public function comment_notification() {
-        return CommentNot::paginate(15)->sortByDesc('date');
+    public function comment_notification()
+    {
+        return CommentNot::with('comment')
+            ->whereHas('comment', function ($query) {
+                $query->where('author', Auth::user()->id);
+            })
+            ->paginate(15)
+            ->sortByDesc('date');
     }
 
-    public function post_reaction(Post $post) 
+    public function post_reaction(Post $post)
     {
         $reactions = Reaction::where('post_id', $post->id)->where('author', $this->id)->get();
-        
+
         $user_post_reactions = [];
-        
+
         foreach ($reactions as $reaction) {
             $user_post_reactions[$reaction->type->value] = [
-                $reaction->type->getViewIcon(), 
+                $reaction->type->getViewIcon(),
                 $reaction->type->getViewColor(),
             ];
         }
 
-        return $user_post_reactions; 
+        return $user_post_reactions;
     }
 
     public function friends()
@@ -113,7 +136,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->where('id', '<>', $this->id);
     }
 
-    public function has_verified_email(): bool {
+    public function has_verified_email(): bool
+    {
         return $this->email_verified_at !== null;
     }
 
