@@ -95,6 +95,8 @@ Route::controller(CommentController::class)->group(function () {
 Route::controller(GroupController::class)->group(function () {
     Route::get('/group/{id}', 'showGroupForm')->name('groupPosts');
     Route::get('/group/{id}/members', 'showGroupMembers')->name('groupMembers');
+    Route::post('/group/{id}/enter', 'addToGroup')->name('groups.enter');
+    Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
 });
 
 Route::controller(SearchController::class)->group(function () {

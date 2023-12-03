@@ -13,7 +13,7 @@
 
 <div class="grid grid-cols-12">
     <main class="col-span-12 md:col-span-8 justify">
-        @can('create', App\Models\Post::class)
+        @can('alreadyIn', $group)
         <a href="{{ route('post.createForm') }}" class="my-4 block mx-auto px-4 py-2 bg-black text-white text-center rounded">Create Post</a> 
         @endcan
         <ul class="tab-container center justify-center flex border border-black rounded shadow my-4">
@@ -25,31 +25,41 @@
             </li>
         </ul>
 
-
-        @if($feed === 'posts')
-            @if($posts->count() == 0)
-                <p class="text-center">No posts found.</p>
-            @else
-                @for($i = 0; $i < $posts->count(); $i++) 
-                    @include('partials.post_card', ['post'=> $posts->get()[$i]])
-                @endfor
+        @can('view', $group)
+            @if($feed === 'posts')
+                @if($posts->count() == 0)
+                    <p class="text-center">No posts found.</p>
+                @else
+                    @for($i = 0; $i < $posts->count(); $i++) 
+                        @include('partials.post_card', ['post'=> $posts->get()[$i]])
+                    @endfor
+                @endif
             @endif
-        @endif
 
-        @if($feed === 'members')
-            <select name="type" class="mt-1 p-2 w-full border focus:ring-2">
-                <option value="allUsers" selected>All Users</option>
-                <option value="groupOwners">Group Owners</option>
-                <option value="members">Members</option>
-            </select>
-            @if($members->count() == 0)
-                <p class="text-center">No members found.</p>
-            @else
-                @for($i = 0; $i < $members->count(); $i++) 
-                    @include('partials.user_card', ['user' => $members->get()[$i], 'adminView' => false])
-                @endfor
+            @if($feed === 'members')
+                <select name="type" class="mt-1 p-2 w-full border focus:ring-2">
+                    <option value="allUsers" selected>All Users</option>
+                    <option value="groupOwners">Group Owners</option>
+                    <option value="members">Members</option>
+                </select>
+                @if($members->count() == 0)
+                    <p class="text-center">No members found.</p>
+                @else
+                    @for($i = 0; $i < $members->count(); $i++) 
+                        @include('partials.user_card', ['user' => $members->get()[$i], 'adminView' => false])
+                    @endfor
+                @endif
             @endif
-        @endif
+
+        @else
+
+        <div class="justify-center h-screen">
+            <div class="bg-red-100 border border-red-500 p-4">
+                <p class="text-red-500">You do not have permission</p>
+            </div>
+        </div>
+
+        @endcan
 
 
     </main>
@@ -77,6 +87,57 @@
                 <p class="mb-2">Public</p>
             </div>  
         @endif
+
+        @can('view', $group)
+
+            @auth
+                @can('alreadyIn', $group)
+
+
+                <form action="{{ route('groups.leave', $group )}}" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        Leave group
+                    </button>
+                </form>
+
+
+                @else
+                    <form action="{{ route('groups.enter', $group) }}" method="post">
+                        @csrf
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Enter this group
+                        </button>
+                    </form>
+
+                @endcan
+            
+            @endauth
+
+        @else
+            @auth
+
+                @if(!$user->is_pending($group->id))
+
+                    <form action="{{ route('groups.enter', $group) }}" method="post">
+                            @csrf
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Enter this group
+                            </button>
+                    </form>
+
+                @else
+                <p class="bg-yellow-100 text-yellow-800 p-4 rounded-md">
+                    Waiting for response...
+                </p>
+                @endif
+
+            @endauth
+
+        @endcan
+
+
     </aside>
 
 </div>

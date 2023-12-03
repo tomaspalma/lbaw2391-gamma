@@ -56,6 +56,7 @@ CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL CONSTRAINT unique_group_name UNIQUE,
     image TEXT,
+    banner TEXT,
     is_private BOOLEAN DEFAULT true NOT NULL,
     description TEXT NOT NULL
 );

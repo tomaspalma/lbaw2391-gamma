@@ -113,6 +113,15 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->friends()->get()->contains($user_id);
     }
 
+
+    public function is_pending($group_id) : bool{
+        return DB::table('group_request')
+            ->where('user_id', $this->id)
+            ->where('group_id', $group_id)
+            ->where('is_accepted', false)
+            ->exists();
+    }
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, "author");
