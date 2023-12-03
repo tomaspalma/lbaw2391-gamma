@@ -21,21 +21,28 @@ class Reaction extends Model
         'type',
     ];
 
+    public static $possible_types = [
+        'LIKE',
+        'DISLIKE',
+        'STAR',
+        'HEART'
+    ];
+
     protected $casts = [
         'type' => ReactionType::class,
     ];
 
-    public function owner() : BelongsTo 
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author');
     }
 
-    public function post() : BelongsTo 
+    public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class, "post_id");
     }
 
-    public function comment() : BelongsTo 
+    public function comment(): BelongsTo
     {
         return $this->belongsTo(Comment::class, "comment_id");
     }

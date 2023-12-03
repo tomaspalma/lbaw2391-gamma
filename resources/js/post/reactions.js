@@ -1,7 +1,8 @@
 import { getCsrfToken } from "../utils";
 
-function reactionAlreadyPresent(entityId, reactionType) {
-    const article = document.querySelector(`[data-entity-id="${entityId}"]`);
+function reactionAlreadyPresent(entityId, reactionType, entityType) {
+    const article = document.querySelector(`[data-entity-id="${entityId}"][data-entity="${entityType}"]`);
+    console.log("articlefsdffdfsf3r4ttk9: ", article)
     const reactionsList = article.querySelector(".reactions-list");
 
     for (const alreadyPresentReaction of reactionsList.children) {
@@ -33,8 +34,9 @@ const reactionIconColor = {
     }
 }
 
-function spawnReaction(entityId, reactionType) {
-    const article = document.querySelector(`[data-entity-id="${entityId}"]`);
+function spawnReaction(entityId, reactionType, entityType) {
+    const article = document.querySelector(`[data-entity-id="${entityId}"][data-entity="${entityType}"]`);
+    console.log("fhusdfhsjdf: ", article);
     const reactionsList = article.querySelector(".reactions-list");
 
     const {
@@ -52,11 +54,12 @@ function spawnReaction(entityId, reactionType) {
     reactionsList.append(newReaction);
 }
 
-async function add_reaction(reaction, reactionType, id) {
-    fetch(`/post/${id}/reaction`, {
+async function add_reaction(reaction, reactionType, id, entityType) {
+    fetch(`/${entityType}/${id}/reaction`, {
         method: 'POST',
         headers: {
-            'X-CSRF-Token': getCsrfToken()
+            'X-CSRF-Token': getCsrfToken(),
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(
             {
@@ -65,7 +68,7 @@ async function add_reaction(reaction, reactionType, id) {
         )
     }).then((res) => {
         if (res.ok) {
-            const presentReaction = reactionAlreadyPresent(id, reactionType);
+            const presentReaction = reactionAlreadyPresent(id, reactionType, entityType);
 
             if (presentReaction) {
                 const counter = presentReaction.querySelector(".reaction-count");
@@ -73,7 +76,7 @@ async function add_reaction(reaction, reactionType, id) {
                 const currentCounter = parseInt(counter.textContent, 10);
                 counter.textContent = `${(currentCounter + 1)}`;
             } else {
-                spawnReaction(id, reactionType);
+                spawnReaction(id, reactionType, entityType);
             }
 
             reaction.classList.add("highlighted", `${reactionType.toLowerCase()}-highlighted`);
@@ -81,12 +84,12 @@ async function add_reaction(reaction, reactionType, id) {
         }
 
     }).catch((err) => {
-
+        console.error(err);
     });
 }
 
-async function remove_reaction(reaction, reactionType, id) {
-    fetch(`/post/${id}/reaction`, {
+async function remove_reaction(reaction, reactionType, id, entityType) {
+    fetch(`/${entityType}/${id}/reaction`, {
         method: 'DELETE',
         headers: {
             'X-CSRF-Token': getCsrfToken()
@@ -103,7 +106,8 @@ async function remove_reaction(reaction, reactionType, id) {
             reaction.classList.remove(`${reactionType.toLowerCase()}-highlighted`);
             reaction.classList.add(`${reactionType.toLowerCase()}-nonhighlighted`);
 
-            const article = document.querySelector(`[data-entity-id="${id}"]`);
+            const article = document.querySelector(`[data-entity-id="${id}"][data-entity="${entityType}"]`);
+            console.log("article: ", article);
             const reactionListItem = article.querySelector(`[class="${id}-${reactionType}"]`);
             const counter = reactionListItem.querySelector(".reaction-count");
             const currentCounterValue = parseInt(counter.textContent, 10);
@@ -121,13 +125,14 @@ async function remove_reaction(reaction, reactionType, id) {
 async function interactReaction(reaction) {
     const reactionType = reaction.getAttribute("data-reaction-type");
     const id = reaction.getAttribute("data-entity-id");
+    const entityType = reaction.getAttribute("data-entity");
 
     const highlighted = reaction.classList.contains("highlighted");
 
     if (highlighted) {
-        await remove_reaction(reaction, reactionType, id);
+        await remove_reaction(reaction, reactionType, id, entityType);
     } else {
-        await add_reaction(reaction, reactionType, id);
+        await add_reaction(reaction, reactionType, id, entityType);
     }
 }
 
@@ -137,7 +142,6 @@ export function initReactionJs() {
         const reactionPopupMenu = reactionPopupMenuToggle.querySelector(".other-reactions-popup-menu");
 
         reactionPopupMenuToggle.addEventListener("click", function() {
-            console.log("clicked");
             reactionPopupMenu.classList.contains("hidden")
                 ? reactionPopupMenu.classList.remove("hidden")
                 : reactionPopupMenu.classList.add("hidden");
@@ -148,7 +152,6 @@ export function initReactionJs() {
     const reactions = document.querySelectorAll(".reaction");
     for (const reaction of reactions) {
         reaction.addEventListener("click", async () => {
-            console.log("clicked: ", reaction);
             await interactReaction(reaction);
         });
     }

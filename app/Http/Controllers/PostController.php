@@ -29,14 +29,14 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
-        return response()->json($post->reactionsMap());
+        return response()->json(ReactionController::reactionsMap($post));
     }
 
     public function add_reaction(Request $request, int $id)
     {
-        // $request->validate([
-        //     'type' => Rule::in(['LIKE', 'HEART', 'DISLIKE', 'STAR'])
-        // ]);
+        $request->validate([
+            'type' => Rule::in(Reaction::$possible_types)
+        ]);
 
         $post = Post::find($id);
 

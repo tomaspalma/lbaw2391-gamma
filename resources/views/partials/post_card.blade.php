@@ -1,8 +1,4 @@
-<head>
-    @vite(['resources/css/app.css'])
-</head>
-
-<article data-entity-id="{{$post->id}}" class="shadow-md post-card border border-black rounded-md my-4 p-2 cursor-pointer">
+<article data-entity="post" data-entity-id="{{$post->id}}" class="shadow-md post-card border border-black rounded-md my-4 p-2 cursor-pointer">
     <div class="flex align-middle justify-between space-x-4">
         <div class="flex space-x-4">
             <img src="{{ $post->owner->getProfileImage() ?? 'hello'}}" class="rounded-full w-10 h-10">
@@ -24,11 +20,11 @@
         {{ $post->content }}
     </p>
     @if($preview === false)
-        @php
-            $f = function($user, $post) {
-                return $user->post_reaction($post);
-            }
-        @endphp
-        @include('partials.reactions', ['entity' => $post, 'entity_function' => $f])
+    @php
+    $f = function($user, $post) {
+    return $user->post_reaction($post);
+    }
+    @endphp
+    @include('partials.reactions', ['entity' => $post, 'entity_function' => $f, 'entity_name' => 'post'])
     @endif
 </article>

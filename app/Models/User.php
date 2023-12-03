@@ -113,6 +113,22 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->sortByDesc('date');
     }
 
+    public function comment_reaction(Comment $comment)
+    {
+        $reactions = Reaction::where('comment_id', $comment->id)->where('author', $this->id)->get();
+
+        $comment_reactions = [];
+
+        foreach ($reactions as $reaction) {
+            $comment_reactions[$reaction->type->value] = [
+                $reaction->type->getViewIcon(),
+                $reaction->type->getViewColor(),
+            ];
+        }
+
+        return $comment_reactions;
+    }
+
     public function post_reaction(Post $post)
     {
         $reactions = Reaction::where('post_id', $post->id)->where('author', $this->id)->get();

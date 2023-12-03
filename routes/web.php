@@ -90,6 +90,9 @@ Route::controller(PostController::class)->group(function () {
 Route::controller(CommentController::class)->group(function () {
     Route::post('/comment', 'create')->name('comment.create');
     Route::delete('/comment/{id}', 'delete')->name('comment.delete');
+    Route::get('/comment/{id}/reaction', 'get_reactions')->name('comment.reactions');
+    Route::post('/comment/{id}/reaction', 'add_reaction')->name('comment.add.reaction');
+    Route::delete('/comment/{id}/reaction', 'remove_reaction')->name('comment.remove.reaction');
 });
 
 Route::controller(SearchController::class)->group(function () {
