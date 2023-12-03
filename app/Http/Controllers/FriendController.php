@@ -27,7 +27,11 @@ class FriendController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        $friendRequests = $user->received_pending_friend_requests();
+        if ($user->id != Auth::id()) {
+            abort(403);
+        }
+
+        $friendRequests = $user->received_pending_friend_requests()->get();
 
         return view('pages.friends', ['user' => $user, 'friendRequests' => $friendRequests, 'tab' => 'requests']);
     }
@@ -93,7 +97,21 @@ class FriendController extends Controller
             ->where('friend_id', Auth::id())
             ->update(['is_accepted' => true]);
 
-        return redirect()->back()->with('message', 'Friend request accepted.');
+        return response()->json([
+            'message' => 'Friend request accepted.'
+        ], 200);
+    }
+
+    public function decline_friend_request($username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+        FriendRequest::where('user_id', $user->id)
+            ->where('friend_id', Auth::id())
+            ->update(['is_accepted' => false]);
+
+        return response()->json([
+            'message' => 'Friend request declined.'
+        ], 200);
     }
 
 }

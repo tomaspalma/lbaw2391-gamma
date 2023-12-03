@@ -10,9 +10,11 @@
 <div class="max-w-screen-md mx-auto pb-4">
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black">
         <div class="flex justify-between items-center">
+            @can('update', $user)
             <button class="text-black font-bold py-2 px-4 rounded opacity-0 cursor-default">
                 <i class="fas fa-ellipsis-v"></i>                     
             </button>
+            @endcan
             <div class="flex-grow text-center">
                 <h2 class="text-2xl font-bold text-gray-700">Profile</h2>
             </div>
@@ -41,31 +43,31 @@
                         {{$user->is_private ? 'Private' : 'Public'}}
                     </span>
                 </div>
-                @if(auth()->user() && auth()->user()->id != $user->id && !auth()->user()->is_friend($user) && !auth()->user()->has_sent_pending_friend_request($user))
+                @if(auth()->user() && auth()->user()->id != $user->id && !auth()->user()->is_friend($user) && !auth()->user()->has_sent_pending_friend_request($user) && !auth()->user()->has_received_pending_friend_request($user))
                     <form action="{{ route('add_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="post">
                         @csrf
                         <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                             Add Friend
                         </button>
                     </form>
-                @else
-                    @if(auth()->user() && auth()->user()->id != $user->id && auth()->user()->has_sent_pending_friend_request($user)) 
+                @elseif(auth()->user() && auth()->user()->id != $user->id && auth()->user()->has_sent_pending_friend_request($user)) 
                         <form action="{{ route('remove_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                             @csrf
                             <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                                 Cancel Friend Request
                             </button>
                         </form>
-                    @else 
-                        @if(auth()->user() && auth()->user()->id != $user->id && auth()->user()->is_friend($user))
-                            <form action="{{ route('remove_friend', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
-                                @csrf
-                                <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
-                                    Remove Friend
-                                </button>
-                            </form>
-                        @endif
-                    @endif
+                @elseif(auth()->user() && auth()->user()->id != $user->id && auth()->user()->is_friend($user))
+                        <form action="{{ route('remove_friend', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
+                            @csrf
+                            <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                                Remove Friend
+                            </button>
+                        </form>
+                @elseif(auth()->user() && auth()->user()->id != $user->id && auth()->user()->has_received_pending_friend_request($user))
+                        <button type="button" onclick="window.location.href='{{ route('friend_requests_page', ['username' => auth()->user()->username]) }}'" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                            See Friend Request
+                        </button>
                 @endif
 
                 <div class="mb-4">

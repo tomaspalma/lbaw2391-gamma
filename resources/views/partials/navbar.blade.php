@@ -83,8 +83,8 @@
                 @endauth
                 @auth
                 <li class="flex items-center space-x-0">
-                    <a href="/users/{{Auth::user()->username}}/friends" class="block py-2 pl-3 pr-1">
-                        <i class="fa-solid fa-user-group text-2xl"></i>
+                    <a href="/users/{{Auth::user()->username}}/friends" class="block py-2 pl-3 pr-4 mb-0">
+                        <i class="fa-solid fa-user-group text-2xl max-md:hidden"></i>
                         <span class="md:hidden">Friends</span>
                     </a>
                 </li>

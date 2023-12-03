@@ -102,7 +102,7 @@ CREATE TABLE friend_request(
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     friend_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
-    is_accepted BOOLEAN DEFAULT false,
+    is_accepted BOOLEAN DEFAULT null,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
 
