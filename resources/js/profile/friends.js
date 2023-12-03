@@ -3,11 +3,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
     if (form) {
         const button = form.querySelector("button");
         let methodField = form.attributes["data-method"];
-        const username = document.getElementById("username").value;
+        const username = document.getElementById("username").textContent;
         button.addEventListener("click", (e) => {
             e.preventDefault();
-            console.log(form.action);
-            console.log(methodField.value);
             fetch(form.action, {
                 method: methodField.value,
                 headers: {
@@ -28,7 +26,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         ) {
                             button.textContent = "Add Friend";
                             methodField.value = "POST";
-                            form.action = `/api/users/${username.value}/friends/requests`;
+                            form.action = `/api/users/${username}/friends/requests`;
                         }
                     }
                 })

@@ -95,6 +95,7 @@ class FriendController extends Controller
         $user = User::where('username', $username)->firstOrFail();
         FriendRequest::where('user_id', $user->id)
             ->where('friend_id', Auth::id())
+            ->where('is_accepted', null)
             ->update(['is_accepted' => true]);
 
         return response()->json([
@@ -107,6 +108,7 @@ class FriendController extends Controller
         $user = User::where('username', $username)->firstOrFail();
         FriendRequest::where('user_id', $user->id)
             ->where('friend_id', Auth::id())
+            ->where('is_accepted', null)
             ->update(['is_accepted' => false]);
 
         return response()->json([

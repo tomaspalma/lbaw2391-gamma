@@ -8,8 +8,6 @@ function handleFriendRequest(action, username) {
         url = `/api/users/${username}/friends/requests`;
         methodType = "PUT";
     }
-    console.log(url);
-    console.log(methodType);
     fetch(url, {
         method: methodType,
         headers: {
