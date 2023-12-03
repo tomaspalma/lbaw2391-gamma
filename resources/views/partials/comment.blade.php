@@ -1,5 +1,5 @@
 <article id="comment-{{$comment->id}}" data-entity="comment" data-entity-id="{{$comment->id}}" class="comment">
-    <div class="flex max-w-full overflow-auto space-x-4">
+    <div class="flex max-w-full overflow-auto space-x-4 mb-4">
         <img src="{{ $comment->owner->getProfileImage() ?? 'hello' }}" class="rounded-full self-center w-8 h-8">
         <div class="grow">
             <p class="text-gray-600">{{ $comment->owner->username }}</p>

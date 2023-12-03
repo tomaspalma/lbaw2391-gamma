@@ -23,6 +23,7 @@ tags:
   - name: 'M07: Posts'
   - name: 'M08: Groups'
   - name: 'M09: Notifications'
+  - name: 'M10: Comments'
 
 paths:
 
@@ -1087,3 +1088,95 @@ paths:
         '200':
           description: 'HTML with the notification cards'
 
+  /comment/{id}/reaction:
+    get: 
+      operationId: R1001
+      summary: 'R1001: Comment reactions'
+      description: 'Returns a list with a comment reaction of each type. Access: USR'
+      parameters:
+        - in: path
+          name: id
+          description: 'Id of the comment'
+          schema:
+            type: string
+          required: true
+      tags:
+        - 'M10: Comments' 
+      responses:
+        '200':
+          description: 'List of each type of reactions of the comments'
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    "fa-heart":
+                      - 1
+                      - "heart-color"
+                      - "HEART"
+    post:
+      operationId: R1002
+      summary: 'R1002: Add reaction to comment'
+      description: 'Adds a reaction to a comment. Access: USR'
+      parameters:
+        - in: path
+          name: id
+          description: 'Id of the comment'
+          schema:
+            type: string
+          required: true
+      tags:
+        - 'M10: Comments'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                type:
+                  type: string
+                  required: true
+          examples:
+            summary: 'Add a like to a comment'
+            value:
+              type: 'LIKE'
+
+      responses:
+        '200':
+          description: 'Adds reaction and sends notification to comment author'
+        '403':
+          description: 'Forbidden if we already have this reaction'
+ 
+    delete:
+      operationId: R1003
+      summary: 'R1003: Removes a reaction from a comment'
+      description: 'Removes a reaction from a comment. Access: USR'
+      parameters:
+        - in: path
+          name: id
+          description: 'Id of the comment'
+          schema:
+            type: string
+          required: true
+      tags:
+        - 'M10: Comments'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                type:
+                  type: string
+                  required: true
+          examples:
+            summary: 'Removes a like from a comment'
+            value:
+              type: 'LIKE'
+
+      responses:
+        '200':
+          description: 'Removes reaction from comment' 
+        '403':
+          description: 'Forbidden if the deleting user does not have this reaction' 
+  

@@ -28,6 +28,9 @@ class CommentController extends Controller
             'type' => Rule::in(Reaction::$possible_types)
         ]);
 
+
+        $this->authorize('remove_reation', [$comment, $reaction_type]);
+
         $reaction = Reaction::where('author', $request->user()->id)
             ->where('comment_id', $id)
             ->where('type', $request->json('type'))

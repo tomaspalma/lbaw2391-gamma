@@ -9,6 +9,9 @@ use Illuminate\Auth\Access\Response;
 
 class CommentPolicy
 {
+    /**
+     * Determines if user can add a reaction or not
+     */
     public function add_reaction(User $user, Comment $comment, string $reaction_type): Response
     {
         $reaction = Reaction::where('author', '=', $user->id)
@@ -20,6 +23,19 @@ class CommentPolicy
             : Response::deny('You already have one reaction to this comment.');
     }
 
+    /**
+     * Determines if user can remove a reaction or not
+     */
+    public function remove_reaction(User $user, Comment $comment, string $reaction_type): Response
+    {
+        $reaction = Reaction::where('author', '=', $user->id)
+            ->where('comment_id', '=', $comment->id)
+            ->where('type', $reaction_type)->get();
+
+        return count($reaction) > 0
+            ? Response::allow()
+            : Response::deny('You do not have this reaction to this comment.');
+    }
 
     /**
      * Determine whether the user can create models.
