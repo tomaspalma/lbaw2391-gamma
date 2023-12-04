@@ -145,7 +145,9 @@ CREATE TABLE group_request_not(
 CREATE TABLE friend_request_not(
     id SERIAL PRIMARY KEY, 
     friend_request INTEGER REFERENCES friend_request(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
+    is_accepted BOOLEAN,
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now()),
+    read BOOLEAN DEFAULT false
 );
 
 CREATE TABLE comment_not(
@@ -410,19 +412,19 @@ CREATE TRIGGER update_group_request_not_trigger
 
 -----------------------------------------
 
--- (TRIGGER06) When a friend request is added, a notification will be inserted
+-- (TRIGGER06) When a friend request is added, accepted or declined, a notification will be inserted
 CREATE OR REPLACE FUNCTION update_friend_request_not() RETURNS TRIGGER AS
 $BODY$
 BEGIN 
-    INSERT INTO friend_request_not (friend_request, date) 
-    VALUES (NEW.id, now());
+    INSERT INTO friend_request_not (friend_request, is_accepted, date) 
+    VALUES (NEW.id, NEW.is_accepted, now());
     RETURN NEW;
 END
 $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER update_friend_request_not_trigger
-    AFTER INSERT ON friend_request
+    AFTER INSERT OR UPDATE ON friend_request
     FOR EACH ROW
     EXECUTE FUNCTION update_friend_request_not();
 
@@ -551,9 +553,11 @@ CREATE TRIGGER add_friend
         (4, 'admin', 'admin@example.com', '$2y$10$ehcHOK3hnZA7L4h5PvpQge3VfdFbaSxryczs9GzK9lUDNxMcKoWua', 'Administrator', 'Admin User', false, 1, null, '2023-11-23 14:18:29+00');
 
     INSERT INTO friend_request(user_id, friend_id, is_accepted, date) VALUES
-        (2, 3, true, '1940-01-28 12:00:00'),
-        (1, 2, true, '1940-01-28 12:00:00'),
-        (1, 4, true, '2023-05-17 15:30:00');
+        (2, 3, null, '1940-01-28 12:00:00'),
+        (1, 2, null, '1940-01-28 12:00:00'),
+        (1, 4, null, '2023-05-17 15:30:00');
+    
+    UPDATE friend_request SET is_accepted = true WHERE user_id = 2 OR user_id = 1;
 
     INSERT INTO groups(id, name, description, is_private) VALUES 
         (1, 'Prolog Enthusiasts', 'A community for discussing Prolog programming language and related topics', false),

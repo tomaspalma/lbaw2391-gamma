@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FriendRequest as FriendRequestEvent;
 use App\Models\User;
 use App\Models\FriendRequest;
 use Illuminate\Support\Facades\Auth;
@@ -51,9 +52,7 @@ class FriendController extends Controller
             ], 400);
         }
 
-        return response()->json([
-            'message' => 'Friend request sent.'
-        ], 200);
+        return event(new FriendRequestEvent($user, $request->user(), null));
     }
 
     public function remove_friend(Request $request, string $username)
@@ -90,7 +89,7 @@ class FriendController extends Controller
         ], 200);
     }
 
-    public function accept_friend_request($username)
+    public function accept_friend_request(Request $request, string $username)
     {
         $user = User::where('username', $username)->firstOrFail();
         FriendRequest::where('user_id', $user->id)
@@ -98,12 +97,10 @@ class FriendController extends Controller
             ->where('is_accepted', null)
             ->update(['is_accepted' => true]);
 
-        return response()->json([
-            'message' => 'Friend request accepted.'
-        ], 200);
+        return event(new FriendRequestEvent($request->user(), $user, true));
     }
 
-    public function decline_friend_request($username)
+    public function decline_friend_request(Request $request, string $username)
     {
         $user = User::where('username', $username)->firstOrFail();
         FriendRequest::where('user_id', $user->id)
@@ -111,9 +108,7 @@ class FriendController extends Controller
             ->where('is_accepted', null)
             ->update(['is_accepted' => false]);
 
-        return response()->json([
-            'message' => 'Friend request declined.'
-        ], 200);
+        return event(new FriendRequestEvent($request->user(), $user, false));
     }
 
 }

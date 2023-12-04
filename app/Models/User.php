@@ -79,7 +79,10 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 
     public function normal_notifications()
     {
-        $result = $this->comment_notification()->concat($this->reaction_notifications())->sortByDesc('date');
+        $result = $this->comment_notification()
+            ->concat($this->reaction_notifications())
+            ->concat($this->friend_request_notifications())
+            ->sortByDesc('date');
 
         return $result;
     }
@@ -99,8 +102,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
                         });
                 });
             })
-            ->paginate(15)
-            ->sortByDesc('date');
+            ->orderBy('date', 'desc')
+            ->paginate(15);
     }
 
     public function comment_notification()
@@ -109,9 +112,22 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->whereHas('comment', function ($query) {
                 $query->where('author', Auth::user()->id);
             })
-            ->paginate(15)
-            ->sortByDesc('date');
+            ->orderBy('date', 'desc')
+            ->paginate(15);
+
     }
+
+    public function friend_request_notifications()
+    {
+        return FriendRequestNot::with('friendRequest')
+            ->whereHas('friendRequest', function ($query) {
+                $query->where('user_id', Auth::user()->id)
+                    ->orWhere('friend_id', Auth::user()->id);
+            })
+            ->orderBy('date', 'desc')
+            ->paginate(15);
+    }
+
 
     public function post_reaction(Post $post)
     {
