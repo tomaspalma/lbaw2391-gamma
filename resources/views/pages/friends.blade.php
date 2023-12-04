@@ -11,10 +11,11 @@
         <div class="flex w-1/2 border-t-4 p-2 justify-center {{ $tab === 'friends' ? 'border-t-4 border-black' : '' }}">
             <a href="/users/{{$user->username}}/friends" class="hover:underline text-lg font-bold">Friends</a>
         </div>
-
+        @if(auth()->user() && auth()->user()->id === $user->id)
         <div class="flex w-1/2 p-2 justify-center {{ $tab === 'requests' ? 'border-t-4 border-black' : '' }}">
             <a href="/users/{{$user->username}}/friends/requests" class="hover:underline text-lg font-bold">Pending ({{count($friendRequests)}})</a>
         </div>
+        @endif
     </div>
     @if($tab=='friends')
         @forelse($friends as $friend)
