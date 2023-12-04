@@ -13,7 +13,7 @@
         </div>
 
         <div class="flex w-1/2 p-2 justify-center {{ $tab === 'requests' ? 'border-t-4 border-black' : '' }}">
-            <a href="/users/{{$user->username}}/friends/requests" class="hover:underline text-lg font-bold">Pending</a>
+            <a href="/users/{{$user->username}}/friends/requests" class="hover:underline text-lg font-bold">Pending ({{count($friendRequests)}})</a>
         </div>
     </div>
     @if($tab=='friends')

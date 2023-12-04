@@ -17,10 +17,13 @@ class FriendController extends Controller
 
         $friends = $user->friends()->get();
 
+        $friendRequests = $user->received_pending_friend_requests()->get();
+
         return view('pages.friends', [
             'user' => $user,
             'friends' => $friends,
-            'tab' => 'friends'
+            'tab' => 'friends',
+            'friendRequests' => $friendRequests
         ]);
     }
 
