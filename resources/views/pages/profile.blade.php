@@ -43,6 +43,11 @@
                         {{$user->is_private ? 'Private' : 'Public'}}
                     </span>
                 </div>
+
+                <div class="flex justify-between items-center">
+                <a href="{{ route('friends_page', ['username' => $user->username]) }}" class="text-l font-bold text-gray-700 hover:underline">
+                    {{$user->friends()->count()}} friend {{$user->friends()->count() == 1 ? '' : 's'}}
+                </a>
                 @if(auth()->user() && auth()->user()->id != $user->id && !auth()->user()->is_friend($user) && !auth()->user()->has_sent_pending_friend_request($user) && !auth()->user()->has_received_pending_friend_request($user))
                     <form action="{{ route('add_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="post">
                         @csrf
@@ -69,6 +74,7 @@
                             See Friend Request
                         </button>
                 @endif
+                </div>
 
                 <div class="mb-4">
                     <label class="text-sm text-gray-600">Username</label>
