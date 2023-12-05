@@ -77,7 +77,7 @@ Route::controller(NotificationController::class)->middleware(['auth', EnsureUser
 });
 
 // Posts
-Route::controller(PostController::class)->group(function () {
+Route::controller(PostController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get('/post/{id}', 'showPost')->name('post.show');
     Route::middleware(['auth', EnsureUserIsNotAppBanned::class])->group(function () {
         Route::get('/post', 'showCreateForm')->name('post.createForm')->middleware('verified');
@@ -92,14 +92,14 @@ Route::controller(PostController::class)->group(function () {
 });
 
 // Comments
-Route::controller(CommentController::class)->group(function () {
+Route::controller(CommentController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::post('/comment', 'create')->name('comment.create');
     Route::get('/comment/{id}/edit', 'showEditForm');
     Route::put('/comment/{id}/edit', 'update')->name('comment.update');
     Route::delete('/comment/{id}', 'delete')->name('comment.delete');
 });
 
-Route::controller(SearchController::class)->group(function () {
+Route::controller(SearchController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get("/search/{query?}", 'showSearch');
 });
 
@@ -111,7 +111,7 @@ Route::controller(AdminController::class)->middleware(['auth', EnsureUserIsAdmin
     });
 });
 
-Route::controller(PasswordController::class)->group(function () {
+Route::controller(PasswordController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get('/forgot-password', 'show_forgot_password')->name('password.request');
     Route::post('/forgot-password', 'send_forgot_password_request')->name('send_reset_password_request');
     Route::get('/reset-password/{token}', 'show_reset_password')->name('password.reset');
@@ -120,7 +120,7 @@ Route::controller(PasswordController::class)->group(function () {
 
 Route::post('/pusher/auth', [PusherController::class, 'authenticate'])->middleware('auth');
 
-Route::prefix('/api')->group(function () {
+Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::controller(SearchController::class)->group(function () {
         Route::get('/search/groups/{query?}', 'fullTextGroups');
         Route::get('/search/users/{query?}', 'fullTextUsers');

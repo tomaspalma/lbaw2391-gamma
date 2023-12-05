@@ -72,7 +72,7 @@ class UserController extends Controller
 
         $this->authorize('can_appeal_appban', $user);
 
-        DB::transaction(function () use ($user, $request, $appeal) {
+        DB::transaction(function () use ($user, $request) {
             $appban = AppBan::where('banned_user_id', $user->id)->get()[0];
 
             $appeal = AppBanAppeal::create([
@@ -208,8 +208,7 @@ class UserController extends Controller
         $rules = array('reason' => 'required|string');
         $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return FacadesResponse::json(array('errors' => $validator->getMessageBag()->toArray()), 400); // 400 being the HTTP code for an invalid request.
         }
 
