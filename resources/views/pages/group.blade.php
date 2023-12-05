@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
     <link href="{{url('css/group.css')}}" rel="stylesheet">
@@ -93,10 +93,10 @@
             @can('alreadyIn', $group)
 
 
-                <form id = "leave_group" action="{{ route('groups.leave', $group )}}" method="post">
+                <form id = "groupForm" action="{{ route('groups.leave', $group )}}" method="post">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    <button id="button" type="submit" id = "leaveGroupButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                         Leave group
                     </button>
                 </form>
@@ -105,18 +105,10 @@
             
                 @can('PendingOption', $group)
 
-                    <div id = "pending">
-
-                        <p class="bg-yellow-100 text-yellow-800 p-4 rounded-md">
-                            Waiting for response...
-                        </p>
-
-                        </br>
-
-                        <form action="{{ route('groups.remove_request', $group )}}" method="post">
+                        <form id = "groupForm" action="{{ route('groups.remove_request', $group )}}" method="post">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            <button id="button" type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                                 Remove Request
                             </button>
                         </form>
@@ -126,11 +118,11 @@
 
                 @else
 
-                    <form id = "enter_group" action="{{ route('groups.enter', $group) }}" method="post">
+                    <form id = "groupForm" action="{{ route('groups.enter', $group) }}" method="post">
                         @csrf
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <button id="button" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Enter this group
-                            </button>
+                        </button>
                     </form>
             
                 @endcan

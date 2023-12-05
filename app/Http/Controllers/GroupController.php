@@ -79,7 +79,7 @@ class GroupController extends Controller
                 ->delete();
         });
 
-        return redirect("/group/$id");
+        //return redirect("/group/$id");
         
     }
 
