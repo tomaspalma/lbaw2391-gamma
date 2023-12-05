@@ -25,7 +25,7 @@
             </li>
         </ul>
 
-        @can('view', $group)
+        @can('viewPostsAndMembers', $group)
             @if($feed === 'posts')
                 @if($posts->count() == 0)
                     <p class="text-center">No posts found.</p>
@@ -88,54 +88,59 @@
             </div>  
         @endif
 
-        @can('view', $group)
+        @auth
 
-            @auth
-                @can('alreadyIn', $group)
+            @can('alreadyIn', $group)
 
 
-                <form action="{{ route('groups.leave', $group )}}" method="post">
+                <form id = "leave_group" action="{{ route('groups.leave', $group )}}" method="post">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                         Leave group
                     </button>
                 </form>
+            
+            @else
+            
+                @can('PendingOption', $group)
+
+                    <div id = "pending">
+
+                        <p class="bg-yellow-100 text-yellow-800 p-4 rounded-md">
+                            Waiting for response...
+                        </p>
+
+                        </br>
+
+                        <form action="{{ route('groups.remove_request', $group )}}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                Remove Request
+                            </button>
+                        </form>
+                    
+                    </div>
 
 
                 @else
-                    <form action="{{ route('groups.enter', $group) }}" method="post">
+
+                    <form id = "enter_group" action="{{ route('groups.enter', $group) }}" method="post">
                         @csrf
                         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Enter this group
-                        </button>
-                    </form>
-
-                @endcan
-            
-            @endauth
-
-        @else
-            @auth
-
-                @if(!$user->is_pending($group->id))
-
-                    <form action="{{ route('groups.enter', $group) }}" method="post">
-                            @csrf
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Enter this group
                             </button>
                     </form>
+            
+                @endcan
+            
+            @endcan
+            
 
-                @else
-                <p class="bg-yellow-100 text-yellow-800 p-4 rounded-md">
-                    Waiting for response...
-                </p>
-                @endif
 
-            @endauth
-
-        @endcan
+        
+        @endauth
 
 
     </aside>

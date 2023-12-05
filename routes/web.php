@@ -97,6 +97,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::get('/group/{id}/members', 'showGroupMembers')->name('groupMembers');
     Route::post('/group/{id}/enter', 'addToGroup')->name('groups.enter');
     Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
+    Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
 });
 
 Route::controller(SearchController::class)->group(function () {

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Group;
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\View\View;
 
 class GroupController extends Controller
@@ -69,7 +68,6 @@ class GroupController extends Controller
 
     public function removeToGroup(string $id){
 
-
         $group = Group::findOrFail($id);
     
         $user = Auth::user();
@@ -83,6 +81,22 @@ class GroupController extends Controller
 
         return redirect("/group/$id");
         
+    }
+
+    public function removeRequest(string $id){
+
+        $group = Group::findOrFail($id);
+    
+        $user = Auth::user();
+
+        DB::transaction(function() use ($user, $group) {
+            DB::table('group_request')
+                ->where('user_id', $user->id)
+                ->where('group_id', $group->id)
+                ->delete();
+        });
+
+        return redirect("/group/$id");
     }
     
 }
