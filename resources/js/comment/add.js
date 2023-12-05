@@ -1,5 +1,8 @@
+import { toggleDropdownButtons } from '../components/dropdown_dots.js';
 import { initReactionJs } from '../post/reactions.js';
 import { deleteComment } from './delete.js';
+import { editCommentForm } from './edit.js';
+import { editComment } from './edit.js';
 
 function addComment() {
     let form = document.getElementById('comment-form');
@@ -36,8 +39,16 @@ function addComment() {
                         document.getElementById('comment-form').reset();
 
                         initReactionJs();
-                    })
 
+                        toggleDropdownButtons(comment.querySelectorAll(".dropdownButton"), comment.querySelectorAll(".dropdownContent"));
+
+                        toggleEditComment(comment.querySelectorAll(".edit-comment-button"));
+                        toggleDeleteComment(comment.querySelectorAll(".delete-comment-button"));
+
+                        const dropdownContent = comment.querySelector(".dropdownContent");
+                        toggleSaveComment(dropdownContent.parentElement.parentElement.querySelectorAll(".save-comment"));
+                        console.log("AHHH: ", dropdownContent.parentElement.parentElement.querySelectorAll(".save-comment"));
+                    })
             }
         })
         .catch((error) => {
@@ -49,3 +60,41 @@ const commentButton = document.getElementById('comment-button').addEventListener
 if (commentButton) {
     commentButton.addEventListener('click', addComment);
 }
+
+function toggleDeleteComment(deleteCommentButtons) {
+    if (!deleteCommentButtons) {
+        return;
+    }
+
+    for (const deleteButton of deleteCommentButtons) {
+        deleteButton.addEventListener('click', deleteComment);
+    }
+}
+
+function toggleEditComment(editCommentButtons) {
+    if (!editCommentButtons) {
+        return;
+    }
+
+    for (const editButton of editCommentButtons) {
+        editButton.addEventListener('click', editCommentForm);
+    }
+}
+
+function toggleSaveComment(saveCommentButtons) {
+    if (!saveCommentButtons) {
+        return;
+    }
+
+    for (const saveButton of saveCommentButtons) {
+        saveButton.addEventListener('click', editComment);
+    }
+}
+
+const deleteCommentButtons = document.querySelectorAll('.delete-comment-button');
+const editCommentButtons = document.querySelectorAll('.edit-comment-button');
+const saveCommentButtons = document.querySelectorAll('.save-comment');
+
+toggleDeleteComment(deleteCommentButtons);
+toggleEditComment(editCommentButtons);
+toggleSaveComment(saveCommentButtons);

@@ -18,10 +18,10 @@
             </div>
             @can('update', $user)
             <div class="relative inline-block text-left">
-                <button id="dropdownButton" class="text-black font-bold py-2 px-4 rounded">
+                <button id="" class="dropdownButton text-black font-bold py-2 px-4 rounded">
                     <i class="fas fa-ellipsis-v"></i>                     
                 </button>
-                <div id="dropdownContent" class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5" style="display:none;">
+                <div id="" class="dropdownContent absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5" style="display:none;">
                     <a href="{{ route('edit_profile',['username' => $user->username]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">Edit</a>
                     <a id="deleteLink" class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 hover:text-gray-900">Delete</a>
                 </div>

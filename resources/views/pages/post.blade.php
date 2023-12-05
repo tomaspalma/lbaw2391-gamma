@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/comment/add.js', 'resources/js/comment/delete.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js' , 'resources/js/post/reactions.js' , 'resources/js/comment/add.js' , 'resources/js/comment/delete.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
@@ -9,7 +9,7 @@
 @include('partials.navbar')
 
 <main class="center">
-    <div data-entity="post" data-entity-id="{{$post->id}}" post-id="{{$post->id}}" class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
+    <div data-entity="post" data-entity-id="{{$post->id}}" post-id="{{$post->id}}" class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto shadow-md">
         <div class="flex justify-between items-center">
             <h2 class="text-4xl font-bold">{{ $post->title }}</h2>
             <span class="text-gray-600">
@@ -66,7 +66,7 @@
 
         <div id="comments" class="mt-4">
             @forelse($comments as $comment)
-            @include('partials.comment', ['comment' => $comment])
+            @include('partials.comment_card', ['comment'=> $comment])
             @empty
             <p id="no-comment">No comments yet.</p>
             @endforelse
