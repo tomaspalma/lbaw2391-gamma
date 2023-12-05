@@ -29,7 +29,8 @@ export default defineConfig({
                 "resources/js/comment/edit.js",
                 "resources/js/post/reactions.js",
                 "resources/js/utils.js",
-                "resources/js/notifications/filter.js"
+                "resources/js/notifications/filter.js",
+                "resources/js/group/enter_group.js"
             ],
             refresh: true,
         }),
