@@ -15,6 +15,14 @@ class FriendController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
+        if (!$user) {
+            abort(422, 'User does not exist');
+        }
+
+        if (!$request->user()->is_friend($user) && $user->id != Auth::id()) {
+            abort(403);
+        }
+
         $friends = $user->friends()->get();
 
         $friendRequests = $user->received_pending_friend_requests()->get();
@@ -30,6 +38,10 @@ class FriendController extends Controller
     public function show_friend_requests(string $username)
     {
         $user = User::where('username', $username)->firstOrFail();
+
+        if (!$user) {
+            abort(422, 'User does not exist');
+        }
 
         if ($user->id != Auth::id()) {
             abort(403);

@@ -28,7 +28,9 @@ export default defineConfig({
                 "resources/js/comment/delete.js",
                 "resources/js/post/reactions.js",
                 "resources/js/utils.js",
-                "resources/js/notifications/filter.js"
+                "resources/js/notifications/filter.js",
+                "resources/js/profile/friends.js",
+                "resources/js/friends/requests.js",
             ],
             refresh: true,
         }),
@@ -39,5 +41,3 @@ export default defineConfig({
         },
     },
 });
-
-
