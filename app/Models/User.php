@@ -90,17 +90,18 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return ReactionNot::with('reaction')
             ->whereHas('reaction', function ($query) {
                 $query->where(function ($subQuery) {
-                    $subQuery->where('author', Auth::user()->id)
-                        ->orWhereHas('post', function ($postQuery) {
-                            $postQuery->where('author', Auth::user()->id);
-                        })
-                        ->orWhereHas('comment', function ($commentQuery) {
-                            $commentQuery->where('author', Auth::user()->id);
+                    $subQuery->where('author', '<>', Auth::user()->id)
+                        ->where(function ($sq) {
+                            $sq->orWhereHas('post', function ($postQuery) {
+                                $postQuery->where('author', Auth::user()->id);
+                            })
+                                ->orWhereHas('comment', function ($commentQuery) {
+                                    $commentQuery->where('author', Auth::user()->id);
+                                });
                         });
                 });
-            })
-            ->paginate(15)
-            ->sortByDesc('date');
+            })->orderBy('date', 'desc')
+            ->paginate(15);
     }
 
     public function comment_notification()
@@ -108,9 +109,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return CommentNot::with('comment')
             ->whereHas('comment', function ($query) {
                 $query->where('author', Auth::user()->id);
-            })
+            })->orderBy('date', 'desc')
             ->paginate(15)
-            ->sortByDesc('date');
     }
 
     public function comment_reaction(Comment $comment)
