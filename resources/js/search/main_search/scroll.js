@@ -7,4 +7,4 @@ const currentQuery = getCurrentSearchQuery();
 const currentUrl = window.location.href;
 const toggled = (currentUrl.split("?")[1]);
 
-await addPaginationListener(`/api/search/${currentQuery}?${toggled}`, content, '&');
+addPaginationListener(`/api/search/${currentQuery}?${toggled}`, content, '&').then(() => { }).catch((e) => console.error(e));
