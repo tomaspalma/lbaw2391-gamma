@@ -20,7 +20,7 @@ class PusherController extends Controller
                 'useTLS' => true
             ]
         );
-
+        
         return response($pusher->socket_auth($channel_name, $socket_id, $request->user()));
     }
 }
