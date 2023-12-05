@@ -35,6 +35,33 @@ class CommentController extends Controller
         return new CommentResource($comment);
     }
 
+    public function showEditForm(int $id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        $this->authorize('update', $comment);
+
+        return view('pages.edit_comment', [
+            'comment' => $comment
+        ]);
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        $this->authorize('update', $comment);
+
+        $request->validate([
+            'content' => 'required|string'
+        ]);
+
+        $comment->content = $request->content;
+        $comment->save();
+
+        return new CommentResource($comment);
+    }
+
     public function delete(int $id)
     {
 

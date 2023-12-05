@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/post/reactions.js', 'resources/js/comment/add.js', 'resources/js/comment/delete.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/post/reactions.js', 'resources/js/comment/add.js', 'resources/js/comment/delete.js', 'resources/js/components/dropdown_dots.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
@@ -9,7 +9,7 @@
 @include('partials.navbar')
 
 <main class="center">
-    <div data-entity-id="{{$post->id}}" post-id="{{$post->id}}" class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
+    <div data-entity-id="{{$post->id}}" post-id="{{$post->id}}" class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto shadow-md">
         <div class="flex justify-between items-center">
             <h2 class="text-4xl font-bold">{{ $post->title }}</h2>
             <span class="text-gray-600">
@@ -66,17 +66,7 @@
 
         <div id="comments" class="mt-4">
             @forelse($comments as $comment)
-            <div class="flex max-w-full overflow-auto space-x-4">
-                <img src="{{ $comment->owner->getProfileImage() ?? 'hello' }}" class="rounded-full self-center w-8 h-8">
-                <div class="grow">
-                    <p class="text-gray-600">{{ $comment->owner->username }}</p>
-                    <p class="">{{ $comment->content }}</p>
-                </div>
-                    @can('delete', $comment)
-                        <button type="button" class="delete-comment-button bg-red-500 text-white self-center py-1 px-2 rounded-md" comment-id="{{ $comment->id }}">Delete</button>
-                    @endcan
-            </div>
-            <hr class="my-2">
+                @include('partials.comment_card', ['comment'=> $comment])
             @empty
             <p id="no-comment">No comments yet.</p>
             @endforelse
