@@ -17,6 +17,7 @@
     <div class="max-w-screen-xl flex flex-col md:flex-row flex-wrap justify-between mx-auto p-4">
         <a href="/" class="self-center text-2xl font-bold hover:underline">Gamma</a>
         <div class="flex flex-col items-center md:order-1">
+            @if(Auth::user() !== null && !Auth::user()->is_app_banned())
             <form id="mobile-search-form" class="relative md:hidden">
                 <input name="search" type="text" id="mobile-search-trigger" class="mt-4 md:hidden block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
             </form>
@@ -51,15 +52,11 @@
             'entities' => [],
             'query' => null
             ])
+            @endif
         </div>
         <div class="items-center w-full md:flex md:w-auto md:order-1">
             <i id="hamburger-toggle" class="md:hidden block fa-solid fa-bars mt-4 cursor-pointer"></i>
             <ul id="navbar-menu" class="hidden md:flex flex flex-col justify-center align-middle items-center p-4 md:p-0 mt-4 font-medium bg-gray-50 md:flex-row md:space-x-2 md:mt-0 md:border-0 md:bg-white">
-                <li>
-                    <a href="/feed" class="block py-2 pl-3 pr-4">
-                        Home
-                    </a>
-                </li>
                 @if(Auth::user() ? Auth::user()->is_admin() : 0)
                 <li>
                     <a href="/admin/user" class="block py-2 pl-3 pr-4">Admin</a>
@@ -80,6 +77,7 @@
                         <button type="submit" class="hover:underline">Logout</button>
                     </form>
                 </li>
+                @if(!Auth::user()->is_app_banned())
                 <li>
                     @include('partials.notifications.notification_bell')
                 </li>
@@ -88,6 +86,7 @@
                         Profile
                     </a>
                 </li>
+                @endif
                 @endauth
             </ul>
         </div>

@@ -180,6 +180,14 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->app_ban !== null;
     }
 
+    public function has_appealed_app_ban() 
+    {
+        if (!$this->is_app_banned()) {
+            return false;
+        }
+        return $this->app_ban->appeal !== null;
+    }
+
     public function app_ban(): HasOne
     {
         return $this->hasOne(AppBan::class, 'banned_user_id');

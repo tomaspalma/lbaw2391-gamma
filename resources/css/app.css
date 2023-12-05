@@ -74,3 +74,11 @@ a {
 .read-notification {
     @apply bg-gray-50;
 }
+
+.tab-container {
+    @apply justify-center flex border border-black rounded shadow my-4;
+}
+
+.toggled-tab {
+    @apply border-t-2 border-black;
+}
