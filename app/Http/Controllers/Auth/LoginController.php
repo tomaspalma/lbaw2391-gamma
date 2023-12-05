@@ -30,19 +30,21 @@ class LoginController extends Controller
     public function authenticate(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'identifier' => ['required'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
+        $field = filter_var($credentials['identifier'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (Auth::attempt(['password' => $credentials["password"], $field => $credentials['identifier']], $request->filled('remember'))) {
             $request->session()->regenerate();
 
             return redirect()->intended('/feed');
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+            'identifier' => 'The provided credentials do not match our records.',
+        ])->onlyInput('identifier');
     }
 
     /**

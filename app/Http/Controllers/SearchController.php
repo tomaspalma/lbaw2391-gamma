@@ -14,18 +14,42 @@ use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
 {
+    private $pagination_limits = [
+        'posts' => 10
+    ];
+
     public function showSearch(Request $request, string $query = null)
     {
-        return view('pages.search', [
-            'query' => $query,
-            'hidden' => false,
-            'previewMenuShadow' => false,
-            'previewMenuWidth' => 'w-full',
-            'previewMenuPosAbs' => false,
-            'previewMenuName' => 'main-search',
-            'toggled' => $request->input('toggled'),
-            'isMobile' => false
-        ]);
+        $toggled = $request->input('toggled');
+
+        $entities = null;
+        switch ($toggled) {
+            case 'users':
+                $entities = $this->fullTextUsers($request, $query);
+                break;
+            case 'posts':
+                $entities = $this->fullTextPosts($request, $query, false);
+                break;
+            case 'groups':
+                $entities = $this->fullTextGroups($request, $query);
+                break;
+        }
+
+        if ($request->is("api*")) {
+            return $entities;
+        } else {
+            return view('pages.search', [
+                'query' => $query,
+                'hidden' => false,
+                'previewMenuShadow' => false,
+                'previewMenuWidth' => 'w-full',
+                'previewMenuPosAbs' => false,
+                'previewMenuName' => 'main-search',
+                'toggled' => $toggled,
+                'isMobile' => false,
+                'entities' => $entities
+            ]);
+        }
     }
 
 
@@ -34,14 +58,18 @@ class SearchController extends Controller
         $groups = [];
 
         if ($query === null) {
-            $groups = Group::where('is_private', '<>', false)->get();
+            $groups = Group::where('is_private', false)->paginate(10);
         } else {
             $groups = Group::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-                ->get();
+                ->paginate(10);
         }
 
-        return response()->json($groups);
+        if ($request->ajax()) {
+            return response()->json($groups);
+        } else {
+            return $groups;
+        }
     }
 
     /**
@@ -50,13 +78,13 @@ class SearchController extends Controller
     public function adminFullTextUsers(string $query = null)
     {
         if ($query === null) {
-            $users = User::where('id', '<>', 0)->where('role', '<>', 1)->get();
+            $users = User::where('id', '<>', 0)->where('role', '<>', 1)->paginate(15);
         } else {
             $users = User::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
                 ->where('id', '<>', 0)
                 ->where('role', '<>', 1)
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-                ->get();
+                ->paginate(15);
         }
 
         $usersJson = [];
@@ -77,19 +105,23 @@ class SearchController extends Controller
                 $users = User::where('id', '<>', 0)
                     ->where('role', '<>', 1)
                     ->where('is_private', '=', false)
-                    ->get();
+                    ->paginate(10);
             } else {
                 $users = User::where('id', '<>', 0)
                     ->where('is_private', '=', false)
-                    ->get();
+                    ->paginate(10);
             }
 
-            $usersJson = [];
-            for ($i = 0; $i < count($users); $i++) {
-                $usersJson[] = new UserResource($users[$i]);
-            }
+            if ($request->is("api*")) {
+                $usersJson = [];
+                foreach ($users as $user) {
+                    $usersJson[] = view('partials.user_card', ['user' => $user, 'adminView' => false])->render();
+                }
 
-            return response()->json($usersJson);
+                return response()->json($usersJson);
+            } else {
+                return $users;
+            }
         } else {
             $users = [];
 
@@ -97,34 +129,42 @@ class SearchController extends Controller
                 ->where('is_private', '=', false)
                 ->where('id', '<>', 0)
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-                ->get();
+                ->paginate(15);
 
-            $usersJson = [];
-            for ($i = 0; $i < count($users); $i++) {
-                $usersJson[] = new UserResource($users[$i]);
+            if ($request->is('api*')) {
+                $usersJson = [];
+                foreach ($users as $user) {
+                    $usersJson[] = view('partials.user_card', ['user' => $user, 'adminView' => false])->render();
+                }
+
+                return response()->json($usersJson);
+            } else {
+                return $users;
             }
-
-            return response()->json($usersJson);
         }
     }
 
-    public function fullTextPosts(Request $request, string $query = null)
+    public function fullTextPosts(Request $request, string $query = null, bool $api = true)
     {
         $rawPosts = [];
 
         if ($query === null) {
-            $rawPosts = Post::where('is_private', '<>', false)->get();
+            $rawPosts = Post::where('is_private', '<>', false)->paginate($this->pagination_limits['posts']);
         } else {
             $rawPosts = Post::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?) and not is_private', [$query])
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
-                ->get();
+                ->paginate($this->pagination_limits['posts']);
         }
 
-        $finalPosts = [];
-        for ($i = 0; $i < count($rawPosts); $i++) {
-            $finalPosts[] = new PostResource($rawPosts[$i]);
-        }
+        if ($request->is('api*')) {
+            $post_cards = [];
+            foreach ($rawPosts as $post) {
+                $post_cards[] = view('partials.post_card', ['post' => new PostResource($post), 'preview' => true])->render();
+            }
 
-        return response()->json($finalPosts);
+            return response()->json($post_cards);
+        } else {
+            return $rawPosts;
+        }
     }
 }

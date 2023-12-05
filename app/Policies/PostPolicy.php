@@ -19,6 +19,7 @@ class PostPolicy
             if ($user === null) {
                 return Response::deny('This post is private.');
             }
+
             return ($user->id === $post->author || $user->friends->contains($post->author) || $user->is_admin()) 
                 ? Response::allow()
                 : Response::deny('This post is private.');

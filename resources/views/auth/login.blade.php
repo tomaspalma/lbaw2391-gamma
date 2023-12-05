@@ -12,20 +12,20 @@
         {{ csrf_field() }}
 
         <div class="mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-600">E-mail</label>
-            <input class="mt-1 p-2 w-full border focus:ring-2" id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
-            @if ($errors->has('email'))
+            <label for="identifier" class="block text-sm font-medium text-gray-600">E-mail / Username</label>
+            <input placeholder="Email / username" class="mt-1 p-2 w-full border focus:ring-2" id="identifier" name="identifier" value="{{ old('identifier') }}" required autofocus>
+            @if ($errors->has('identifier'))
             <span class="text-red-500 text-sm">
-                {{ $errors->first('email') }}
+                {{ $errors->first('identifier') }}
             </span>
             @endif
         </div>
 
         <div class="mb-4">
             <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
-            <input class="mt-1 p-2 w-full border focus:ring-2" id="password" type="password" name="password" required>
+            <input placeholder="Password" class="mt-1 p-2 w-full border focus:ring-2" id="password" type="password" name="password" required>
 
-            <i class="fas fa-eye-slash" id="togglePassword" style="margin-top: -29px; margin-left: 310px;"></i>
+            <i class="fas fa-eye-slash cursor-pointer" id="togglePassword" style="margin-top: -29px; margin-left: 310px;"></i>
 
             @if ($errors->has('password'))
             <span class="text-red-500 text-sm">

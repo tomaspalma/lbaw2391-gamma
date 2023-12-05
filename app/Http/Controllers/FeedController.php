@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use Illuminate\Http\Request;
 
 use App\Models\Post;
@@ -29,32 +30,50 @@ class FeedController extends Controller
         $user = auth()->user();
 
         $groups = $user->groups;
-        $posts = $groups->pluck('posts')->flatten();
+        $raw_posts = $groups->pluck('posts')->flatten();
 
         $friends = $user->friends;
-        $posts = $posts->merge($friends->pluck('posts')->flatten());
-        $posts = Post::withCount('reactions')->whereIn('id', $posts->pluck('id'))->get();
+        $raw_posts = $raw_posts->merge($friends->pluck('posts')->flatten());
+        $raw_posts = Post::withCount('reactions')->whereIn('id', $raw_posts->pluck('id'))->paginate(10);
 
-        $posts = $posts->unique('id')->values();
+        if ($request->is("api*")) {
+            $post_cards = [];
+            foreach ($raw_posts as $post) {
+                $post_cards[] = view('partials.post_card', ['post' => $post, 'preview' => false])->render();
+            }
 
-        return view('pages.homepage', [
-            'feed' => 'personal',
-            'posts' => $posts,
-            'email_verified' => true
-        ]);
+            return response()->json($post_cards);
+        } else {
+            return view('pages.homepage', [
+                'feed' => 'personal',
+                'posts' => $raw_posts,
+                'email_verified' => true
+            ]);
+        }
     }
 
-    public function show_popular()
+    public function show_popular(Request $request)
     {
-        $posts = Post::withCount('reactions')
+        $raw_posts = [];
+
+        $raw_posts = Post::withCount('reactions')
             ->where('is_private', '=', false)
             ->orderBy('reactions_count', 'desc')
-            ->get();
+            ->paginate(10);
 
-        return view('pages.homepage', [
-            'feed' => 'popular',
-            'posts' => $posts,
-            'email_verified' => true
-        ]);
+        if ($request->is("api*")) {
+            $post_cards = [];
+            foreach ($raw_posts as $post) {
+                $post_cards[] = view('partials.post_card', ['post' => $post, 'preview' => false])->render();
+            }
+
+            return response()->json($post_cards);
+        } else {
+            return view('pages.homepage', [
+                'feed' => 'popular',
+                'posts' => $raw_posts,
+                'email_verified' => true
+            ]);
+        }
     }
 }

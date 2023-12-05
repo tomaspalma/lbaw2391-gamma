@@ -35,7 +35,9 @@
             'previewMenuPosAbs' => false,
             'previewMenuName' => 'search-input',
             'toggled' => 'users',
-            'isMobile' => true
+            'isMobile' => true,
+            'entities' => [],
+            'query' => null,
             ])
 
             @include('partials.search.search_preview', [
@@ -45,7 +47,9 @@
             'previewMenuPosAbs' => true,
             'previewMenuName' => 'search-input',
             'toggled' => 'users',
-            'isMobile' => false
+            'isMobile' => false,
+            'entities' => [],
+            'query' => null
             ])
         </div>
         <div class="items-center w-full md:flex md:w-auto md:order-1">
@@ -76,17 +80,9 @@
                         <button type="submit" class="hover:underline">Logout</button>
                     </form>
                 </li>
-                @endauth
                 <li>
-                    <a href="/notifications" class="block py-2 pl-3 pr-4">
-                        <div class="relative flex flex-row md:flex-col space-x-1 md:space-x-0">
-                            <i class="hidden md:inline fa-solid fa-bell text-2xl"></i>
-                            <span class="md:hidden">Notifications</span>
-                            <span id="notification-counter" class="hidden text-xs md:absolute md:bottom-3 md:left-1.5 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full">1</span>
-                        </div>
-                    </a>
+                    @include('partials.notifications.notification_bell')
                 </li>
-                @auth
                 <li class="flex items-center space-x-0">
                     <a href="/users/{{Auth::user()->username}}" class="block py-2 pl-3 pr-1">
                         Profile

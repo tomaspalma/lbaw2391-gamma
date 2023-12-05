@@ -89,6 +89,8 @@ Route::controller(PostController::class)->group(function () {
 // Comments
 Route::controller(CommentController::class)->group(function () {
     Route::post('/comment', 'create')->name('comment.create');
+    Route::get('/comment/{id}/edit', 'showEditForm');
+    Route::put('/comment/{id}/edit', 'update')->name('comment.update');
     Route::delete('/comment/{id}', 'delete')->name('comment.delete');
 });
 
@@ -126,10 +128,20 @@ Route::prefix('/api')->group(function () {
         Route::get('/search/users/{query?}', 'fullTextUsers');
         Route::get('/search/posts/{query?}', 'fullTextPosts');
         Route::get('/admin/search/users/{query?}', 'adminFullTextUsers')->middleware(['auth', EnsureUserIsAdmin::class]);
+        Route::get("/search/{query?}", 'showSearch');
     });
 
-    Route::controller(PostController::class)->group(function() {
+    Route::controller(FeedController::class)->group(function () {
+        Route::get('/feed/popular', 'show_popular');
+        Route::get('/feed/personal', 'show_personal');
+    });
+
+    Route::controller(PostController::class)->group(function () {
         Route::get('/post/{id}/card/{preview}', 'show_post_card');
+    });
+
+    Route::controller(NotificationController::class)->middleware('auth')->group(function () {
+        Route::get('/notifications/{filter?}', 'show_notifications');
     });
 
     Route::controller(UserController::class)->group(function () {

@@ -31,4 +31,14 @@ enum ReactionType: string
             ReactionType::STAR => 'star-color'
         };
     }
+
+    public function getVerb(): string
+    {
+        return match($this) {
+            ReactionType::HEART => 'hearted',
+            ReactionType::LIKE => 'liked',
+            ReactionType::DISLIKE => 'disliked',
+            ReactionType::STAR => 'starred'
+        };
+    }
 };
