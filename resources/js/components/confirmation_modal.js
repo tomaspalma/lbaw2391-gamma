@@ -169,7 +169,8 @@ export function overrideConfirmationForm(
     form,
     action,
     requestParams,
-    callbackType
+    callbackType,
+    thenCallback
 ) {
     clearColorConfiguration();
 
@@ -182,12 +183,15 @@ export function overrideConfirmationForm(
         requestParams.body = formData;
 
         fetch(action, requestParams)
-            .then((res) => {
+            .then(async (res) => {
                 if (res.ok) {
                     modal.classList.add("hidden");
                     confirmationForm.classList.remove("hidden");
+                    
 
                     callbackTypesAction[callbackType](form);
+                } else {
+                    await thenCallback(res);
                 }
             })
             .catch((e) => {

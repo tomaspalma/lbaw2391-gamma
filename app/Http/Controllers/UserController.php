@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\FileController;
 use App\Models\AppBanAppeal;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Response as FacadesResponse;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Console\Input\Input;
 
 class UserController extends Controller
 {
@@ -201,10 +205,13 @@ class UserController extends Controller
 
     public function block_user(Request $request, string $username)
     {
-        $validated = $request->validate([
-            'reason' => 'required|string'
-        ]);
+        $rules = array('reason' => 'required|string');
+        $validator = Validator::make($request->all(), $rules);
 
+        if ($validator->fails())
+        {
+            return FacadesResponse::json(array('errors' => $validator->getMessageBag()->toArray()), 400); // 400 being the HTTP code for an invalid request.
+        }
 
         $block_reason = $request->input('reason');
 
