@@ -7,14 +7,21 @@
 @include('partials.navbar')
 
 <main class="center mx-4">
-    <div class="flex justify-center mb-2">
-        <a target="_blank" href="{{url('/admin/user/create')}}">Create user</a>
-    </div>
-    <div class="flex justify-center">
-        <form id="search-form" class="w-1/2 ">
-            <input name="search" type="text" id="search-user-admin" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search an user...">
-        </form>
-    </div>
+    @include('partials.admin.common')
+    <ul class="tab-container">
+        <li class="flex w-1/2 p-2 justify-center toggled-tab">
+            Dashboard
+        </li>
+
+        @auth
+        <li class="flex w-1/2 p-2 justify-center">
+            <a href="/admin/user/appeals" class="hover:underline">
+                Appeals (<span id="appeal-counter">{{$appeal_number}}</span>)
+            </a>
+        </li>
+        @endauth
+    </ul>
+
     <div class="flex flex-col align-middle justify-center" id="admin-search-user-results">
         @for($i = 0; $i < count($users); $i++) @if($users[$i]->id !== 0 && $users[$i]->role !== 1)
             @include('partials.user_card', [ 'user'=> $users[$i], 'adminView' => true])
@@ -22,4 +29,3 @@
             @endfor
     </div>
     @include('partials.confirm_modal')
-</main>

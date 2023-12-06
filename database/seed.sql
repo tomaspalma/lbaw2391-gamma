@@ -56,6 +56,7 @@ CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL CONSTRAINT unique_group_name UNIQUE,
     image TEXT,
+    banner TEXT,
     is_private BOOLEAN DEFAULT true NOT NULL,
     description TEXT NOT NULL
 );
@@ -164,7 +165,9 @@ CREATE TABLE reaction_not(
 
 CREATE TABLE appeal(
     id SERIAL PRIMARY KEY,
-    reason TEXT NOT NULL
+    reason TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now() CHECK(created_at <= now()),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() CHECK(updated_at <= now())
 );
 
 CREATE TABLE group_ban(
@@ -182,9 +185,7 @@ CREATE TABLE app_ban(
     reason TEXT NOT NULL,
     admin_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
     banned_user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
-
     appeal INTEGER REFERENCES appeal(id) ON UPDATE CASCADE,
-
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 

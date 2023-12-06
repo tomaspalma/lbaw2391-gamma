@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AppBanUserAppeal;
+use App\Events\BanAppUserAppeal;
 use Illuminate\View\View;
 
 use App\Models\User;
@@ -10,12 +12,80 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\FileController;
+use App\Models\AppBanAppeal;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Response as FacadesResponse;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Console\Input\Input;
 
 class UserController extends Controller
 {
+    public function remove_appeal(string $username)
+    {
+        $user = User::where('username', $username)->get()[0];
+
+        // $this->authorize('can_have_appeal_removed', $user);
+        DB::transaction(function () use ($user) {
+            $appeal = $user->app_ban->appeal_model;
+
+            $user->app_ban->appeal = null;
+            $user->app_ban->save();
+
+            $appeal->delete();
+        });
+    }
+
+    /**
+     * Returns a view with the form where a user can appeal their app ban
+     */
+    public function show_appban_appeal_form(string $username): View
+    {
+        $user = User::where('username', $username)->get()[0];
+
+        $this->authorize('can_appeal_appban', $user);
+
+        $reason = $user->app_ban->reason;
+        $appeal = $user->app_ban->appeal;
+
+        return view(
+            'pages.appban_appeal',
+            [
+                'username' => $username,
+                'reason' => $reason,
+                'alreadyAppealed' => isset($appeal)
+            ]
+        );
+    }
+
+    /**
+     * Executes the action of submitting an appeal
+     */
+    public function appeal_appban(Request $request, string $username)
+    {
+        $request->validate([
+            'reason' => 'required|string|max:512'
+        ]);
+
+        $user = User::where('username', $username)->get()[0];
+
+        $this->authorize('can_appeal_appban', $user);
+
+        DB::transaction(function () use ($user, $request) {
+            $appban = AppBan::where('banned_user_id', $user->id)->get()[0];
+
+            $appeal = AppBanAppeal::create([
+                'reason' => $request->input('reason')
+            ]);
+
+            $appban->appeal = $appeal->id;
+            $appban->save();
+        });
+
+        return redirect('/');
+    }
+
     public function show(string $username): View
     {
         $user = User::where('username', $username)->firstOrFail();
@@ -100,7 +170,16 @@ class UserController extends Controller
         $user = User::where('username', '=', $username)->get()[0];
 
         if ($user->is_app_banned()) {
-            AppBan::where('banned_user_id', $user->id)->delete();
+            DB::transaction(function () use ($user) {
+                $app_ban = AppBan::where('banned_user_id', $user->id)->get()[0];
+
+                $appeal = AppBanAppeal::find($app_ban->appeal);
+                $app_ban->delete();
+
+                if (isset($appeal)) {
+                    $appeal->delete();
+                }
+            });
         }
     }
 
@@ -126,10 +205,12 @@ class UserController extends Controller
 
     public function block_user(Request $request, string $username)
     {
-        $validated = $request->validate([
-            'reason' => 'required|string'
-        ]);
+        $rules = array('reason' => 'required|string');
+        $validator = Validator::make($request->all(), $rules);
 
+        if ($validator->fails()) {
+            return FacadesResponse::json(array('errors' => $validator->getMessageBag()->toArray()), 400); // 400 being the HTTP code for an invalid request.
+        }
 
         $block_reason = $request->input('reason');
 
@@ -218,6 +299,8 @@ class UserController extends Controller
             ->where('friend1', '=', $user_id)
             ->orWhere('friend2', '=', $user_id)
             ->delete();
+
+        AppBan::where('banned_user_id', $user_id)->delete();
 
         DB::table('users')
             ->where('id', '=', $user_id)

@@ -167,6 +167,15 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->friends()->get()->contains($user_id);
     }
 
+
+    public function is_pending($group_id) : bool{
+        return DB::table('group_request')
+            ->where('user_id', $this->id)
+            ->where('group_id', $group_id)
+            ->where('is_accepted', false)
+            ->exists();
+    }
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, "author");
@@ -185,6 +194,14 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     public function is_app_banned(): bool
     {
         return $this->app_ban !== null;
+    }
+
+    public function has_appealed_app_ban() 
+    {
+        if (!$this->is_app_banned()) {
+            return false;
+        }
+        return $this->app_ban->appeal !== null;
     }
 
     public function app_ban(): HasOne

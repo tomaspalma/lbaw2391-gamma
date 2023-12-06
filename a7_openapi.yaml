@@ -1064,8 +1064,6 @@ paths:
                   description: 'OK. Redirect to login page.'
                   value: '/login'
          
-
-
   /api/notifications/{filter}:
     get: 
       operationId: R902
@@ -1087,6 +1085,7 @@ paths:
       responses:
         '200':
           description: 'HTML with the notification cards'
+  /users/{username}/appban/appeal:
 
   /comment/{id}/reaction:
     get: 
@@ -1180,3 +1179,51 @@ paths:
         '403':
           description: 'Forbidden if the deleting user does not have this reaction' 
   
+    get:
+      operationId: R507
+      summary: 'R507: Show form to appeal app ban'
+      description: 'Shows a page with the form so a user can appeal their app ban. Access: USR'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'Get the view of the edit post form'
+        '403':
+          description: 'Forbidden. User is not banned or it already has appealed the ban'
+      
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+
+  post:
+      operationId: R508
+      summary: 'R508: Appeal app ban action'
+      description: 'Submits the appeal from the user about the app ban they got. Access: USR'
+      tags:
+        - 'M05: Users'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: text
+      responses:
+        '302':
+          description: 'Redirect after submitting user app ban appeal.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                '302 Success':
+                  description: 'OK. Redirect to homepage'
+                  value: '/'
+                '302 Failure':
+                  description: 'NOT OK. Redirect again to submit appeal form.'
+                  value: '/users/{username}/appban/appeal'
