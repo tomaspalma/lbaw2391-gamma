@@ -566,7 +566,7 @@ CREATE TRIGGER add_friend
 
     INSERT INTO group_user (user_id, group_id) VALUES
         (1, 2),
-        -- (1, 1),
+        (1, 1),
         (2, 1),
         (2, 2);
 

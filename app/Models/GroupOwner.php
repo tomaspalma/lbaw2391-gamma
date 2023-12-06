@@ -10,4 +10,9 @@ class GroupOwner extends Model
     use HasFactory;
 
     protected $table = 'group_owner';
+
+    protected $fillable = [
+        'group_id',
+        'user_id'
+    ];
 }

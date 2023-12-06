@@ -113,10 +113,11 @@ Route::controller(CommentController::class)->middleware(EnsureUserIsNotAppBanned
     Route::delete('/comment/{id}/reaction', 'remove_reaction')->name('comment.remove.reaction');
 });
 
-
 Route::controller(GroupController::class)->group(function () {
     Route::get('/group/{id}', 'showGroupForm')->name('groupPosts');
-    Route::get('/group/{id}/members', 'showGroupMembers')->name('groupMembers');
+    Route::get('/group/{id}/members/', 'showGroupMembers')->name('groupMembers');
+    Route::delete('/group/{id}/members/{username}', 'deleteGroupMember')->name('delete.groupMember');
+    Route::post('/group/{id}/members/{username}/promote', 'promoteGroupMember')->name('promote.groupMember');
     Route::post('/group/{id}/enter', 'addToGroup')->name('groups.enter');
     Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
     Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
@@ -177,5 +178,9 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::middleware(EnsureUserIsAdmin::class)->group(function () {
             Route::delete("/users/{username}/appeal", 'remove_appeal')->name('admin.remove_appeal');
         });
+    });
+
+    Route::controller(GroupController::class)->group(function () {
+        Route::get('/group/{id}/members/{filter?}', 'showGroupMembers')->name('api.groupMembers');
     });
 });

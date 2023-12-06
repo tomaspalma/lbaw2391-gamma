@@ -94,3 +94,11 @@ input {
 .x-icon {
     @apply fa-solid fa-x;
 }
+
+.delete-confirmation-trigger {
+    @apply bg-red-500 p-2 text-white rounded-md;
+}
+
+.promote-group-member-confirmation-trigger {
+    @apply bg-blue-400 p-2 text-white rounded-md;
+}

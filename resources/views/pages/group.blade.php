@@ -1,12 +1,11 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js', 'resources/js/group/scroll.js'])
-
     <title>{{ config('app.name', 'Laravel') }} | Group {{$group->name}}</title>
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js', 'resources/js/group/filter.js', 'resources/js/group/scroll.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
-    <link href="{{url('css/group.css')}}" rel="stylesheet">
 
     <script src="https://kit.fontawesome.com/38229b6c34.js" crossorigin="anonymous"></script>
 </head>
@@ -14,7 +13,7 @@
 @include('partials.navbar')
 
 <div class="grid grid-cols-12">
-    <main class="col-span-12 md:col-span-8 justify">
+    <main class="col-span-12 md:col-span-8 justify mx-auto w-full">
         @can('alreadyIn', $group)
         <a href="{{ route('post.createForm') }}" class="my-4 block mx-auto px-4 py-2 bg-black text-white text-center rounded">Create Post</a>
         @endcan
@@ -50,9 +49,11 @@
         @if($members->count() == 0)
         <p class="text-center">No members found.</p>
         @else
+        <div id="member-cards">
         @for($i = 0; $i < $members->count(); $i++)
             @include('partials.user_card', ['user' => $members->get()[$i], 'adminView' => false])
             @endfor
+        </div>
             @endif
             @endif
 
@@ -69,7 +70,7 @@
 
     </main>
 
-    <aside class="border-2 border-gray-500 p-10 w-96 rounded-lg col-span-10 md:col-span-3 self-start items-start content-start mr-2 md:mr-5">
+    <aside class="shadow-md border-2 border-gray-500 p-10 w-96 rounded-lg col-span-10 md:col-span-3 self-start items-start content-start mr-2 md:mr-5">
 
         <h2 class="text-3xl font-bold mb-4">{{$group->name}}</h2>
 

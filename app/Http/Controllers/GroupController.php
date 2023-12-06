@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Group;
+use App\Models\GroupOwner;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -40,20 +42,57 @@ class GroupController extends Controller
         }
     }
 
-    public function showGroupMembers(string $id): View
+    public function promoteUser(Request $request, int $id, string $username)
     {
+        $group = Group::find($id);
+        $user = User::where('username', $username)->get()[0];
 
+        $this->authorize('can_modify', $group);
+
+        GroupOwner::create([
+            'group_id' => $id,
+            'user_id' => $user->id
+        ]);
+    }
+
+    public function deleteGroupMember(Request $request, int $id, string $username)
+    {
+        $group = Group::find($id);
+        $user = User::where('username', $username)->get()[0];
+
+        $this->authorize('can_modify', $group);
+    }
+
+    public function showGroupMembers(Request $request, int $id, string $filter = null)
+    {
         $group = Group::findOrFail($id);
+
         $members = $group->users();
         $posts = $group->posts();
         $user = Auth::user();
-        return view('pages.group', [
-            'feed' => 'members',
-            'members' => $members,
-            'posts' => $posts,
-            'group' => $group,
-            'user' => $user
-        ]);
+
+        if ($request->is("api*")) {
+            $userCards = [];
+
+            if ($filter === 'groupOwners') {
+                $members = $group->group_owners();
+            } elseif ($filter === 'members') {
+            }
+
+            for ($i = 0; $i < count($members->get()); $i++) {
+                $userCards[] = view('partials.user_card', ['user' => $members->get()[$i], 'adminView' => false, 'is_group' => true, 'group' => $group])->render();
+            }
+
+            return $userCards;
+        } else {
+            return view('pages.group', [
+                'feed' => 'members',
+                'members' => $members,
+                'posts' => $posts,
+                'group' => $group,
+                'user' => $user
+            ]);
+        }
     }
 
     public function addToGroup(string $id)

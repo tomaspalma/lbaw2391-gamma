@@ -13,8 +13,8 @@
         </div>
     </div>
 
-    @if($adminView)
-        <div class="flex space-x-8 items-center">
+        <div class="order-3 space-x-8">
+            @if($adminView)
             @if(!isset($appealView) || !$appealView)
                 <button>
                     <a target="_blank" href="{{ '/users/' . $user->username . '/edit' }}">Edit</a>
@@ -37,8 +37,20 @@
                 </button>
                 <i class="appban-dropdown-arrow cursor-pointer fa-solid fa-angle-down"></i>
             @endif
+            @endif
+
+            @if(isset($is_group) && $is_group && Auth::user()->is_owner($group))
+            @if(Auth::user()->is_owner($group) && !$user->is_owner($group))
+            <button class="promote-group-member-confirmation-trigger">
+                Promote
+            </button>
+            <button class="delete-confirmation-trigger">
+                Remove
+            </button>
+            @endif
+
+            @endif
         </div>
-    @endif
 
     @if(isset($appealView) && $appealView)
         <article data-username="{{ $user->username }}" class="hidden appban-appeal-reason">
