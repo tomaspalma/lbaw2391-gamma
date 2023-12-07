@@ -75,7 +75,7 @@ class SearchController extends Controller
     /**
      * Method used in the API endpoint used in the admin page to search for users
      */
-    public function adminFullTextUsers(string $query = null)
+    public function adminFullTextUsers(Request $request, string $query = null)
     {
         if ($query === null) {
             $users = User::where('id', '<>', 0)->where('role', '<>', 1)->paginate(15);
@@ -87,12 +87,25 @@ class SearchController extends Controller
                 ->paginate(15);
         }
 
-        $usersJson = [];
-        for ($i = 0; $i < count($users); $i++) {
-            $usersJson[] = new UserResource($users[$i]);
+        $userCardsJson = [];
+        foreach ($users as $user) {
+            if($request->headers->get('referer') === env('APP_URL') . '/admin/user/appeals')
+            {
+                if(!$user->has_appealed_app_ban()) {
+                    continue;
+                }
+
+                $userCardsJson[] = view('partials.user_card', [
+                    'user' => new UserResource($user),
+                    'adminView' => true, 'appealView' => true,
+                    'appeal' => $user->app_ban->appeal_model
+                ])->render();
+            } else {
+                $userCardsJson[] = view('partials.user_card', ['user' => new UserResource($user), 'adminView' => true])->render();
+            }
         }
 
-        return response()->json($usersJson);
+        return response()->json($userCardsJson);
     }
 
     public function fullTextUsers(Request $request, string $query = null)

@@ -9,9 +9,9 @@ export function deleteComment(deleteButton) {
     .then((response) => {
         if(response.ok) {
             // delete hr between comment
-            document.querySelector(`[comment-id="${commentId}"]`).parentElement.nextElementSibling.remove();
+            document.querySelector(`[comment-id="${commentId}"]`).parentElement.parentElement.parentElement.nextElementSibling.remove();
             // delete comment from the page
-            document.querySelector(`[comment-id="${commentId}"]`).parentElement.remove();
+            document.querySelector(`[comment-id="${commentId}"]`).parentElement.parentElement.parentElement.remove();
 
             // if there is no comment left add the no comment message
             if(document.getElementById('comments').childElementCount == 0) {
@@ -25,9 +25,4 @@ export function deleteComment(deleteButton) {
     .catch((error) => {
         console.log(error);
     });
-}
-
-let deleteButtons = document.getElementsByClassName('delete-comment-button');
-for(const deleteButton of deleteButtons) {
-    deleteButton.addEventListener('click', deleteComment);
 }

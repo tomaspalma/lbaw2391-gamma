@@ -1,22 +1,36 @@
-const dropdownButton = document.getElementById("dropdownButton");
-const dropdownContent = document.getElementById("dropdownContent");
+const dropdownButtons = document.querySelectorAll(".dropdownButton");
+const dropdownContents = document.querySelectorAll(".dropdownContent");
 
-dropdownButton.addEventListener("click", function () {
-  const display = dropdownContent.style.display;
+console.log("buttons: ", dropdownButtons);
+console.log("contents: ", dropdownContents);
 
-  if (display == "none") {
-    dropdownContent.style.display = "block";
-  } else {
-    dropdownContent.style.display = "none";
-  }
-});
+export function toggleDropdownButtons(dropdownButtons, dropdownContents) {
+    for (let i = 0; i < dropdownButtons.length; i++) {
+        const dropdownButton = dropdownButtons[i];
+        const dropdownContent = dropdownContents[i];
+        dropdownButton.addEventListener("click", function() {
+            const display = dropdownContent.style.display;
 
-document.addEventListener("click", function (event) {
-  const isClickInside =
-    dropdownButton.contains(event.target) ||
-    dropdownContent.contains(event.target);
+            if (display == "none") {
+                dropdownContent.style.display = "block";
+            } else {
+                dropdownContent.style.display = "none";
+            }
+        });
 
-  if (!isClickInside) {
-    dropdownContent.style.display = "none";
-  }
-});
+        document.addEventListener("click", function(event) {
+            const isClickInside =
+                dropdownButton.contains(event.target) ||
+                dropdownContent.contains(event.target);
+
+            if (!isClickInside) {
+                dropdownContent.style.display = "none";
+            }
+        });
+    }
+}
+
+toggleDropdownButtons(dropdownButtons, dropdownContents);
+
+
+

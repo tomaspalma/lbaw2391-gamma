@@ -8,11 +8,11 @@ const currentUrl = window.location.href;
 const lastSlashIndex = currentUrl.lastIndexOf('/');
 
 if (currentUrl.slice(lastSlashIndex + 1) === 'feed') {
-    await addPaginationListener("/api/feed/popular", posts, "?", (entityCard) => {
+    addPaginationListener("/api/feed/popular", posts, "?", (entityCard) => {
         initReactionJs(entityCard);
-    });
+    }).then(() => { }).catch((e) => console.error(e));
 } else if (currentUrl.slice(lastSlashIndex + 1) === 'personal') {
-    await addPaginationListener("/api/feed/personal", posts, "?", (entityCard) => {
+    addPaginationListener("/api/feed/personal", posts, "?", (entityCard) => {
         initReactionJs(entityCard);
-    });
+    }).then(() => { }).catch((e) => console.error(e));
 }
