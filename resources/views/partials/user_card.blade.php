@@ -41,12 +41,14 @@
 
             @if(isset($is_group) && $is_group && Auth::user()->is_owner($group))
             @if(Auth::user()->is_owner($group) && !$user->is_owner($group))
-            <button class="promote-group-member-confirmation-trigger">
-                Promote
-            </button>
-            <button class="delete-confirmation-trigger">
-                Remove
-            </button>
+            <div class="normal-user-actions">
+                <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
+                    Promote
+                </button>
+                <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="ban-confirmation-trigger">
+                    Ban
+                </button>
+            </div>
             @endif
 
             @endif

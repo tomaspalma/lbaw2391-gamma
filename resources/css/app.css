@@ -95,10 +95,10 @@ input {
     @apply fa-solid fa-x;
 }
 
-.delete-confirmation-trigger {
+.delete-confirmation-trigger, .ban-confirmation-trigger {
     @apply bg-red-500 p-2 text-white rounded-md;
 }
 
-.promote-group-member-confirmation-trigger {
+.promote-group-member-confirmation-trigger-btn {
     @apply bg-blue-400 p-2 text-white rounded-md;
 }

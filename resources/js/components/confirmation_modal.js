@@ -20,6 +20,14 @@ if (leaveModalButtons) {
 }
 
 const callbackTypesAction = {
+    promote_group_member: (form) => {
+        const username = form.action.split("/")[6];
+        const userCard = document.querySelector(
+            `article[data-username="${username}"]`
+        );
+
+        userCard.querySelector(".normal-user-actions").classList.add("hidden");
+    },
     remove_appeal: (form) => {
         const username = form.action.split("/")[5];
         const userCard = document.querySelector(

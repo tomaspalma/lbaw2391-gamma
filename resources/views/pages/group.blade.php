@@ -1,9 +1,10 @@
 @extends('layouts.head')
 
 <head>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js', 'resources/js/group/filter.js', 'resources/js/group/promote.js', 'resources/js/group/block.js', 'resources/js/group/scroll.js', 'resources/js/group/filter.js'])
     <title>{{ config('app.name', 'Laravel') }} | Group {{$group->name}}</title>
     
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js', 'resources/js/group/filter.js', 'resources/js/group/scroll.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 
@@ -34,14 +35,14 @@
             <p class="text-center">No posts found.</p>
             @else
             @for($i = 0; $i < $posts->count(); $i++)
-                @include('partials.post_card', ['post'=> $posts[$i]])
+                @include('partials.post_card', ['post'=> $posts->get()[$i]])
                 @endfor
                 @endif
                 @endif
         </section>
 
         @if($feed === 'members')
-        <select name="type" class="mt-1 p-2 w-full border focus:ring-2">
+        <select id="group-member-filter" name="type" class="mt-1 p-2 w-full border focus:ring-2">
             <option value="allUsers" selected>All Users</option>
             <option value="groupOwners">Group Owners</option>
             <option value="members">Members</option>
@@ -51,7 +52,7 @@
         @else
         <div id="member-cards">
         @for($i = 0; $i < $members->count(); $i++)
-            @include('partials.user_card', ['user' => $members->get()[$i], 'adminView' => false])
+            @include('partials.user_card', ['user' => $members[$i], 'adminView' => false, 'is_group' => true, 'group' => $group])
             @endfor
         </div>
             @endif
@@ -143,3 +144,5 @@
 </aside>
 
 </div>
+
+@include('partials.confirm_modal')

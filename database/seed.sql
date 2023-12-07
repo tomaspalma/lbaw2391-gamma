@@ -80,9 +80,9 @@ CREATE TABLE friends (
 
 
 CREATE TABLE group_owner(
+    id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
-    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE,
-    PRIMARY KEY (user_id, group_id)
+    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE
 );
 
 CREATE TABLE group_request(
@@ -94,9 +94,9 @@ CREATE TABLE group_request(
 );
 
 CREATE TABLE group_user(
+    id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
-    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE,
-    PRIMARY KEY (user_id, group_id)
+    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE
 );
 
 CREATE TABLE friend_request(
@@ -566,7 +566,7 @@ CREATE TRIGGER add_friend
 
     INSERT INTO group_user (user_id, group_id) VALUES
         (1, 2),
-        (1, 1),
+        -- (1, 1),
         (2, 1),
         (2, 2);
 

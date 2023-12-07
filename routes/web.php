@@ -18,7 +18,6 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Controllers\PostController;
-use App\Http\Middleware\EnsurePostExists;
 use App\Http\Middleware\EnsureUserIsNotAppBanned;
 
 /*
@@ -116,8 +115,8 @@ Route::controller(CommentController::class)->middleware(EnsureUserIsNotAppBanned
 Route::controller(GroupController::class)->group(function () {
     Route::get('/group/{id}', 'showGroupForm')->name('groupPosts');
     Route::get('/group/{id}/members/', 'showGroupMembers')->name('groupMembers');
-    Route::delete('/group/{id}/members/{username}', 'deleteGroupMember')->name('delete.groupMember');
-    Route::post('/group/{id}/members/{username}/promote', 'promoteGroupMember')->name('promote.groupMember');
+    Route::post('/group/{id}/members/{username}/block', 'banGroupMember')->name('ban.groupMember');
+    Route::post('/group/{id}/members/{username}/promote', 'promoteUser')->name('promote.groupMember');
     Route::post('/group/{id}/enter', 'addToGroup')->name('groups.enter');
     Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
     Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');

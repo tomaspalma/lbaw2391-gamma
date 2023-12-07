@@ -7,17 +7,20 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Models\GroupOwner;
+use App\Models\GroupUser;
 use App\Models\User;
+use App\Models\GroupBan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
 {
     public function showGroupForm(Request $request, string $id)
     {
         $group = Group::findOrFail($id);
-        $posts = $group->posts()->paginate(5);
-        $members = $group->users();
+        $posts = $group->posts();
+        $members = $group->all_users();
         $user = Auth::user();
 
         if ($request->is("api*")) {
@@ -42,6 +45,36 @@ class GroupController extends Controller
         }
     }
 
+    public function banGroupMember(Request $request, int $id, string $username)
+    {
+        $rules = array('reason' => 'required|string');
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return Response::json(array('errors' => $validator->getMessageBag()->toArray()), 400); // 400 being the HTTP code for an invalid request.
+        }
+
+        $group = Group::find($id);
+        $user = User::where('username', $username)->get()[0];
+
+        $this->authorize('can_modify', $group);
+
+        DB::transaction(function () use ($request, $user, $group) {
+            if ($user->is_owner($group)) {
+                GroupOwner::where('user_id', $user->id)->delete();
+            } else {
+                GroupUser::where('user_id', $user->id)->delete();
+            }
+
+            GroupBan::create([
+                'reason' => $request->input('reason'),
+                'group_owner_id' => Auth::user()->id,
+                'banned_user_id' => $user->id,
+                'group_id' => $group->id
+            ]);
+        });
+    }
+
     public function promoteUser(Request $request, int $id, string $username)
     {
         $group = Group::find($id);
@@ -49,25 +82,21 @@ class GroupController extends Controller
 
         $this->authorize('can_modify', $group);
 
-        GroupOwner::create([
-            'group_id' => $id,
-            'user_id' => $user->id
-        ]);
-    }
+        DB::transaction(function () use ($id, $user) {
+            GroupUser::where('user_id', $user->id)->get()[0]->delete();
 
-    public function deleteGroupMember(Request $request, int $id, string $username)
-    {
-        $group = Group::find($id);
-        $user = User::where('username', $username)->get()[0];
-
-        $this->authorize('can_modify', $group);
+            GroupOwner::create([
+                'group_id' => $id,
+                'user_id' => $user->id
+            ]);
+        });
     }
 
     public function showGroupMembers(Request $request, int $id, string $filter = null)
     {
         $group = Group::findOrFail($id);
 
-        $members = $group->users();
+        $members = $group->all_users();
         $posts = $group->posts();
         $user = Auth::user();
 
@@ -75,12 +104,13 @@ class GroupController extends Controller
             $userCards = [];
 
             if ($filter === 'groupOwners') {
-                $members = $group->group_owners();
+                $members = $group->group_owners()->get();
             } elseif ($filter === 'members') {
+                $members = $group->users()->get();
             }
 
-            for ($i = 0; $i < count($members->get()); $i++) {
-                $userCards[] = view('partials.user_card', ['user' => $members->get()[$i], 'adminView' => false, 'is_group' => true, 'group' => $group])->render();
+            for ($i = 0; $i < count($members); $i++) {
+                $userCards[] = view('partials.user_card', ['user' => $members[$i], 'adminView' => false, 'is_group' => true, 'group' => $group])->render();
             }
 
             return $userCards;

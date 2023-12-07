@@ -19,9 +19,15 @@ class Group extends Model
         'tsvectors'
     ];
 
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, "group_id");
+    }
+
+    public function all_users()
+    {
+        return $this->group_owners->concat($this->users);
     }
 
     public function users(): BelongsToMany
