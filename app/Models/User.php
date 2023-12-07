@@ -110,7 +110,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->whereHas('comment', function ($query) {
                 $query->where('author', Auth::user()->id);
             })->orderBy('date', 'desc')
-            ->paginate(15)
+            ->paginate(15);
     }
 
     public function comment_reaction(Comment $comment)
