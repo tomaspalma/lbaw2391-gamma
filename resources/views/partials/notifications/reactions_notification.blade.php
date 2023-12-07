@@ -11,9 +11,3 @@
     </p>
 </article>
 @endif
-@if(!$notification->read)
-@php
-$notification->read = true;
-$notification->save();
-@endphp
-@endif

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Comment as EventsComment;
 use App\Events\Reaction as EventsReaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Comment;
 use App\Http\Resources\CommentResource;
+use App\Models\CommentNot;
 use App\Models\Reaction;
 use Illuminate\Validation\Rule;
 
@@ -72,7 +74,6 @@ class CommentController extends Controller
 
     public function create(Request $request)
     {
-
         $this->authorize('create', Comment::class);
 
         $request->validate([
@@ -81,6 +82,7 @@ class CommentController extends Controller
         ]);
 
         $last_id = DB::select('SELECT id FROM comment ORDER BY id DESC LIMIT 1')[0]->id;
+
         $new_id = $last_id + 1;
 
         $comment = Comment::create([
@@ -89,6 +91,8 @@ class CommentController extends Controller
             'author' => Auth::user()->id,
             'content' => $request->content
         ]);
+
+        event(new EventsComment($comment->post->owner->username, $comment->owner, $comment));
 
         return response()->json(view('partials.comment_card', ['comment' => $comment])->render());
     }
