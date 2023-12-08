@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js', 'resources/js/group/scroll.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
     <link href="{{url('css/group.css')}}" rel="stylesheet">
@@ -14,7 +14,7 @@
 <div class="grid grid-cols-12">
     <main class="col-span-12 md:col-span-8 justify">
         @can('alreadyIn', $group)
-        <a href="{{ route('post.createForm') }}" class="my-4 block mx-auto px-4 py-2 bg-black text-white text-center rounded">Create Post</a> 
+        <a href="{{ route('post.createForm') }}" class="my-4 block mx-auto px-4 py-2 bg-black text-white text-center rounded">Create Post</a>
         @endcan
         <ul class="tab-container center justify-center flex border border-black rounded shadow my-4">
             <li class="flex w-1/2 {{ $feed === 'posts' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
@@ -26,40 +26,43 @@
         </ul>
 
         @can('viewPostsAndMembers', $group)
-            @if($feed === 'posts')
-                @if($posts->count() == 0)
-                    <p class="text-center">No posts found.</p>
-                @else
-                    @for($i = 0; $i < $posts->count(); $i++) 
-                        @include('partials.post_card', ['post'=> $posts->get()[$i]])
-                    @endfor
+        @if($feed === 'posts')
+        <section id="posts">
+            <h1 class="sr-only">Posts</h1>
+            @if($posts->count() == 0)
+            <p class="text-center">No posts found.</p>
+            @else
+            @for($i = 0; $i < $posts->count(); $i++)
+                @include('partials.post_card', ['post'=> $posts[$i]])
+                @endfor
                 @endif
-            @endif
-
-            @if($feed === 'members')
-                <select name="type" class="mt-1 p-2 w-full border focus:ring-2">
-                    <option value="allUsers" selected>All Users</option>
-                    <option value="groupOwners">Group Owners</option>
-                    <option value="members">Members</option>
-                </select>
-                @if($members->count() == 0)
-                    <p class="text-center">No members found.</p>
-                @else
-                    @for($i = 0; $i < $members->count(); $i++) 
-                        @include('partials.user_card', ['user' => $members->get()[$i], 'adminView' => false])
-                    @endfor
                 @endif
-            @endif
+        </section>
 
+        @if($feed === 'members')
+        <select name="type" class="mt-1 p-2 w-full border focus:ring-2">
+            <option value="allUsers" selected>All Users</option>
+            <option value="groupOwners">Group Owners</option>
+            <option value="members">Members</option>
+        </select>
+        @if($members->count() == 0)
+        <p class="text-center">No members found.</p>
         @else
+        @for($i = 0; $i < $members->count(); $i++)
+            @include('partials.user_card', ['user' => $members->get()[$i], 'adminView' => false])
+            @endfor
+            @endif
+            @endif
 
-        <div class="justify-center h-screen">
-            <div class="bg-red-100 border border-red-500 p-4">
-                <p class="text-red-500">You do not have permission</p>
+            @else
+
+            <div class="justify-center h-screen">
+                <div class="bg-red-100 border border-red-500 p-4">
+                    <p class="text-red-500">You do not have permission</p>
+                </div>
             </div>
-        </div>
 
-        @endcan
+            @endcan
 
 
     </main>
@@ -77,64 +80,64 @@
         <p class="mb-2">{{$posts->count()}} posts</p>
 
         @if($group->is_private)
-            <div class="flex items-center">
-                <i class="fa-solid fa-lock" style="margin-right: 10px; margin-top:-7px"></i>
-                <p class="mb-2 ml-1">Private</p>
-            </div>
+        <div class="flex items-center">
+            <i class="fa-solid fa-lock" style="margin-right: 10px; margin-top:-7px"></i>
+            <p class="mb-2 ml-1">Private</p>
+        </div>
         @else
-            <div class="flex items-center">
-                <i class="fa-solid fa-eye" style="margin-right: 10px; margin-top:-7px"></i>
-                <p class="mb-2">Public</p>
-            </div>  
+        <div class="flex items-center">
+            <i class="fa-solid fa-eye" style="margin-right: 10px; margin-top:-7px"></i>
+            <p class="mb-2">Public</p>
+        </div>
         @endif
 
         @auth
 
-            @can('alreadyIn', $group)
+        @can('alreadyIn', $group)
 
 
-                <form id = "groupForm" action="{{ route('groups.leave', $group )}}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button id="button" type="submit" id = "leaveGroupButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                        Leave group
-                    </button>
-                </form>
-            
-            @else
-            
-                @can('PendingOption', $group)
+        <form id="groupForm" action="{{ route('groups.leave', $group )}}" method="post">
+            @csrf
+            @method('DELETE')
+            <button id="button" type="submit" id="leaveGroupButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Leave group
+            </button>
+        </form>
 
-                        <form id = "groupForm" action="{{ route('groups.remove_request', $group )}}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <button id="button" type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                                Remove Request
-                            </button>
-                        </form>
-                    
-                    </div>
+        @else
 
+        @can('PendingOption', $group)
 
-                @else
+        <form id="groupForm" action="{{ route('groups.remove_request', $group )}}" method="post">
+            @csrf
+            @method('DELETE')
+            <button id="button" type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Remove Request
+            </button>
+        </form>
 
-                    <form id = "groupForm" action="{{ route('groups.enter', $group) }}" method="post">
-                        @csrf
-                        <button id="button" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Enter this group
-                        </button>
-                    </form>
-            
-                @endcan
-            
-            @endcan
-            
+</div>
 
 
-        
-        @endauth
+@else
+
+<form id="groupForm" action="{{ route('groups.enter', $group) }}" method="post">
+    @csrf
+    <button id="button" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Enter this group
+    </button>
+</form>
+
+@endcan
+
+@endcan
 
 
-    </aside>
+
+
+@endauth
+
+
+</aside>
 
 </div>

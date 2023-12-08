@@ -1252,4 +1252,44 @@ paths:
             type: string
           required: false
 
+  /api/post/{id}/comments:
 
+    get:
+      operationId: R708
+      summary: 'R708: Show comments of post'
+      description: 'AJAX endpoint to show comments of posts. Access: USR'
+      tags:
+        - 'M07: Posts'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the post 
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'Returns JSON with HTML of the post cards'
+        '403':
+          description: 'Forbidden. User cannot see this post.'
+
+  /api/group/{id}/posts:
+
+    get:
+      operationId: R801
+      summary: 'R801: Show posts of groups'
+      description: 'AJAX endpoint to show posts of groups. Access: USR'
+      tags:
+        - 'M08: Groups'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the group 
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'Returns JSON with HTML of the post cards'
+        '403':
+          description: 'Forbidden. User cannot see the posts of this group'

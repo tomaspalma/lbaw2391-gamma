@@ -155,6 +155,10 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::get('/notifications/{filter?}', 'show_notifications');
     });
 
+    Route::controller(GroupController::class)->group(function () {
+        Route::get('/group/{group_id}/posts', 'showGroupForm')->name('api.group.show_posts');
+    });
+
     Route::controller(UserController::class)->group(function () {
         Route::get("/users/username/{username}", 'checkUsernameExists');
         Route::get("/users/email/{email}", 'checkEmailExists');
