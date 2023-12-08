@@ -15,8 +15,8 @@
 @endauth
 <nav class="bg-white border-black border-b mb-5 p-4 shadow-md">
     <div class="max-w-screen-xl flex flex-col md:flex-row justify-around mx-auto">
-        <div class="w-1/3 self-center">
-            <a href="/" class="self-center text-2xl font-bold hover:underline">Gamma</a>
+        <div class="w-full md:w-1/3 self-center text-center md:text-left">
+            <a href="/" class="text-2xl font-bold hover:underline">Gamma</a>
         </div>
         <div class="flex flex-col items-center md:w-1/3 w-full self-start">
             @if(Auth::user() === null || !Auth::user()->is_app_banned())
