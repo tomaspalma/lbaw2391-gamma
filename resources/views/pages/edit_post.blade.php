@@ -3,6 +3,7 @@
 <head>
     @vite('resources/css/app.css')
 
+    <title>{{ config('app.name', 'Laravel') }} | Edit post</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
 

@@ -1,6 +1,7 @@
 @extends('layouts.head')
 
 <head>
+    <title>{{ config('app.name', 'Laravel') }} | User appban appeals</title>
     @vite(['resources/js/search/admin_user_search.js', 'resources/js/admin/user/remove_appeal.js'])
 </head>
 
