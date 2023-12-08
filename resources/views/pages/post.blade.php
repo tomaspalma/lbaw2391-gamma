@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js' , 'resources/js/post/reactions.js' , 'resources/js/comment/add.js' , 'resources/js/comment/delete.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js', 'resources/js/comment/add.js' , 'resources/js/comment/delete.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
