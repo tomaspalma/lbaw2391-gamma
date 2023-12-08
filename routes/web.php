@@ -148,6 +148,7 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
 
     Route::controller(PostController::class)->group(function () {
         Route::get('/post/{id}/card/{preview}', 'show_post_card');
+        Route::get('/post/{id}/comments', 'showPost');
     });
 
     Route::controller(NotificationController::class)->middleware('auth')->group(function () {

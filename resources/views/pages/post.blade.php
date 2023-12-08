@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js', 'resources/js/comment/add.js' , 'resources/js/comment/delete.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js', 'resources/js/comment/add.js' , 'resources/js/comment/delete.js', 'resources/js/post/scroll.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
@@ -41,7 +41,7 @@
         </div>
 
         @can('update', $post)
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center mt-4">
             <a href="{{ route('post.update', $post->id) }}" class="bg-black text-white py-2 px-4 rounded-md">Edit Post</a>
             <button type="submit" class="delete-post-button bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
         </div>

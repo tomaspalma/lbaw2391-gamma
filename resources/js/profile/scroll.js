@@ -1,6 +1,5 @@
 import { initReactionJs } from "../post/reactions";
 import { addPaginationListener } from "../search/infinite_scroll";
-import { getUsername } from "../utils";
 
 const url = window.location.href;
 const username = url.split("/")[4].split("?")[0];
