@@ -14,6 +14,7 @@ if (leaveModalButtons) {
     for (const leaveModalButton of leaveModalButtons) {
         leaveModalButton.addEventListener("click", () => {
             modal.classList.add("hidden");
+            restoreConfirmationForm();
         });
     }
 }
@@ -147,6 +148,19 @@ function clearColorConfiguration() {
     }
 }
 
+function restoreColorConfiguration() {
+    for (const color of colorsUsedInModal) {
+        confirmButton.classList.remove(color);
+        infoIcon.classList.remove(color);
+    }
+}
+
+export function restoreConfirmationForm() {
+    restoreColorConfiguration();
+
+    confirmationForm.classList.remove("hidden");
+}
+
 export function configureConfirmationForm(
     action,
     method,
@@ -187,12 +201,15 @@ export function overrideConfirmationForm(
                 if (res.ok) {
                     modal.classList.add("hidden");
                     confirmationForm.classList.remove("hidden");
-                    
 
                     callbackTypesAction[callbackType](form);
+
+                    confirmationForm.classList.remove("hidden");
+                    restoreColorConfiguration()
                 } else {
                     await thenCallback(res);
                 }
+
             })
             .catch((e) => {
                 console.error(e);
