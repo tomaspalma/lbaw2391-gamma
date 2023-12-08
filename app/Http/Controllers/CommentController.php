@@ -28,8 +28,10 @@ class CommentController extends Controller
             'type' => Rule::in(Reaction::$possible_types)
         ]);
 
+        $reaction_type = $request->json('type');
+        $comment = Comment::find($id);
 
-        $this->authorize('remove_reation', [$comment, $reaction_type]);
+        $this->authorize('remove_reaction', [$comment, $reaction_type]);
 
         $reaction = Reaction::where('author', $request->user()->id)
             ->where('comment_id', $id)

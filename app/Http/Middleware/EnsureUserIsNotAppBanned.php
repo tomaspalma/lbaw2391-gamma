@@ -17,12 +17,16 @@ class EnsureUserIsNotAppBanned
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        
+
+        if ($user === null) {
+            return $next($request);
+        }
+
         $user_is_logged_in = ($user !== null);
-        if($user_is_logged_in) {
+        if ($user_is_logged_in) {
             $appbans = AppBan::where('banned_user_id', $user->id)->get();
-        
-            if(count($appbans) > 0) {
+
+            if (count($appbans) > 0) {
                 return redirect()->route('appban_appeal_form.show', ['username' => $user->username]);
             }
         }
