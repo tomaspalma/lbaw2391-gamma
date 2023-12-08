@@ -1227,3 +1227,29 @@ paths:
                 '302 Failure':
                   description: 'NOT OK. Redirect again to submit appeal form.'
                   value: '/users/{username}/appban/appeal'
+
+  /api/users/{username}/posts/{filter?}:
+    get:
+      operationId: R508
+      summary: 'R508: Get the posts of a user'
+      description: 'Get the posts of a user. Access: USR'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'Return JSON with post cards'
+        '403':
+          description: 'Forbidden. The user is private.'
+      
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          name: filter
+          schema:
+            type: string
+          required: false
+
+
