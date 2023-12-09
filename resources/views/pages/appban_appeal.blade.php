@@ -1,5 +1,9 @@
 @extends('layouts.head')
 
+<head>
+<title>{{ config('app.name', 'Laravel') }} | Appban appeal user form</title>
+</head>
+
 @include('partials.navbar')
 
 

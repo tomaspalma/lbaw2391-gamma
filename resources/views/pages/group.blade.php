@@ -3,6 +3,8 @@
 <head>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js'])
 
+    <title>{{ config('app.name', 'Laravel') }} | Group {{$group->name}}</title>
+
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
     <link href="{{url('css/group.css')}}" rel="stylesheet">
 
