@@ -19,7 +19,8 @@ class Group extends Model
         'tsvectors'
     ];
 
-    public function posts(): HasMany {
+    public function posts(): HasMany
+    {
         return $this->hasMany(Post::class, "group_id");
     }
 
@@ -27,5 +28,4 @@ class Group extends Model
     {
         return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id');
     }
-    
 }

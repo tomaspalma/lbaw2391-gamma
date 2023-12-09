@@ -86,16 +86,25 @@ class UserController extends Controller
         return redirect('/');
     }
 
-    public function show(string $username): View
+    public function show(Request $request, string $username, string $filter = null)
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        $posts = $user->posts()->orderBy('date', 'desc')->get();
+        $posts = $user->posts()->orderBy('date', 'desc')->paginate(10);
 
-        return view('pages.profile', [
-            'user' => $user,
-            'posts' => $posts
-        ]);
+        if ($request->is("api*")) {
+            $post_cards = [];
+            foreach ($posts as $post) {
+                $post_cards[] = view('partials.post_card', ['post' => $post, 'preview' => false])->render();
+            }
+
+            return response()->json($post_cards);
+        } else {
+            return view('pages.profile', [
+                'user' => $user,
+                'posts' => $posts
+            ]);
+        }
     }
 
     public static function reset_password(User $user, string $password)
@@ -305,9 +314,5 @@ class UserController extends Controller
         DB::table('users')
             ->where('id', '=', $user_id)
             ->delete();
-    }
-
-    public function send_reset_password(User $user)
-    {
     }
 }

@@ -570,25 +570,15 @@ CREATE TRIGGER add_friend
         (1, 1),
         (2, 2);
 
-    INSERT INTO post (id, author, title, content, attachment, group_id, is_private, date) VALUES
-        (1, 1, 'Exciting AI Research Findings', 'Exciting new research findings in the field of artificial intelligence!', 'ai_research.pdf', 1, false, NOW() - INTERVAL '1 day'),
-        (2, 2, 'Renewable Energy Discussion', 'Important discussion on renewable energy solutions for the future.', 'renewable_energy.png', 2, true, NOW() - INTERVAL '1 day'),
-        (3, 3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
-        (4, 1, 'SpaceXs Mars Colonization Plans', 'Exciting news for all tech enthusiasts - SpaceX plans to colonize Mars!', null, null, true, NOW() - INTERVAL '4 days'),
-        (5, 2, 'Exploring 6G Technology', 'Discussing the potential of 6G technology and its impact on communication.', null, 2, false, NOW() - INTERVAL '5 days'),
-        (6, 1, 'History of Computer Science Lecture', 'Attended a fascinating lecture on the history of computer science today.', null, 1, false, NOW() - INTERVAL '6 days'),
-        (7, 3, 'Challenges in Quantum Computing', 'Exploring the challenges and opportunities in the field of quantum computing.', null, 2, false, NOW() - INTERVAL '7 days'),
-        (8, 4, 'Future of AI and Society', 'A sneak peek into the future of AI and its implications for society.', null, null, true, NOW() - INTERVAL '8 days'),
-        (9, 2, 'Python 4.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (10, 2, 'Python 5.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (11, 2, 'Python 6.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (12, 2, 'Python 7.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (13, 2, 'Python 8.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (14, 2, 'Python 9.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (15, 2, 'Python 10.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (16, 2, 'Python 11.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (17, 2, 'Python 12.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days'),
-        (18, 2, 'Python 13.0 Announcement', 'Exciting times ahead for programmers with the launch of the new Python 4.0!', null, 1, false, NOW() - INTERVAL '9 days');
+    INSERT INTO post (author, title, content, attachment, group_id, is_private, date) VALUES
+        (1, 'Exciting AI Research Findings', 'Exciting new research findings in the field of artificial intelligence!', 'ai_research.pdf', 1, false, NOW() - INTERVAL '1 day'),
+        (2, 'Renewable Energy Discussion', 'Important discussion on renewable energy solutions for the future.', 'renewable_energy.png', 2, true, NOW() - INTERVAL '1 day'),
+        (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        (1, 'SpaceXs Mars Colonization Plans', 'Exciting news for all tech enthusiasts - SpaceX plans to colonize Mars!', null, null, true, NOW() - INTERVAL '4 days'),
+        (2, 'Exploring 6G Technology', 'Discussing the potential of 6G technology and its impact on communication.', null, 2, false, NOW() - INTERVAL '5 days'),
+        (1, 'History of Computer Science Lecture', 'Attended a fascinating lecture on the history of computer science today.', null, 1, false, NOW() - INTERVAL '6 days'),
+        (3, 'Challenges in Quantum Computing', 'Exploring the challenges and opportunities in the field of quantum computing.', null, 2, false, NOW() - INTERVAL '7 days'),
+        (4, 'Future of AI and Society', 'A sneak peek into the future of AI and its implications for society.', null, null, true, NOW() - INTERVAL '8 days');
 
 
     INSERT INTO comment (id, post_id, author, content, date) VALUES

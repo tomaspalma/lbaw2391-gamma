@@ -148,15 +148,21 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
 
     Route::controller(PostController::class)->group(function () {
         Route::get('/post/{id}/card/{preview}', 'show_post_card');
+        Route::get('/post/{id}/comments', 'showPost');
     });
 
     Route::controller(NotificationController::class)->middleware('auth')->group(function () {
         Route::get('/notifications/{filter?}', 'show_notifications');
     });
 
+    Route::controller(GroupController::class)->group(function () {
+        Route::get('/group/{group_id}/posts', 'showGroupForm')->name('api.group.show_posts');
+    });
+
     Route::controller(UserController::class)->group(function () {
         Route::get("/users/username/{username}", 'checkUsernameExists');
         Route::get("/users/email/{email}", 'checkEmailExists');
+        Route::get("/users/{username}/posts/{filter?}", 'show');
         Route::middleware(EnsureUserIsAdmin::class)->group(function () {
             Route::delete("/users/{username}/appeal", 'remove_appeal')->name('admin.remove_appeal');
         });
