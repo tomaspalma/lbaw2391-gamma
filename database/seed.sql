@@ -342,8 +342,8 @@ CREATE INDEX groups_search_idx ON groups USING GIN(tsvectors);
 CREATE OR REPLACE FUNCTION update_comment_not() RETURNS TRIGGER AS
 $BODY$
 BEGIN 
-    INSERT INTO comment_not (comment_id, date) 
-    VALUES (NEW.id, now());
+    INSERT INTO comment_not (comment_id, date, read) 
+    VALUES (NEW.id, now(), false);
     RETURN NEW;
 END
 $BODY$

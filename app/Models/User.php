@@ -79,7 +79,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 
     public function normal_notifications()
     {
-        $result = $this->comment_notification()->concat($this->reaction_notifications())->sortByDesc('date');
+        $result = $this->comment_notifications()->concat($this->reaction_notifications())->sortByDesc('date');
 
         return $result;
     }
@@ -104,11 +104,11 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->paginate(15);
     }
 
-    public function comment_notification()
+    public function comment_notifications()
     {
         return CommentNot::with('comment')
             ->whereHas('comment', function ($query) {
-                $query->where('author', Auth::user()->id);
+                $query->where('author', '<>', Auth::user()->id);
             })->orderBy('date', 'desc')
             ->paginate(15);
     }
@@ -168,7 +168,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     }
 
 
-    public function is_pending($group_id) : bool{
+    public function is_pending($group_id): bool
+    {
         return DB::table('group_request')
             ->where('user_id', $this->id)
             ->where('group_id', $group_id)
@@ -196,7 +197,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->app_ban !== null;
     }
 
-    public function has_appealed_app_ban() 
+    public function has_appealed_app_ban()
     {
         if (!$this->is_app_banned()) {
             return false;

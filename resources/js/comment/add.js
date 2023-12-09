@@ -38,7 +38,7 @@ function addComment() {
                         // clear comment form
                         document.getElementById('comment-form').reset();
 
-                        initReactionJs();
+                        initReactionJs(comment);
 
                         toggleDropdownButtons(comment.querySelectorAll(".dropdownButton"), comment.querySelectorAll(".dropdownContent"));
 
