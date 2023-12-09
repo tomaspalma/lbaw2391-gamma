@@ -71,7 +71,7 @@
                         </form>
                 @elseif(auth()->user() && auth()->user()->id != $user->id && auth()->user()->has_received_pending_friend_request($user))
                         <button type="button" onclick="window.location.href='{{ route('friend_requests_page', ['username' => auth()->user()->username]) }}'" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
-                            See Friend Request
+                            Pending Friend Request
                         </button>
                 @endif
                 </div>

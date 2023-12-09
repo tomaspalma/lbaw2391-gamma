@@ -46,13 +46,15 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
 
 // Friends
 Route::controller(FriendController::class)->middleware(EnsureUserExists::class)->group(function () {
-    Route::get('/users/{username}/friends', 'show_friends')->name('friends_page');
-    Route::get('/users/{username}/friends/requests', 'show_friend_requests')->name('friend_requests_page');
-    Route::post('/api/users/{username}/friends/requests', 'add_friend_request')->name('add_friend_request');
-    Route::put('/api/users/{username}/friends/requests', 'decline_friend_request')->name('decline_friend_request');
-    Route::delete('/api/users/{username}/friends/requests', 'remove_friend_request')->name('remove_friend_request');
-    Route::post('/api/users/{username}/friends/', 'accept_friend_request')->name('accept_friend_request');
-    Route::delete('/api/users/{username}/friends', 'remove_friend')->name('remove_friend');
+    Route::middleware('auth')->group(function () {
+        Route::get('/users/{username}/friends', 'show_friends')->name('friends_page');
+        Route::get('/users/{username}/friends/requests', 'show_friend_requests')->name('friend_requests_page');
+        Route::post('/api/users/{username}/friends/requests', 'add_friend_request')->name('add_friend_request');
+        Route::put('/api/users/{username}/friends/requests', 'decline_friend_request')->name('decline_friend_request');
+        Route::delete('/api/users/{username}/friends/requests', 'remove_friend_request')->name('remove_friend_request');
+        Route::post('/api/users/{username}/friends', 'accept_friend_request')->name('accept_friend_request');
+        Route::delete('/api/users/{username}/friends', 'remove_friend')->name('remove_friend');
+    });
 });
 
 Route::controller(FeedController::class)->group(function () {

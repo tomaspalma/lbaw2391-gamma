@@ -15,12 +15,8 @@ class FriendController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        if (!$user) {
-            abort(422, 'User does not exist');
-        }
-
-        if (!$request->user()->is_friend($user) && $user->id != Auth::id()) {
-            abort(403);
+        if (!$request->user()->is_friend($user) && $user->id !== Auth::id()) {
+            abort(403, 'User is not your friend.');
         }
 
         $friends = $user->friends()->get();
@@ -39,14 +35,6 @@ class FriendController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        if (!$user) {
-            abort(422, 'User does not exist');
-        }
-
-        if ($user->id != Auth::id()) {
-            abort(403);
-        }
-
         $friendRequests = $user->received_pending_friend_requests()->get();
 
         return view('pages.friends', ['user' => $user, 'friendRequests' => $friendRequests, 'tab' => 'requests']);
@@ -56,16 +44,15 @@ class FriendController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        if (!$request->user()->is_friend($user)) {
-            FriendRequest::create([
-                'user_id' => Auth::id(),
-                'friend_id' => $user->id
-            ]);
-        } else {
+        if ($request->user()->is_friend($user)) {
             return response()->json([
-                'message' => 'Friend request already sent.'
+                'message' => 'User is already your friend.'
             ], 400);
         }
+        FriendRequest::create([
+            'user_id' => Auth::id(),
+            'friend_id' => $user->id
+        ]);
 
         return event(new FriendRequestEvent($user, $request->user(), null));
     }
@@ -73,6 +60,12 @@ class FriendController extends Controller
     public function remove_friend(Request $request, string $username)
     {
         $user = User::where('username', $username)->firstOrFail();
+
+        if (!$request->user()->is_friend($user)) {
+            return response()->json([
+                'message' => 'User is not your friend.'
+            ], 404);
+        }
 
         if ($request->user()->is_friend($user)) {
             DB::table('friends')
@@ -84,11 +77,18 @@ class FriendController extends Controller
         }
     }
 
-    public function remove_friend_request($username)
+    public function remove_friend_request(Request $request, User $username)
     {
         $user = User::where('username', $username)->firstOrFail();
+
+        if (!$request->user()->is_friend($user)) {
+            return response()->json([
+                'message' => 'User is not your friend.'
+            ], 404);
+        }
+
         $friendRequest = FriendRequest::where('user_id', Auth::id())
-            ->where('friend_id', $user->id)
+            ->where('friend_id', $user->id)->where('is_accepted', null)
             ->first();
 
         if ($friendRequest == null) {
@@ -107,6 +107,7 @@ class FriendController extends Controller
     public function accept_friend_request(Request $request, string $username)
     {
         $user = User::where('username', $username)->firstOrFail();
+
         FriendRequest::where('user_id', $user->id)
             ->where('friend_id', Auth::id())
             ->where('is_accepted', null)

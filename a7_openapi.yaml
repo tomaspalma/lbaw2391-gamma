@@ -674,6 +674,106 @@ paths:
             type: string
           required: true
 
+  /users/{username}/friends:
+
+    get:
+      operationId: R507
+      summary: 'R507: See friends of user'
+      description: 'Get the friends of the user and show them. Access: USR (can only see friends of friends).'
+      tags: 
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'OK. Show user friends'
+        '422':
+          description: 'Failure. If user not found with username'
+        '403':
+          description: 'Action forbidden'
+
+  /api/users/{username}/friends:
+
+    post:
+      operationId: R508
+      summary: 'R508: Accept friend request of user'
+      description: 'Accept friend request of user with username. Access: USR'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'Ok. Friend request accepted'
+        '422':
+          description: 'Failure. If user not found with username'
+        '403':
+          description: 'Action forbidden'
+    
+    delete:
+      operationId: R509
+      summary: 'R509: Remove friendship of user'
+      description: 'Remove the friendship of user with username. Access: USR (can only remove if friends)'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'Ok. Friendship removed'
+        '422':
+          description: 'Failure. If user not found with username'
+        '403':
+          description: 'Failure. Action forbidden'
+        '404':
+          description: 'Failure. User is not friend'
+
+  /users/{username}/friends/requests:
+
+    get:
+      operationId: R510
+      summary: 'R511: See pending friend requests'
+      description: 'Get the pending friend requests and show them. Access: USR'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'Ok. Show friend requests'
+        '422':
+          description: 'Failure. If user not found with username'
+        '403':
+          description: 'Action forbidden'
+          
+
+  
+  /api/users/{username}/friends/requests:
+
+    post:
+      operationId: R511
+      summary: 'R511: Send friend request to user'
+      description: 'Send friend request to user with username. Access: USR'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'Ok. Friend request sent'
+        '422':
+          description: 'Failure. If user not found with username'
+        '403':
+          description: 'Action forbidden'
+        '404':
+          description: 'Failure. User is already friend'
+
+    delete:
+      operationId: R512
+      summary: 'R512: Cancel friend request to user'
+      description: 'Cancel friend request to user with username. Access: USR'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'Ok. Friend request cancelled'
+        '422':
+          description: 'Failure. If user not found with username'
+        '403':
+          description: 'Action forbidden'
+        '404':
+          description: 'Failure. User is not friend'
+      
   /post:
 
     post:
