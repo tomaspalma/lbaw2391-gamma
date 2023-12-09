@@ -2,7 +2,8 @@
 
 <head>
     @vite('resources/css/app.css')
-
+    
+    <title>{{ config('app.name', 'Laravel') }} | Create post</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
 

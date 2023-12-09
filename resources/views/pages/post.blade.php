@@ -3,6 +3,7 @@
 <head>
     @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js', 'resources/js/comment/add.js' , 'resources/js/comment/delete.js', 'resources/js/post/scroll.js'])
 
+    <title>{{ config('app.name', 'Laravel') }} | Post {{$post->title}}</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
 

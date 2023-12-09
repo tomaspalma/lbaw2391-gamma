@@ -2,6 +2,9 @@
 
 <head>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/main_search/scroll.js'])
+    
+    <title>{{ config('app.name', 'Laravel') }} | Main search page</title>
+
     <meta name="search" content="{{ $query ? $query : '' }}">
 </head>
 

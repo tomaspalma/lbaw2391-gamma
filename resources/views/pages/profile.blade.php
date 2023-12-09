@@ -2,6 +2,8 @@
 
 <head>
     @vite(['resources/css/app.css', 'resources/js/components/dropdown_dots.js', 'resources/js/profile/delete.js', 'resources/js/profile/scroll.js'])
+
+    <title>{{ config('app.name', 'Laravel') }} | {{$user->username}} profile</title>
 </head>
 
 @include('partials.navbar')

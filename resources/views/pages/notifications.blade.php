@@ -2,6 +2,8 @@
 
 <head>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/notifications/filter.js'])
+
+    <title>{{ config('app.name', 'Laravel') }} | Notifications</title>
 </head>
 
 @include('partials.navbar')

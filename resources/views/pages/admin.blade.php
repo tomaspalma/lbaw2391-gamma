@@ -1,6 +1,7 @@
 @extends('layouts.head')
 
 <head>
+    <title>{{ config('app.name', 'Laravel') }} | Admin dashboard</title>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/admin_user_search.js', 'resources/js/admin/user/block.js'])
 </head>
 
