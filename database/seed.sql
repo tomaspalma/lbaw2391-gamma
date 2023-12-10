@@ -139,7 +139,7 @@ CREATE TABLE post_tag(
 
 CREATE TABLE group_request_not(
     id SERIAL PRIMARY KEY, 
-    group_request_id INTEGER REFERENCES group_request(id) ON UPDATE CASCADE,
+    group_request_id INTEGER REFERENCES group_request(id) ON UPDATE CASCADE ON DELETE CASCADE,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
