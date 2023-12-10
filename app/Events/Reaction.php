@@ -58,7 +58,6 @@ class Reaction implements ShouldBroadcast
             'post_id' => $post_id,
             'comment_id' => $comment_id,
             'reaction_not_view' => $reaction_not_view,
-            'c' => $reaction_not[0]
         ];
     }
 

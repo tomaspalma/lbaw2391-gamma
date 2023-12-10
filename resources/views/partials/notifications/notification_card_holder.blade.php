@@ -3,12 +3,15 @@
     @php
     $date = App\Http\Controllers\DateController::format_date($notification->date);
     @endphp
+
     @if(isset($notification->reaction_id))
         @include('partials.notifications.reactions_notification', [
         'notification' => $notification,
         'date' => $date
         ])
-    @elseif(isset($notification->friend_request))
+    @endif
+
+    @if(isset($notification->friend_request))
         @php
         $user = $notification->is_accepted === null ? $notification->sender : $notification->receiver;
         @endphp
@@ -20,5 +23,20 @@
             ])
         @endif
     @endif
+
+    @if(isset($notification->comment_id))
+    @include('partials.notifications.comments_notification', [
+    'notification' => $notification,
+    'date' => $date
+    ])
+    @endif
+
+    @if(!$notification->read)
+    @php
+    $notification->read = true;
+    $notification->save();
+    @endphp
+    @endif
+
     @endforeach
 </div>

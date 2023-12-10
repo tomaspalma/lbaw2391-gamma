@@ -3,6 +3,7 @@
 <head>
     @vite(['resources/css/app.css', 'resources/js/search/feed/scroll.js'])
 
+    <title>{{ config('app.name', 'Laravel') }} | {{ucfirst($feed)}} feed</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Comment as EventsComment;
+use App\Events\Reaction as EventsReaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -9,12 +11,69 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Comment;
 use App\Http\Resources\CommentResource;
+use App\Models\CommentNot;
+use App\Models\Reaction;
+use Illuminate\Validation\Rule;
 
 class CommentController extends Controller
 {
+    public function get_reactions(int $id)
+    {
+        $comment = Comment::find($id);
+
+        return response()->json(ReactionController::reactionsMap($comment));
+    }
+
+    public function remove_reaction(Request $request, int $id)
+    {
+        $request->validate([
+            'type' => Rule::in(Reaction::$possible_types)
+        ]);
+
+        $reaction_type = $request->json('type');
+        $comment = Comment::find($id);
+
+        $this->authorize('remove_reaction', [$comment, $reaction_type]);
+
+        $reaction = Reaction::where('author', $request->user()->id)
+            ->where('comment_id', $id)
+            ->where('type', $request->json('type'))
+            ->get()[0];
+
+        if ($reaction !== null) {
+            DB::transaction(function () use ($reaction) {
+                DB::table('reaction_not')->where('reaction_id', $reaction->id)->delete();
+                $reaction->delete();
+            });
+        }
+    }
+
+    /**
+     * Adds a reaction to a comment
+     */
+    public function add_reaction(Request $request, int $id)
+    {
+        $request->validate([
+            'type' => Rule::in(Reaction::$possible_types)
+        ]);
+
+        $comment = Comment::find($id);
+
+        $reaction_type = $request->json('type');
+
+        $this->authorize('add_reaction', [$comment, $reaction_type]);
+
+        Reaction::create([
+            'author' => $request->user()->id,
+            'comment_id' => $id,
+            'type' => $reaction_type
+        ]);
+
+        event(new EventsReaction($comment->owner->username, $request->user(), $reaction_type, null, $id));
+    }
+
     public function create(Request $request)
     {
-
         $this->authorize('create', Comment::class);
 
         $request->validate([
@@ -23,6 +82,7 @@ class CommentController extends Controller
         ]);
 
         $last_id = DB::select('SELECT id FROM comment ORDER BY id DESC LIMIT 1')[0]->id;
+
         $new_id = $last_id + 1;
 
         $comment = Comment::create([
@@ -31,6 +91,35 @@ class CommentController extends Controller
             'author' => Auth::user()->id,
             'content' => $request->content
         ]);
+
+        event(new EventsComment($comment->post->owner->username, $comment->owner, $comment));
+
+        return response()->json(view('partials.comment_card', ['comment' => $comment])->render());
+    }
+
+    public function showEditForm(int $id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        $this->authorize('update', $comment);
+
+        return view('pages.edit_comment', [
+            'comment' => $comment
+        ]);
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        $this->authorize('update', $comment);
+
+        $request->validate([
+            'content' => 'required|string'
+        ]);
+
+        $comment->content = $request->content;
+        $comment->save();
 
         return new CommentResource($comment);
     }
@@ -45,7 +134,7 @@ class CommentController extends Controller
         DB::transaction(function () use ($comment) {
             $this->delete_comment($comment->id);
         });
-        
+
         $comment->delete();
 
         return response()->json([
@@ -55,7 +144,7 @@ class CommentController extends Controller
 
     /**
      * This should be used inside a transaction
-     * 
+     *
      * @$reaction_id The id of the user we want to delete
      * */
     private function delete_reaction($reaction_id)
@@ -63,10 +152,10 @@ class CommentController extends Controller
         DB::table('reaction_not')->where('reaction_id', $reaction_id)->delete();
         DB::table('reaction')->where('id', $reaction_id)->delete();
     }
-    
+
     /**
      * This should be used inside a transaction
-     * 
+     *
      * @$comment_id The id of the comment we want to delete
      */
     private function delete_comment($comment_id)

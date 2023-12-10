@@ -23,6 +23,7 @@ tags:
   - name: 'M07: Posts'
   - name: 'M08: Groups'
   - name: 'M09: Notifications'
+  - name: 'M10: Comments'
 
 paths:
 
@@ -1163,8 +1164,6 @@ paths:
                   description: 'OK. Redirect to login page.'
                   value: '/login'
          
-
-
   /api/notifications/{filter}:
     get: 
       operationId: R902
@@ -1186,4 +1185,211 @@ paths:
       responses:
         '200':
           description: 'HTML with the notification cards'
+  /users/{username}/appban/appeal:
 
+  /comment/{id}/reaction:
+    get: 
+      operationId: R1001
+      summary: 'R1001: Comment reactions'
+      description: 'Returns a list with a comment reaction of each type. Access: USR'
+      parameters:
+        - in: path
+          name: id
+          description: 'Id of the comment'
+          schema:
+            type: string
+          required: true
+      tags:
+        - 'M10: Comments' 
+      responses:
+        '200':
+          description: 'List of each type of reactions of the comments'
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    "fa-heart":
+                      - 1
+                      - "heart-color"
+                      - "HEART"
+    post:
+      operationId: R1002
+      summary: 'R1002: Add reaction to comment'
+      description: 'Adds a reaction to a comment. Access: USR'
+      parameters:
+        - in: path
+          name: id
+          description: 'Id of the comment'
+          schema:
+            type: string
+          required: true
+      tags:
+        - 'M10: Comments'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                type:
+                  type: string
+                  required: true
+          examples:
+            summary: 'Add a like to a comment'
+            value:
+              type: 'LIKE'
+
+      responses:
+        '200':
+          description: 'Adds reaction and sends notification to comment author'
+        '403':
+          description: 'Forbidden if we already have this reaction'
+ 
+    delete:
+      operationId: R1003
+      summary: 'R1003: Removes a reaction from a comment'
+      description: 'Removes a reaction from a comment. Access: USR'
+      parameters:
+        - in: path
+          name: id
+          description: 'Id of the comment'
+          schema:
+            type: string
+          required: true
+      tags:
+        - 'M10: Comments'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                type:
+                  type: string
+                  required: true
+          examples:
+            summary: 'Removes a like from a comment'
+            value:
+              type: 'LIKE'
+
+      responses:
+        '200':
+          description: 'Removes reaction from comment' 
+        '403':
+          description: 'Forbidden if the deleting user does not have this reaction' 
+  
+    get:
+      operationId: R507
+      summary: 'R507: Show form to appeal app ban'
+      description: 'Shows a page with the form so a user can appeal their app ban. Access: USR'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'Get the view of the edit post form'
+        '403':
+          description: 'Forbidden. User is not banned or it already has appealed the ban'
+      
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+
+  post:
+      operationId: R508
+      summary: 'R508: Appeal app ban action'
+      description: 'Submits the appeal from the user about the app ban they got. Access: USR'
+      tags:
+        - 'M05: Users'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: text
+      responses:
+        '302':
+          description: 'Redirect after submitting user app ban appeal.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                '302 Success':
+                  description: 'OK. Redirect to homepage'
+                  value: '/'
+                '302 Failure':
+                  description: 'NOT OK. Redirect again to submit appeal form.'
+                  value: '/users/{username}/appban/appeal'
+
+  /api/users/{username}/posts/{filter?}:
+    get:
+      operationId: R508
+      summary: 'R508: Get the posts of a user'
+      description: 'Get the posts of a user. Access: USR'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: 'Return JSON with post cards'
+        '403':
+          description: 'Forbidden. The user is private.'
+      
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          name: filter
+          schema:
+            type: string
+          required: false
+
+  /api/post/{id}/comments:
+
+    get:
+      operationId: R708
+      summary: 'R708: Show comments of post'
+      description: 'AJAX endpoint to show comments of posts. Access: USR'
+      tags:
+        - 'M07: Posts'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the post 
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'Returns JSON with HTML of the post cards'
+        '403':
+          description: 'Forbidden. User cannot see this post.'
+
+  /api/group/{id}/posts:
+
+    get:
+      operationId: R801
+      summary: 'R801: Show posts of groups'
+      description: 'AJAX endpoint to show posts of groups. Access: USR'
+      tags:
+        - 'M08: Groups'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the group 
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'Returns JSON with HTML of the post cards'
+        '403':
+          description: 'Forbidden. User cannot see the posts of this group'

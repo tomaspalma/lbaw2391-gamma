@@ -17,12 +17,16 @@ export async function addPaginationListener(url, content, separator, normalizati
                         }
 
                         for (const entityCard of entities) {
-                            content.innerHTML += entityCard;
+                            const entity = document.createElement("div");
+                            entity.innerHTML = entityCard;
+
+                            content.appendChild(entity);
+
+                            if (normalizationCallback) {
+                                normalizationCallback(content.lastChild);
+                            }
                         }
 
-                        if (normalizationCallback) {
-                            normalizationCallback();
-                        }
 
                         page += 1;
                         scrolls = 0;

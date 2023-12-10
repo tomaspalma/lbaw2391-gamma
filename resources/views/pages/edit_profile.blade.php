@@ -2,6 +2,8 @@
 
 <head>
     @vite(['resources/css/app.css','resources/js/edit_profile/edit_profile.js'])
+
+    <title>{{ config('app.name', 'Laravel') }} | Edit profile</title>
 </head>
 
 @include('partials.navbar')

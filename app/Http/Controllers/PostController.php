@@ -29,14 +29,14 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
-        return response()->json($post->reactionsMap());
+        return response()->json(ReactionController::reactionsMap($post));
     }
 
     public function add_reaction(Request $request, int $id)
     {
-        // $request->validate([
-        //     'type' => Rule::in(['LIKE', 'HEART', 'DISLIKE', 'STAR'])
-        // ]);
+        $request->validate([
+            'type' => Rule::in(Reaction::$possible_types)
+        ]);
 
         $post = Post::find($id);
 
@@ -113,7 +113,7 @@ class PostController extends Controller
         return redirect('/post/' . $post->id);
     }
 
-    public function showPost(string $id)
+    public function showPost(Request $request, string $id)
     {
 
         // validate id
@@ -126,12 +126,23 @@ class PostController extends Controller
 
         $this->authorize('view', $post);
 
-        $comments = $post->comments()->get();
+        $comments = $post->comments()->paginate(15);
 
-        return view('pages.post', [
-            'post' => $post,
-            'comments' => $comments
-        ]);
+        if ($request->is("api*")) {
+            $commentCards = [];
+
+            foreach ($comments as $comment) {
+                $commentCards[] = view('partials.comment_card', ['comment' => $comment])->render();
+            }
+
+            return response()->json($commentCards);
+        } else {
+
+            return view('pages.post', [
+                'post' => $post,
+                'comments' => $comments
+            ]);
+        }
     }
 
     public function showEditForm(string $id)

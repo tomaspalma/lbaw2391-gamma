@@ -14,11 +14,27 @@ if (leaveModalButtons) {
     for (const leaveModalButton of leaveModalButtons) {
         leaveModalButton.addEventListener("click", () => {
             modal.classList.add("hidden");
+            restoreConfirmationForm();
         });
     }
 }
 
 const callbackTypesAction = {
+    remove_appeal: (form) => {
+        const username = form.action.split("/")[5];
+        const userCard = document.querySelector(
+            `article[data-username="${username}"]`
+        );
+
+        const appealCounter = document.getElementById("appeal-counter");
+        const content = document.getElementById("content");
+        if (content.children.length === 1) {
+            content.innerHTML = "<p class='text-center'>No appeals found.</p>"
+            appealCounter.textContent = "0";
+        }
+
+        userCard.remove();
+    },
     delete_user: (confirmationForm) => {
         const username = confirmationForm.action.split("/")[4];
         const userCard = document.querySelector(
@@ -132,6 +148,19 @@ function clearColorConfiguration() {
     }
 }
 
+function restoreColorConfiguration() {
+    for (const color of colorsUsedInModal) {
+        confirmButton.classList.remove(color);
+        infoIcon.classList.remove(color);
+    }
+}
+
+export function restoreConfirmationForm() {
+    restoreColorConfiguration();
+
+    confirmationForm.classList.remove("hidden");
+}
+
 export function configureConfirmationForm(
     action,
     method,
@@ -154,14 +183,13 @@ export function overrideConfirmationForm(
     form,
     action,
     requestParams,
-    callbackType
+    callbackType,
+    thenCallback
 ) {
     clearColorConfiguration();
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        console.log("Form submitted");
 
         const formData = new FormData();
 
@@ -169,13 +197,19 @@ export function overrideConfirmationForm(
         requestParams.body = formData;
 
         fetch(action, requestParams)
-            .then((res) => {
+            .then(async (res) => {
                 if (res.ok) {
                     modal.classList.add("hidden");
                     confirmationForm.classList.remove("hidden");
 
                     callbackTypesAction[callbackType](form);
+
+                    confirmationForm.classList.remove("hidden");
+                    restoreColorConfiguration()
+                } else {
+                    await thenCallback(res);
                 }
+
             })
             .catch((e) => {
                 console.error(e);

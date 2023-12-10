@@ -32,9 +32,11 @@ class FriendRequest implements ShouldBroadcast
         if ($is_accepted === null) {
             $this->author = $receiver->username;
             $user = $sender;
+            $notification_receiver = $receiver;
         } else {
             $this->author = $sender->username;
             $user = $receiver;
+            $notification_receiver = $sender;
         }
 
 
@@ -49,6 +51,7 @@ class FriendRequest implements ShouldBroadcast
 
         $this->message = [
             'user' => $user,
+            'notification_receiver' => $notification_receiver,
             'friend_request_not_view' => $friend_request_not_view
         ];
     }

@@ -12,7 +12,7 @@ class NotificationController extends Controller
         if ($filter === 'reactions') {
             $notifications = $request->user()->reaction_notifications();
         } elseif ($filter === 'comments') {
-            $notifications = $request->user()->uncomment_notifications();
+            $notifications = $request->user()->comment_notifications();
         } elseif ($filter === 'friend-requests') {
             $notifications = $request->user()->friend_request_notifications();
         } else {
