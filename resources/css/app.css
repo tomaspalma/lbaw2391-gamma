@@ -94,3 +94,7 @@ input {
 .x-icon {
     @apply fa-solid fa-x;
 }
+
+.share-icon {
+    @apply fa-solid fa-share-from-square;
+}
