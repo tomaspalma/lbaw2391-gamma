@@ -1,4 +1,4 @@
-import { initReactionJs, initReactionJs } from "../../post/reactions";
+import { initReactionJs } from "../../post/reactions";
 import { getCurrentSearchQuery } from "../../utils";
 import { addPaginationListener } from "../infinite_scroll";
 

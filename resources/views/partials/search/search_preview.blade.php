@@ -2,22 +2,22 @@
     bg-white rounded-4 p-4 {{ $previewMenuShadow ? 'shadow-xl' : ''}}">
     <ul id="{{$previewMenuName}}-preview-results" class="center justify-center flex border border-black rounded shadow my-4 cursor-pointer">
         <li data-id="selected" id="{{$isMobile ? 'mobile-' : ''}}{{$previewMenuName}}-users-preview-results" class="preview-results-option flex w-1/2 p-2 justify-center {{($toggled === 'users' || !$toggled) ? 'border-t-4 border-black' : '' }}">
-            @if($query !== null)
-            <a href="/search/{{$query}}?toggled=users">Users</a>
+            @if($previewMenuName !== 'search-input')
+            <a href="/search/{{$query === null ? '' : $query}}?toggled=users">Users</a>
             @else
             Users
             @endif
         </li>
         <li id="{{$isMobile ? 'mobile-' : ''}}{{$previewMenuName}}-posts-preview-results" class="preview-results-option flex w-1/2 p-2 justify-center {{$toggled === 'posts' ? 'border-t-4 border-black' : ''}}">
-            @if($query !== null)
-            <a href="/search/{{$query}}?toggled=posts">Posts</a>
+            @if($previewMenuName !== 'search-input')
+            <a href="/search/{{$query === null ? '' : $query}}?toggled=posts">Posts</a>
             @else
             Posts
             @endif
         </li>
         <li id="{{$isMobile ? 'mobile-' : ''}}{{$previewMenuName}}-groups-preview-results" class="preview-results-option flex w-1/2 p-2 justify-center {{$toggled === 'groups' ? 'border-t-4 border-black' : ''}}">
-            @if($query !== null)
-            <a href="/search/{{$query}}?toggled=groups">Groups</a>
+            @if($previewMenuName !== 'search-input')
+            <a href="/search/{{$query === null ? '' : $query}}?toggled=groups">Groups</a>
             @else
             Groups
             @endif
