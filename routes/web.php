@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\FriendController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FeedController;
@@ -44,9 +45,19 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
         Route::post('/users/{username}/block', 'block_user');
         Route::post('/users/{username}/unblock', 'unblock_user');
     });
-
     Route::get('/users/{username}/appban/appeal', 'show_appban_appeal_form')->name('appban_appeal_form.show');
     Route::post('/users/{username}/appban/appeal', 'appeal_appban');
+});
+
+// Friends
+Route::controller(FriendController::class)->middleware(EnsureUserExists::class)->middleware('auth')->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
+    Route::get('/users/{username}/friends', 'show_friends')->name('friends_page');
+    Route::get('/users/{username}/friends/requests', 'show_friend_requests')->name('friend_requests_page');
+    Route::post('/api/users/{username}/friends/requests', 'send_friend_request')->name('send_friend_request');
+    Route::put('/api/users/{username}/friends/requests', 'decline_friend_request')->name('decline_friend_request');
+    Route::delete('/api/users/{username}/friends/requests', 'cancel_friend_request')->name('cancel_friend_request');
+    Route::post('/api/users/{username}/friends', 'accept_friend_request')->name('accept_friend_request');
+    Route::delete('/api/users/{username}/friends', 'remove_friend')->name('remove_friend');
 });
 
 Route::controller(FeedController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {

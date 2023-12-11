@@ -8,6 +8,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use App\Models\User;
 use App\Policies\UserPolicy;
 use App\Models\Reaction;
+use App\Policies\FriendPolicy;
 use App\Policies\ReactionPolicy;
 
 class AuthServiceProvider extends ServiceProvider
