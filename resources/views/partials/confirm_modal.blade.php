@@ -8,7 +8,7 @@
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div class="p-6 text-center">
                 <div class="text-right">
-                    <i class="close-confirmation-modal fa-solid fa-x p-4 hover:cursor-pointer"></i>
+                    <i class="close-confirmation-modal x-icon p-4 hover:cursor-pointer"></i>
                 </div>
                 <div class="flex justify-between">
                     <svg id="info-icon" class="mx-auto mb-4 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
