@@ -42,13 +42,17 @@ class GroupController extends Controller
 
     public function showGroupsForm(Request $request){
         $user = Auth::user();
-        $groups = $user->groups();
+        $groupsNormal = $user->groups('normal');
+        $groupsOwner = $user->groups('owner');
 
-        return view('pages.groups', ['feed' => 'groups', 'groups' => $groups]);
+        return view('pages.groups', ['feed' => 'groups', 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
     }
 
     public function showGroupRequests(Request $request){
-        return view('pages.groups', ['feed' => 'requests']);
+        $user = Auth::user();
+
+        $requests = $user->groupRequests();
+        return view('pages.groups', ['feed' => 'requests', 'requests' => $requests]);
     }
 
     public function showGroupMembers(string $id): View

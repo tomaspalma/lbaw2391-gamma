@@ -24,10 +24,29 @@
 </ul>
 
 @if($feed === 'groups')
-    @for($i = 0; $i < $groups->count(); $i++)
-        @include('partials.group_card', ['group'=> $groups->get()[$i]])
-    @endfor
+
+    @if($groupsNormal->count() == 0 && $groupsOwner->count() == 0)
+        <p>Não estás em nenumh grupo, burro</p>
+
+    @else
+        @if($groupsOwner->count() > 0)
+            @for($i = 0; $i < $groupsOwner->count(); $i++)
+                @include('partials.group_card', ['group'=> $groupsOwner->get()[$i], 'owner' => true])
+            @endfor
+        @endif
+
+        @if($groupsNormal->count() > 0)
+
+            @for($i = 0; $i < $groupsNormal->count(); $i++)
+                @include('partials.group_card', ['group'=> $groupsNormal->get()[$i], 'owner' => false])
+            @endfor
+        @endif
+    @endif
 
 @else
-    <p>pôr aqui os pedidos para se aceder à base de dados</p>
+    @if(sizeof($requests) > 0)
+        @for($i = 0; $i < sizeof($requests); $i++)
+            @include('partials.group_requests_card', ['request'=> $requests[$i]])
+        @endfor
+    @endif
 @endif

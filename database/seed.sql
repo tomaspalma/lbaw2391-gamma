@@ -556,18 +556,17 @@ CREATE TRIGGER add_friend
         (1, 2, true, '1940-01-28 12:00:00'),
         (1, 4, true, '2023-05-17 15:30:00');
 
-    INSERT INTO groups(id, name, description, is_private) VALUES 
-        (1, 'Prolog Enthusiasts', 'A community for discussing Prolog programming language and related topics', false),
-        (2, 'Tech Enthusiasts', 'A group dedicated to discussing the latest technology trends and innovations', true);
+    INSERT INTO groups(id, name, description, is_private, image) VALUES 
+        (1, 'Prolog Enthusiasts', 'A community for discussing Prolog programming language and related topics', false, ' '),
+        (2, 'Tech Enthusiasts', 'A group dedicated to discussing the latest technology trends and innovations', true, 'prolog.png');
 
     INSERT INTO group_user (user_id, group_id) VALUES
-        (1, 2),
-        -- (1, 1),
-        (2, 1),
-        (2, 2);
+        (4, 2);
 
     INSERT INTO group_owner (group_id, user_id) VALUES
         (1, 1),
+        (1, 2),
+        (2, 1),
         (2, 2);
 
     INSERT INTO post (author, title, content, attachment, group_id, is_private, date) VALUES

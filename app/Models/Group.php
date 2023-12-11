@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Http\Controllers\FileController;
 
+use App\Models\GroupRequest;
 class Group extends Model
 {
     use HasFactory;
@@ -24,6 +25,11 @@ class Group extends Model
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, "group_id");
+    }
+
+    public function requests(): HasMany
+    {
+        return $this->hasMany(GroupRequest::class, 'group_id');
     }
 
     public function users(): BelongsToMany

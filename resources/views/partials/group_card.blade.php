@@ -8,5 +8,16 @@
                 </a>
             </h1>
         </div>
+        @if($owner == true)
+            <div>
+                Group Owner
+                <i class="fa-solid fa-hammer"></i>
+            </div>
+        @else
+            <div>
+                Normal User
+                <i class="fa-solid fa-user"></i>
+            </div>
+        @endif
     </div>
 </article>
