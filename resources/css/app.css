@@ -12,6 +12,10 @@ a {
     @apply text-2xl;
 }
 
+input {
+    @apply rounded-md;
+}
+
 .success {
     @apply text-green-500;
 }
