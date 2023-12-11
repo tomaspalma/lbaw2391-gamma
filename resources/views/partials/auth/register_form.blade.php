@@ -10,8 +10,9 @@
 </h1>
 @endif
 
+<h1 class="text-xl text-center">Register</h1>
 <div class="flex justify-center mt-2">
-    <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-self: center" action="{{ route('register') }}">
+    <form method="POST" class="border p-4 w-96 shadow rounded-md max-w-screen-md justify-self: center" action="{{ route('register') }}">
         {{ csrf_field() }}
         <input name="_token" value="{{ csrf_token() }}" hidden>
 
@@ -89,8 +90,8 @@
 
             <i class="fas fa-eye-slash cursor-pointer" id="togglePasswordConfirm" style="margin-top: -29px; margin-left: 310px;"></i>
 
-            <div class="flex items-center">
-                <button class="bg-blue-500 text-white py-2 px-4 rounded {{$admin_page_version ? 'w-full' : ''}}" type="submit">
+            <div class="mt-8 flex justify-between items-center">
+                <button class="bg-black text-white py-2 px-4 rounded {{$admin_page_version ? 'w-full' : ''}}" type="submit">
                     {{$admin_page_version ? "Create User" : "Register"}}
                 </button>
 
