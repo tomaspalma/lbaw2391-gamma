@@ -25,7 +25,7 @@
             </form>
             <form id="search-form" class="relative hidden md:block">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+                    
                     <span class="sr-only">Search icon</span>
                 </div>
                 <input name="search" type="text" id="search-navbar" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
@@ -83,6 +83,17 @@
                 <li>
                     @include('partials.notifications.notification_bell')
                 </li>
+
+                @auth
+                    <li>
+                        <a href="/groups" class="block py-2 pl-3 pr-4 text-xl">
+                            <div class="relative flex flex-row md:flex-col md:space-x-0">
+                                <i class="fa-sharp fa-solid fa-people-group"></i>
+                            </div>
+                        </a>
+                    </li>
+                @endauth
+
                 <li class="flex items-center space-x-0">
                     <a href="/users/{{Auth::user()->username}}" class="block py-2 pl-3 pr-1">
                         Profile

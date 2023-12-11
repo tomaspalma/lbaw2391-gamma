@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use \Illuminate\Http\UploadedFile;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Group;
 use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
@@ -46,6 +47,8 @@ class FileController extends Controller
             case 'post':
                 $fileName = Post::find($id)->image;
                 break;
+            case 'groupProfile':
+                $fileName = Group::find($id)->image;
         }
 
         return $fileName;

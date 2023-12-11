@@ -40,6 +40,17 @@ class GroupController extends Controller
         }
     }
 
+    public function showGroupsForm(Request $request){
+        $user = Auth::user();
+        $groups = $user->groups();
+
+        return view('pages.groups', ['feed' => 'groups', 'groups' => $groups]);
+    }
+
+    public function showGroupRequests(Request $request){
+        return view('pages.groups', ['feed' => 'requests']);
+    }
+
     public function showGroupMembers(string $id): View
     {
 
@@ -116,4 +127,5 @@ class GroupController extends Controller
 
         return redirect("/group/$id");
     }
+
 }

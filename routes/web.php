@@ -109,6 +109,8 @@ Route::controller(GroupController::class)->group(function () {
     Route::post('/group/{id}/enter', 'addToGroup')->name('groups.enter');
     Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
     Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
+    Route::get('/groups', 'showGroupsForm');
+    Route::get('/groups/requests', 'showGroupRequests');
 });
 
 Route::controller(SearchController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
