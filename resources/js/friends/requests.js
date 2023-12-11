@@ -19,6 +19,11 @@ function handleFriendRequest(action, username) {
     })
         .then((response) => {
             if (response.ok) {
+                const friendRequestsCounter = document.getElementById(
+                    "friend-request-counter"
+                );
+                const counter = parseInt(friendRequestsCounter.textContent, 10);
+                friendRequestsCounter.textContent = counter - 1;
                 const requestElement = document.getElementById(
                     `request-${username}`
                 );
@@ -28,6 +33,7 @@ function handleFriendRequest(action, username) {
                     const noRequestsMessage =
                         document.getElementById("noRequestsMessage");
                     noRequestsMessage.classList.remove("hidden");
+                    friendRequestsCounter.classList.add("hidden");
                 }
             }
         })

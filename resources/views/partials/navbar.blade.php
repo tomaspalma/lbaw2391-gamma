@@ -81,12 +81,15 @@
                 </li>
                 @endauth
                 @auth
-                <li class="flex items-center space-x-0">
-                    <a href="/users/{{Auth::user()->username}}/friends" class="block py-2 pl-3 pr-4 mb-0">
+                <a href="/users/{{Auth::user()->username}}/friends" class="block py-2 pl-3 pr-4">
+                    <div class="relative flex flex-row md:flex-col space-x-1 md:space-x-0">
                         <i class="fa-solid fa-user-group text-2xl max-md:hidden"></i>
                         <span class="md:hidden">Friends</span>
-                    </a>
-                </li>
+                        <span id="friend-request-counter" class="{{count(Auth::user()->received_pending_friend_requests()->get()) > 0 ? '' : 'hidden'}} text-xs md:absolute md:bottom-3 md:left-3 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full">
+                            {{count(Auth::user()->received_pending_friend_requests()->get())}}
+                        </span>
+                    </div>
+                </a>              
                 @endauth
                 @auth
                 @if(!Auth::user()->is_app_banned())

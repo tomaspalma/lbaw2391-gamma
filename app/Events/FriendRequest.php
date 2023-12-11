@@ -49,7 +49,8 @@ class FriendRequest implements ShouldBroadcast
 
         $this->message = [
             'user' => $user,
-            'friend_request_not_view' => $friend_request_not_view
+            'friend_request_not_view' => $friend_request_not_view,
+            'is_accepted' => $is_accepted
         ];
     }
 

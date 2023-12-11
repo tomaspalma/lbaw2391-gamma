@@ -33,7 +33,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                                 span.textContent = friendsCount - 1 + " friends";
                                 friendsLink.parentNode.replaceChild(span, friendsLink);
                             }
-                            button.textContent = "Add Friend";
+                            button.textContent = "Send Friend Request";
                             methodField.value = "POST";
                             form.action = `/api/users/${username}/friends/requests`;
                         }
