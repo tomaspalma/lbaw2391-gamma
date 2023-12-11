@@ -64,7 +64,7 @@
             <button type="button" id="comment-button" class="bg-black text-white py-2 px-4 rounded-md">Comment</button>
         </form>
         @endcan
-
+        
         <div id="comments" class="mt-4">
             @forelse($comments as $comment)
             @include('partials.comment_card', ['comment'=> $comment])

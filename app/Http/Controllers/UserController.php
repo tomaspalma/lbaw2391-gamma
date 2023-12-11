@@ -117,7 +117,7 @@ class UserController extends Controller
         event(new PasswordReset($user));
     }
 
-    public function edit(Request $request, string $username)
+    public function edit(string $username)
     {
         $user = User::where('username', $username)->firstOrFail();
         $this->authorize('update', $user);

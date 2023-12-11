@@ -30,9 +30,11 @@ export default defineConfig({
                 "resources/js/post/reactions.js",
                 "resources/js/utils.js",
                 "resources/js/notifications/filter.js",
+                "resources/js/profile/friends.js",
+                "resources/js/friends/requests.js",
                 "resources/js/group/enter_group.js",
                 "resources/js/admin/user/show_appeal_reason.js",
-                "resources/js/components/dropdown.js"
+                "resources/js/components/dropdown.js",
             ],
             refresh: true,
         }),
@@ -43,5 +45,3 @@ export default defineConfig({
         },
     },
 });
-
-

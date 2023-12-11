@@ -8,7 +8,7 @@ export function toggleDropdownButtons(dropdownButtons, dropdownContents) {
     for (let i = 0; i < dropdownButtons.length; i++) {
         const dropdownButton = dropdownButtons[i];
         const dropdownContent = dropdownContents[i];
-        dropdownButton.addEventListener("click", function() {
+        dropdownButton.addEventListener("click", function () {
             const display = dropdownContent.style.display;
 
             if (display == "none") {
@@ -18,7 +18,7 @@ export function toggleDropdownButtons(dropdownButtons, dropdownContents) {
             }
         });
 
-        document.addEventListener("click", function(event) {
+        document.addEventListener("click", function (event) {
             const isClickInside =
                 dropdownButton.contains(event.target) ||
                 dropdownContent.contains(event.target);
@@ -31,6 +31,3 @@ export function toggleDropdownButtons(dropdownButtons, dropdownContents) {
 }
 
 toggleDropdownButtons(dropdownButtons, dropdownContents);
-
-
-

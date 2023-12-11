@@ -5,10 +5,23 @@
     @endphp
 
     @if(isset($notification->reaction_id))
-    @include('partials.notifications.reactions_notification', [
-    'notification' => $notification,
-    'date' => $date
-    ])
+        @include('partials.notifications.reactions_notification', [
+        'notification' => $notification,
+        'date' => $date
+        ])
+    @endif
+
+    @if(isset($notification->friend_request))
+        @php
+        $user = $notification->is_accepted === null ? $notification->sender : $notification->receiver;
+        @endphp
+        @if($user->username !== auth()->user()->username)
+            @include('partials.notifications.friend_request_notification', [
+            'user' => $user,
+            'notification' => $notification,
+            'date' => $date
+            ])
+        @endif
     @endif
 
     @if(isset($notification->comment_id))

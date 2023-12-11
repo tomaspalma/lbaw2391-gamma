@@ -43,10 +43,30 @@ channel.bind('reaction-notification', function(data) {
         }
     }
 });
+channel.bind('friend-request-notification', function(data) {
+    const message = data.message;
+    if (message.user.username !== data.author) {
+        if(message.is_accepted === null) {
+            const friendRequestCounter = document.getElementById("friend-request-counter");
+            friendRequestCounter.classList.remove("hidden");
+            const counter = parseInt(friendRequestCounter.textContent, 10);
+            friendRequestCounter.textContent = (counter + 1);
+        }
+        else {
+            notificationCounter.classList.remove("hidden");
+            const counter = parseInt(notificationCounter.textContent, 10);
+            notificationCounter.textContent = (counter + 1);
+        }
 
+        if (onNotificationsPage()) {
+            const notificationsCards = document.getElementById("notification-cards");
+            notificationsCards.insertAdjacentHTML('afterbegin', message.friend_request_not_view);
+        }
+    }
+});
 
 channel.bind('comment-notification', function(data) {
-    const message = data.message;
+const message = data.message;
     if (message.user.username !== data.author) {
         notificationCounter.classList.remove("hidden");
         const counter = parseInt(notificationCounter.textContent, 10);
@@ -55,6 +75,6 @@ channel.bind('comment-notification', function(data) {
         if (onNotificationsPage()) {
             const notificationsCards = document.getElementById("notification-cards");
             notificationsCards.insertAdjacentHTML('afterbegin', message.comment_not_view);
+            }
         }
-    }
 })
