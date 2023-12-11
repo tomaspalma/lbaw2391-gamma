@@ -21,8 +21,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         User::class => UserPolicy::class,
         Post::class => PostPolicy::class,
-        Reaction::class => ReactionPolicy::class,
-        User::class => FriendPolicy::class,
+        Reaction::class => ReactionPolicy::class
     ];
 
     /**

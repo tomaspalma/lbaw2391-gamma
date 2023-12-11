@@ -12,17 +12,13 @@
 
 <div class="max-w-screen-md mx-auto pb-4">
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black">
-        <div class="flex justify-between items-center">
-            @can('update', $user)
-            <button class="text-black font-bold py-2 px-4 rounded opacity-0 cursor-default">
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
-            @endcan
-            <div class="flex-grow text-center">
+        <div class="grid grid-cols-3 items-center">
+            <div></div>
+            <div class="text-center">
                 <h2 class="text-2xl font-bold text-gray-700">Profile</h2>
             </div>
             @can('update', $user)
-            <div class="relative inline-block text-left">
+            <div class="relative inline-block text-left justify-self-end">
                 <button id="" class="dropdownButton text-black font-bold py-2 px-4 rounded">
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
@@ -33,7 +29,7 @@
                 <input type="hidden" id="auth-user" value="{{ auth()->user()->username }}">
             </div>
             @endcan
-        </div>
+        </div>        
         <div class="mt-6 flex flex-col md:flex-row -mx-3">
             <div class="md:flex-1 px-3">
                 <div class="mb-4">
@@ -60,7 +56,7 @@
                     <form action="{{ route('send_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="post">
                         @csrf
                         <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
-                            Add Friend
+                            Send Friend Request
                         </button>
                     </form>
                 @endcan
