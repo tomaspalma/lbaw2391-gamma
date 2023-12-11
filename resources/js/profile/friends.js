@@ -1,4 +1,5 @@
 window.addEventListener("DOMContentLoaded", (event) => {
+    event.preventDefault();
     const form = document.getElementById("friendForm");
     if (form) {
         const button = form.querySelector("button");
@@ -24,6 +25,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         } else if (
                             methodField.value.toUpperCase() === "DELETE"
                         ) {
+                            if (button.textContent.includes("Remove Friend")) {
+                                const friendsLink = document.getElementById("friends-link");
+                                const friendsCount = parseInt(friendsLink.textContent,10);
+                                const span = document.createElement("span");
+                                span.className = friendsLink.className;
+                                span.textContent = friendsCount - 1 + " friends";
+                                friendsLink.parentNode.replaceChild(span, friendsLink);
+                            }
                             button.textContent = "Add Friend";
                             methodField.value = "POST";
                             form.action = `/api/users/${username}/friends/requests`;

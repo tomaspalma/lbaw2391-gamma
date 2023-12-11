@@ -242,12 +242,12 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->where('is_accepted', null);
     }
 
-    public function has_sent_pending_friend_request(User $user): bool
+    public function has_friend_request_to(User $user): bool
     {
         return $this->sent_pending_friend_requests()->where('friend_id', $user->id)->exists();
     }
 
-    public function has_received_pending_friend_request(User $user): bool
+    public function has_friend_request_from(User $user): bool
     {
         return $this->received_pending_friend_requests()->where('user_id', $user->id)->exists();
     }

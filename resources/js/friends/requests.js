@@ -43,5 +43,11 @@ if (friendRequestForm) {
         const username = this.getAttribute("data-username");
         const action = event.submitter.value;
         handleFriendRequest(action, username);
+        const requestsTitle = document.getElementById("friend-requests-title");
+        let requestsCount = requestsTitle.textContent
+            .replace("Pending (", "")
+            .replace(")", "");
+        requestsCount = parseInt(requestsCount, 10);
+        requestsTitle.textContent = `Pending (${requestsCount - 1})`;
     });
 }

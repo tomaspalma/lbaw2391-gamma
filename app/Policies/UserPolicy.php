@@ -50,4 +50,10 @@ class UserPolicy
     {
         return ($user->id === $model->id || $user->is_admin()) ? Response::allow() : Response::deny('You do not own this profile.');
     }
+
+    public function view(User $user, User $model): response
+    {
+        return $user->is_friend($model) ? Response::allow() : Response::deny('You are not friends of the user.');
+    }
+
 }

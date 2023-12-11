@@ -8,6 +8,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use App\Models\User;
 use App\Policies\UserPolicy;
 use App\Models\Reaction;
+use App\Policies\FriendPolicy;
 use App\Policies\ReactionPolicy;
 
 class AuthServiceProvider extends ServiceProvider
@@ -20,7 +21,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         User::class => UserPolicy::class,
         Post::class => PostPolicy::class,
-        Reaction::class => ReactionPolicy::class
+        Reaction::class => ReactionPolicy::class,
+        User::class => FriendPolicy::class,
     ];
 
     /**

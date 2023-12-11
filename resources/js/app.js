@@ -45,7 +45,7 @@ channel.bind('reaction-notification', function(data) {
 });
 channel.bind('friend-request-notification', function(data) {
     const message = data.message;
-    if (message.notification_receiver.username !== data.author) {
+    if (message.user.username !== data.author) {
         notificationCounter.classList.remove("hidden");
         const counter = parseInt(notificationCounter.textContent, 10);
         notificationCounter.textContent = (counter + 1);
