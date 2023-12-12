@@ -86,3 +86,11 @@ input {
 .toggled-tab {
     @apply border-t-2 border-black;
 }
+
+.snackbar {
+    @apply p-2 flex flex-row justify-between;
+}
+
+.x-icon {
+    @apply fa-solid fa-x;
+}

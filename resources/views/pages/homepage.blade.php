@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/search/feed/scroll.js'])
+    @vite(['resources/css/app.css', 'resources/js/search/feed/scroll.js', 'resources/js/components/snackbar.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | {{ucfirst($feed)}} feed</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
@@ -38,3 +38,5 @@
             @endif
     </div>
 </main>
+
+@include('partials.snackbar')

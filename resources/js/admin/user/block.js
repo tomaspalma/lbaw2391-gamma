@@ -16,8 +16,8 @@ const blockConfirmationTriggerButtons = document.querySelectorAll(".block-reason
 toggleBlockTriggerButtons(blockConfirmationTriggerButtons);
 
 export function blockUserAction(blockConfirmationTriggerButton) {
-    let username = blockConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-username");
-    const profileImage = blockConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-user-image");
+    let username = blockConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-username");
+    const profileImage = blockConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-user-image");
 
     const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 
@@ -44,11 +44,11 @@ export function blockUserAction(blockConfirmationTriggerButton) {
         },
         method: "POST",
     }, "block_user", async (res) => {
-        if(!res.ok) {
+        if (!res.ok) {
             const errors = await res.json();
 
             console.log("Errors: ", errors);
-            
+
             const blockError = document.getElementById("block-error");
             blockError.classList.remove("hidden");
             blockError.textContent = errors.errors.reason[0];

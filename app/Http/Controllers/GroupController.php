@@ -69,7 +69,7 @@ class GroupController extends Controller
             'new_text' => 'Leave Group', 'new_method' => 'delete']);
         } else {
 
-            $last_id = DB::select('SELECT id FROM users ORDER BY id DESC LIMIT 1')[0]->id;
+            $last_id = DB::select('SELECT id FROM group_request ORDER BY id DESC LIMIT 1')[0]->id;
             $new_id = $last_id + 1;
             DB::table('group_request')->insert([
                 'id' => $new_id,
