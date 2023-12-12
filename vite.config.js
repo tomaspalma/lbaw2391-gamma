@@ -15,6 +15,7 @@ export default defineConfig({
                 "resources/js/search/admin_user_search.js",
                 "resources/js/search/infinite_scroll.js",
                 "resources/js/search/feed/scroll.js",
+                "resources/js/group/block.js",
                 "resources/js/components/confirmation_modal.js",
                 "resources/js/admin/user/delete.js",
                 "resources/js/admin/user/unblock.js",

@@ -168,6 +168,7 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
 
     Route::controller(GroupController::class)->group(function () {
         Route::get('/group/{group_id}/posts', 'showGroupForm')->name('api.group.show_posts');
+        Route::get('/group/{group_id}/members/{filter?}', 'showGroupMembers')->name('api.groupMembers');
     });
 
     Route::controller(UserController::class)->group(function () {
@@ -177,9 +178,5 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::middleware(EnsureUserIsAdmin::class)->group(function () {
             Route::delete("/users/{username}/appeal", 'remove_appeal')->name('admin.remove_appeal');
         });
-    });
-
-    Route::controller(GroupController::class)->group(function () {
-        Route::get('/group/{id}/members/{filter?}', 'showGroupMembers')->name('api.groupMembers');
     });
 });

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 
 class Group extends Model
 {
@@ -27,7 +28,7 @@ class Group extends Model
 
     public function all_users()
     {
-        return $this->group_owners->concat($this->users);
+        return $this->group_owners()->paginate(10)->merge($this->users()->paginate(10));
     }
 
     public function users(): BelongsToMany

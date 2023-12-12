@@ -134,8 +134,10 @@ class GroupController extends Controller
 
         if (!$group->is_private) {
             $group->users()->attach($user->id);
-            return response()->json(['message' => 'User added to the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded', 
-            'new_text' => 'Leave Group', 'new_method' => 'delete']);
+            return response()->json([
+                'message' => 'User added to the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded',
+                'new_text' => 'Leave Group', 'new_method' => 'delete'
+            ]);
         } else {
 
             $last_id = DB::select('SELECT id FROM group_request ORDER BY id DESC LIMIT 1')[0]->id;
@@ -148,8 +150,10 @@ class GroupController extends Controller
                 'date' => now(),
             ]);
 
-            return response()->json(['message' => 'User asked to enter the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded', 
-            'new_text' => 'Remove Request', 'new_method' => 'delete']);
+            return response()->json([
+                'message' => 'User asked to enter the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded',
+                'new_text' => 'Remove Request', 'new_method' => 'delete'
+            ]);
         }
     }
 
@@ -157,19 +161,20 @@ class GroupController extends Controller
     {
         try {
             $group = Group::findOrFail($id);
-    
+
             $user = Auth::user();
-    
+
             DB::transaction(function () use ($user, $group) {
                 DB::table('group_user')
                     ->where('user_id', $user->id)
                     ->where('group_id', $group->id)
                     ->delete();
             });
-    
-            return response()->json(['message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded', 
-                'new_text' => 'Enter this group', 'new_method' => 'post']);
-    
+
+            return response()->json([
+                'message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
+                'new_text' => 'Enter this group', 'new_method' => 'post'
+            ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error removing user from the group', 'message' => $e->getMessage()], 500);
         }
@@ -177,7 +182,7 @@ class GroupController extends Controller
 
     public function removeRequest(string $id)
     {
-        
+
         $group = Group::findOrFail($id);
 
         $user = Auth::user();
@@ -191,8 +196,9 @@ class GroupController extends Controller
 
 
 
-        return response()->json(['message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded', 
-                'new_text' => 'Enter this group', 'new_method' => 'post']);
-
+        return response()->json([
+            'message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
+            'new_text' => 'Enter this group', 'new_method' => 'post'
+        ]);
     }
 }
