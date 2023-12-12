@@ -4,7 +4,7 @@
 
 <h1 class="text-center title">Reset Password</h1>
 <div class="flex justify-center">
-    <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-center mt-4" action="{{ route('send_reset_password_request') }}">
+    <form method="POST" class="w-96 max-w-screen-md form-card mt-4" action="{{ route('send_reset_password_request') }}">
         @csrf
 
         <div class="mb-4">
@@ -21,7 +21,7 @@
         <p class="text-center success">Reset link sent with success</p>
         @endif
         <div class="flex items-center">
-            <button class="mt-2 w-full bg-blue-500 text-white py-2 px-4 rounded" type="submit">
+            <button class="mt-2 w-full form-button text-white py-2 px-4 rounded" type="submit">
                 Submit
             </button>
         </div>

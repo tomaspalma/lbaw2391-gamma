@@ -4,7 +4,7 @@
 
 <h1 class="text-center title">Reset Password</h1>
 <div class="flex justify-center">
-    <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-center mt-4" action="{{ route('password.update', ['token' => request('token')]) }}">
+    <form method="POST" class="w-96 max-w-screen-md form-card mt-4" action="{{ route('password.update', ['token' => request('token')]) }}">
         @csrf
 
         <div class="mb-4">
@@ -36,7 +36,7 @@
         </div>
         <input class="mt-1 p-2 w-full border focus:ring-2" name="token" type="text" value="{{ request('token') }}" hidden>
         <div class="flex items-center">
-            <button class="w-full bg-blue-500 text-white py-2 px-4 rounded" type="submit">
+            <button class="w-full form-button text-white py-2 px-4 rounded" type="submit">
                 Submit
             </button>
         </div>

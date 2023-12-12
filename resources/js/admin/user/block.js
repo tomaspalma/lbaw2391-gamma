@@ -28,7 +28,7 @@ export function blockUserAction(blockConfirmationTriggerButton, apiUrl, method, 
             <label for="block-reason">Provide a reason for blocking ${username}</label>
             <textarea placeholder="Reason for block..." name="reason" id="block-reason" rows="6" class="mt-2 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
             <p id="block-error" class="text-justify text-small text-red-500 hidden"></p>
-            <button type="submit" class="bg-black p-2 text-white mt-2 rounded-s w-full">Submit</button>
+            <button type="submit" class="form-button p-2 mt-2 rounded-s w-full">Submit</button>
         </form>
     `;
 
