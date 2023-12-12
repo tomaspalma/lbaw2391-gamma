@@ -1,5 +1,20 @@
 const snackbarContentHolder = document.getElementById("snackbar-holder");
 
+function checkSessionEnabledSnackbars() {
+    const snackbars = document.querySelectorAll(".snackbar");
+
+    for (const snackbar of snackbars) {
+        const closeButton = snackbar.querySelector(".close-snackbar");
+        closeButton.addEventListener("click", closeSnackbar);
+        setTimeout(() => {
+            if (snackbarContentHolder.children.length <= 1) {
+                snackbarContentHolder.classList.add("hidden");
+            }
+            snackbar.remove();
+        }, parseInt(snackbar.getAttribute("data-timeout"), 10));
+    }
+}
+
 function createSnackbarDiv(message) {
     const snackbar = document.createElement("div");
     snackbar.classList.add("snackbar");
@@ -39,10 +54,11 @@ export function addSnackbar(message, disappearTime) {
     snackbarContentHolder.appendChild(snackbar);
 
     setTimeout(() => {
-        console.log("Children: ", snackbarContentHolder.children);
         if (snackbarContentHolder.children.length <= 1) {
             snackbarContentHolder.classList.add("hidden");
         }
         snackbar.remove();
     }, disappearTime);
 }
+
+checkSessionEnabledSnackbars();
