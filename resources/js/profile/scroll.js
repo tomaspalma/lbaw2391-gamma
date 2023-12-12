@@ -9,7 +9,7 @@ console.log(url.split("/"));
 
 console.log("hello");
 
-await addPaginationListener(
+addPaginationListener(
     `/api/users/${username}/posts/${filter}`,
     document.getElementById("posts"),
     '?',
@@ -19,4 +19,4 @@ await addPaginationListener(
         card.innerHTML = entityCard;
         togglePostCopyLink(card.querySelectorAll(".post-copy-link-btn"));
     }
-);
+).then(() => { }).catch((e) => console.error(e));
