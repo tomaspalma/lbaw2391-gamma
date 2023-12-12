@@ -15,7 +15,7 @@ export function toggleBlockTriggerButtons(blockConfirmationTriggerButtons) {
 const blockConfirmationTriggerButtons = document.querySelectorAll(".block-reason-trigger");
 toggleBlockTriggerButtons(blockConfirmationTriggerButtons);
 
-export function blockUserAction(blockConfirmationTriggerButton, apiUrl, method) {
+export function blockUserAction(blockConfirmationTriggerButton, apiUrl, method, callbackType) {
     let username = blockConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-username");
     const profileImage = blockConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-user-image");
 
@@ -44,7 +44,7 @@ export function blockUserAction(blockConfirmationTriggerButton, apiUrl, method) 
             'X-CSRF-Token': `${csrfToken}`,
         },
         method: method ? method : "POST",
-    }, "block_user", async (res) => {
+    }, callbackType ? callbackType : "block_user", async (res) => {
         if (!res.ok) {
             const errors = await res.json();
 

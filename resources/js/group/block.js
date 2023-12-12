@@ -7,6 +7,6 @@ for (const banConfirmationTriggerButton of banConfirmationTriggerButtons) {
         const group_id = banConfirmationTriggerButton.getAttribute("data-group-id");
         const username = banConfirmationTriggerButton.getAttribute("data-username");
 
-        blockUserAction(banConfirmationTriggerButton, `/group/${group_id}/members/${username}/ban`, 'POST');
+        blockUserAction(banConfirmationTriggerButton, `/group/${group_id}/members/${username}/block`, 'POST', "ban_group_member");
     });
 }

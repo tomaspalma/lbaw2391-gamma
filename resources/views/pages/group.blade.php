@@ -4,7 +4,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js', 'resources/js/group/filter.js', 'resources/js/group/promote.js', 'resources/js/group/block.js', 'resources/js/group/scroll.js', 'resources/js/group/filter.js'])
     <title>{{ config('app.name', 'Laravel') }} | Group {{$group->name}}</title>
-    
+
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 
@@ -51,22 +51,22 @@
         <p class="text-center">No members found.</p>
         @else
         <div id="member-cards">
-        @for($i = 0; $i < $members->count(); $i++)
-            @include('partials.user_card', ['user' => $members[$i], 'adminView' => false, 'is_group' => true, 'group' => $group])
-            @endfor
+            @for($i = 0; $i < $members->count(); $i++)
+                @include('partials.user_card', ['user' => $members[$i], 'adminView' => false, 'is_group' => true, 'group' => $group])
+                @endfor
         </div>
-            @endif
-            @endif
+        @endif
+        @endif
 
-            @else
+        @else
 
-            <div class="justify-center h-screen">
-                <div class="bg-red-100 border border-red-500 p-4">
-                    <p class="text-red-500">You do not have permission</p>
-                </div>
+        <div class="justify-center h-screen">
+            <div class="bg-red-100 border border-red-500 p-4">
+                <p class="text-red-500">You do not have permission</p>
             </div>
+        </div>
 
-            @endcan
+        @endcan
 
 
     </main>
@@ -146,3 +146,5 @@
 </div>
 
 @include('partials.confirm_modal')
+
+@include('partials.snackbar')

@@ -9,8 +9,6 @@ export function togglePromoteButtons(promoteButtons) {
     for (const promoteButton of promoteButtons) {
         promoteButton.addEventListener("click", () => {
 
-            console.log("click");
-
             const group_id = promoteButton.getAttribute("data-group-id");
             const username = promoteButton.getAttribute("data-username");
 

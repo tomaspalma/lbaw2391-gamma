@@ -102,3 +102,7 @@ input {
 .promote-group-member-confirmation-trigger-btn {
     @apply bg-blue-400 p-2 text-white rounded-md;
 }
+
+.group-status-text {
+    @apply text-sm font-normal italic;
+}

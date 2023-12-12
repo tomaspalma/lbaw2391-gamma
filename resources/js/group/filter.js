@@ -18,6 +18,11 @@ groupMemberTypeFilter.addEventListener("change", function(e) {
             console.log(memberCardsJson);
 
             memberCards.innerHTML = "";
+
+            if (memberCardsJson.length === 0) {
+                memberCards.innerHTML += `<p class="text-center">No members found.</p>`;
+            }
+
             for (const memberCard of memberCardsJson) {
                 memberCards.innerHTML += memberCard;
             }
