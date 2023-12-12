@@ -18,14 +18,14 @@
     <header class="my-4">
         <h1 class="text-2xl">
             <a class="hover:underline" href="{{ route('post.show', $post->id) }}">{{ $post->title }}</a>
+            <button data-entity-id="{{$post->id}}" class="mb-1 p-2 text-base rounded-md hover:bg-black hover:text-white transition-colors post-copy-link-btn">
+                <i class="copy-link-icon"></i>
+            </button>
         </h1>
     </header>
     <p class="my-4">
         {{ $post->content }}
     </p>
-    <button class="mb-1 p-2 rounded-md hover:bg-black hover:text-white transition-colors post-copy-link-btn">
-        <i class="share-icon"></i>
-    </button>
     @if($preview === false)
     @php
     $f = function($user, $post) {
