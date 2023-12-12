@@ -152,6 +152,10 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::get("/search/{query?}", 'showSearch');
     });
 
+    Route::controller(FriendController::class)->group(function () {
+        Route::get('/users/{username}/friends', 'show_friends')->name('friends_page');
+    });
+
     Route::controller(FeedController::class)->group(function () {
         Route::get('/feed/popular', 'show_popular');
         Route::get('/feed/personal', 'show_personal');
