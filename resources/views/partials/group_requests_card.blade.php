@@ -14,9 +14,10 @@
                 </a>
             </h1>
 
-            <form id="groupForm" action="{{ route('groups.enter', $request->group) }}" method="post">
+            <form id="groupForm" action="{{ route('groups.approve_request', $request->id) }}" method="post">
                 @csrf
-                <button id="button" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                @method('PUT')
+                <button id="approve" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Accept
                 </button>
             </form>
@@ -25,7 +26,7 @@
             <form id="groupForm" action="{{ route('groups.leave', $request->group )}}" method="post">
                 @csrf
                 @method('DELETE')
-                <button id="button" type="submit" id="leaveGroupButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                <button id="remove" type="submit" id="leaveGroupButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                     Decline Request
                 </button>
             </form>

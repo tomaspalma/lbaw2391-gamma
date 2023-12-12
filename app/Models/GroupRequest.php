@@ -8,11 +8,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Http\Controllers\FileController;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class GroupRequest extends Model
 {
     protected $table = 'group_request';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -30,6 +33,16 @@ class GroupRequest extends Model
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class, 'group_id');
+    }
+
+    public function approve(){
+        $id = $this->id;
+
+        DB::transaction(function () use ($id) {
+            DB::table('group_request')
+                ->where('id', $id)
+                ->update(['is_accepted' => true]);
+        });
     }
 }
 ?>

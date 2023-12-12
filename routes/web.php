@@ -111,6 +111,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
     Route::get('/groups', 'showGroupsForm');
     Route::get('/groups/requests', 'showGroupRequests');
+    Route::put('/groups/{id}/approve', 'approveRequest')->name('groups.approve_request');
 });
 
 Route::controller(SearchController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {

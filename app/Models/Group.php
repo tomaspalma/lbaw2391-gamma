@@ -29,7 +29,7 @@ class Group extends Model
 
     public function requests(): HasMany
     {
-        return $this->hasMany(GroupRequest::class, 'group_id');
+        return $this->hasMany(GroupRequest::class, 'group_id')->where('is_accepted', false);
     }
 
     public function users(): BelongsToMany
