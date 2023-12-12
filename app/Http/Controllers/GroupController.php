@@ -79,7 +79,7 @@ class GroupController extends Controller
                 'date' => now(),
             ]);
 
-            return response()->json(['message' => 'User added to the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded', 
+            return response()->json(['message' => 'User asked to enter the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded', 
             'new_text' => 'Remove Request', 'new_method' => 'delete']);
         }
     }

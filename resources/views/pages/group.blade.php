@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js', 'resources/js/group/scroll.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_leave.js', 'resources/js/group/scroll.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Group {{$group->name}}</title>
 

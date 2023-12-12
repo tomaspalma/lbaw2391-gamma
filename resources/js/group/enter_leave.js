@@ -1,7 +1,5 @@
 window.addEventListener("DOMContentLoaded", (event) => {
     const form = document.getElementById("groupForm");
-
-
     if (form) {
         const button = form.querySelector("button");
         let methodField = form.attributes["data-method"];
@@ -11,20 +9,19 @@ window.addEventListener("DOMContentLoaded", (event) => {
         console.log(methodField.value)
 
         button.addEventListener("click", (e) => {
-            console.log("button clicked")
+            console.log("Button Clicked")
             e.preventDefault()
 
             fetch(form.action, {
                 method: methodField.value,
                 headers: {
-                    "Content-Type": "application/json",
                     "X-CSRF-TOKEN": document
                         .querySelector('meta[name="csrf-token"]')
                         .getAttribute("content"),
                 },
             })
             .then((response) => {
-                console.log(response)
+                console.log(response.status)
                 if (response.status === 200) {
                     return response.json();
                 } else {
