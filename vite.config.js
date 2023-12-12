@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 "resources/css/app.css",
                 "resources/js/app.js",
+                "resources/js/components/snackbar.js",
                 "resources/js/search/search_input_preview.js",
                 "resources/js/search/search.js",
                 "resources/js/search/main_search_preview.js",
