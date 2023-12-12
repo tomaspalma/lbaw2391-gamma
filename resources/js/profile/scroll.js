@@ -15,5 +15,8 @@ await addPaginationListener(
     '?',
     (entityCard) => {
         initReactionJs(entityCard);
+        const card = document.createElement("div");
+        card.innerHTML = entityCard;
+        togglePostCopyLink(card.querySelectorAll(".post-copy-link-btn"));
     }
 );

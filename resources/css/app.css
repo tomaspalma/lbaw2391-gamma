@@ -94,3 +94,7 @@ input {
 .x-icon {
     @apply fa-solid fa-x;
 }
+
+.copy-link-icon {
+    @apply fa-solid fa-link;
+}
