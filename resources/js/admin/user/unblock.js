@@ -17,8 +17,8 @@ const unblockConfirmationTriggerButtons = document.querySelectorAll(".unblock-co
 toggleUnblockConfirmationButtons(unblockConfirmationTriggerButtons);
 
 export function unblockUserAction(unblockConfirmationTriggerButton) {
-    const username = unblockConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-username");
-    const profileImage = unblockConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-user-image");
+    const username = unblockConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-username");
+    const profileImage = unblockConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-user-image");
 
     populateModalText(`
             <div class="flex flex-col align-middle">
