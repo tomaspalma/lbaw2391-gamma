@@ -14,6 +14,8 @@ class Group extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'id',
         'name',
