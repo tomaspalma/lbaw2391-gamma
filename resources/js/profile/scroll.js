@@ -1,5 +1,6 @@
 import { initReactionJs } from "../post/reactions";
 import { addPaginationListener } from "../search/infinite_scroll";
+import { togglePostCopyLink } from "../post/copy_link";
 
 const url = window.location.href;
 const username = url.split("/")[4].split("?")[0];
@@ -15,8 +16,6 @@ addPaginationListener(
     '?',
     (entityCard) => {
         initReactionJs(entityCard);
-        const card = document.createElement("div");
-        card.innerHTML = entityCard;
-        togglePostCopyLink(card.querySelectorAll(".post-copy-link-btn"));
+        togglePostCopyLink(entityCard.querySelectorAll(".post-copy-link-btn"));
     }
 ).then(() => { }).catch((e) => console.error(e));
