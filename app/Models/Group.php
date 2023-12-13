@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Http\Controllers\FileController;
+
 
 class Group extends Model
 {
@@ -27,5 +29,15 @@ class Group extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id');
+    }
+
+    public function getGroupImage()
+    {
+        return FileController::get('group', $this->id);
+    }
+
+    public function getBannerImage()
+    {
+        return FileController::get('banner', $this->id);
     }
 }
