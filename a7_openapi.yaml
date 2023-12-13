@@ -1373,7 +1373,7 @@ paths:
         '403':
           description: 'Forbidden. User cannot see this post.'
 
-  /api/group/{id}/posts:
+  /api/group/{group_id}/posts:
 
     get:
       operationId: R801
@@ -1393,3 +1393,30 @@ paths:
           description: 'Returns JSON with HTML of the post cards'
         '403':
           description: 'Forbidden. User cannot see the posts of this group'
+
+  /api/group/{id}/members/{filter}:
+
+    get:
+      operationId: R802
+      summary: 'R802: Show posts of groups'
+      description: 'AJAX endpoint to show posts of groups. Access: USR'
+      tags:
+        - 'M08: Groups'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the group 
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: filter
+        description: Role of the user in the group (e.g. Group owner, group member)
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'Returns JSON with HTML of the member cards'
+        '403':
+          description: 'Forbidden. User cannot see the members of this group'

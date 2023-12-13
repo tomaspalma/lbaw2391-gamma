@@ -89,9 +89,8 @@ class SearchController extends Controller
 
         $userCardsJson = [];
         foreach ($users as $user) {
-            if($request->headers->get('referer') === env('APP_URL') . '/admin/user/appeals')
-            {
-                if(!$user->has_appealed_app_ban()) {
+            if ($request->headers->get('referer') === env('APP_URL') . '/admin/user/appeals') {
+                if (!$user->has_appealed_app_ban()) {
                     continue;
                 }
 
@@ -115,13 +114,10 @@ class SearchController extends Controller
 
             // Public user
             if (Auth::user() === null) {
-                $users = User::where('id', '<>', 0)
-                    ->where('role', '<>', 1)
-                    ->where('is_private', '=', false)
+                $users = User::where('id', '<>', 0)->where('is_private', false)
                     ->paginate(10);
             } else {
                 $users = User::where('id', '<>', 0)
-                    ->where('is_private', '=', false)
                     ->paginate(10);
             }
 
@@ -139,7 +135,6 @@ class SearchController extends Controller
             $users = [];
 
             $users = User::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
-                ->where('is_private', '=', false)
                 ->where('id', '<>', 0)
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
                 ->paginate(15);
