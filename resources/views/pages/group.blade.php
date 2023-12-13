@@ -70,10 +70,10 @@
             @if($feed === 'posts')
                 <section id="posts">
                     <h1 class="sr-only">Posts</h1>
-                    @if($posts->count() == 0)
+                    @if($posts->get()->count() == 0)
                         <p class="text-center">No posts found.</p>
                     @else
-                        @foreach($posts as $post)
+                        @foreach($posts->get() as $post)
                             @include('partials.post_card', ['post' => $post])
                         @endforeach
                     @endif
