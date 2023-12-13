@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\AppBanUserAppeal;
+use App\Events\Appeal;
 use App\Events\BanAppUserAppeal;
 use Illuminate\View\View;
 
@@ -81,7 +82,11 @@ class UserController extends Controller
 
             $appban->appeal = $appeal->id;
             $appban->save();
+
+
+            event(new Appeal($user->username, $user, $appeal));
         });
+
 
         return redirect('/');
     }

@@ -16,8 +16,8 @@ const blockConfirmationTriggerButtons = document.querySelectorAll(".block-reason
 toggleBlockTriggerButtons(blockConfirmationTriggerButtons);
 
 export function blockUserAction(blockConfirmationTriggerButton) {
-    let username = blockConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-username");
-    const profileImage = blockConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-user-image");
+    let username = blockConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-username");
+    const profileImage = blockConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-user-image");
 
     const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 
