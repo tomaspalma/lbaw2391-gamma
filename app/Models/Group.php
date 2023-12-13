@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 
 class Group extends Model
 {
@@ -19,13 +20,24 @@ class Group extends Model
         'tsvectors'
     ];
 
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, "group_id");
     }
 
+    public function all_users()
+    {
+        return $this->group_owners()->paginate(10)->merge($this->users()->paginate(10));
+    }
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id');
+    }
+
+    public function group_owners(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_owner', 'group_id', 'user_id');
     }
 }
