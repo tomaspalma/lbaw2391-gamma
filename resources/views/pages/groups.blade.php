@@ -13,6 +13,7 @@
 
 @include('partials.navbar')
 
+<main class="center">
 <ul class="tab-container center justify-center flex border border-black rounded shadow my-4">
         <li class="flex w-1/2 {{ $feed === 'groups' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
             <a href="/groups" class="hover:underline">Groups</a>
@@ -50,3 +51,5 @@
         @endfor
     @endif
 @endif
+
+</main>
