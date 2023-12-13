@@ -54,7 +54,7 @@
 </div>
 
 <div class="grid grid-cols-12 gap-4">
-    <main class="col-span-12 md:col-span-8 mx-auto">
+    <main class="col-span-12 md:col-span-8 mx-auto w-full">
         @can('alreadyIn', $group)
             <a href="{{ route('post.createForm') }}" class="my-4 block mx-auto px-4 py-2 bg-black text-white text-center rounded">Create Post</a>
         @endcan
@@ -90,7 +90,7 @@
                 @if($members->count() == 0)
                     <p class="text-center">No members found.</p>
                 @else
-                    @foreach($members as $member)
+                    @foreach($members->get() as $member)
                         @include('partials.user_card', ['user' => $member, 'adminView' => false])
                     @endforeach
                 @endif

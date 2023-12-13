@@ -38,6 +38,6 @@ class Group extends Model
 
     public function getBannerImage()
     {
-        return FileController::get('banner', $this->id);
+        return FileController::get('group_banner', $this->id);
     }
 }

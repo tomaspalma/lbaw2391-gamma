@@ -18,7 +18,7 @@ class FileController extends Controller
         'profile' => ['png', 'jpg', 'jpeg', 'gif'],
         'post' => ['mp3', 'mp4', 'gif', 'png', 'jpg', 'jpeg'],
         'group' => ['png', 'jpg', 'jpeg', 'gif'],
-        'banner' => ['png', 'jpg', 'jpeg', 'gif'],
+        'group_banner' => ['png', 'jpg', 'jpeg', 'gif'],
     ];
 
     private static function isValidType(string $type)
@@ -51,7 +51,7 @@ class FileController extends Controller
             case 'group':
                 $fileName = Group::find($id)->image;
                 break;
-            case 'banner':
+            case 'group_banner':
                 $fileName = Group::find($id)->banner;
                 break;
         }
@@ -76,7 +76,7 @@ class FileController extends Controller
                 case 'group':
                     Group::find($id)->image = null;
                     break;
-                case 'banner':
+                case 'group_banner':
                     Group::find($id)->banner = null;
                     break;
             }
@@ -148,7 +148,7 @@ class FileController extends Controller
                     redirect()->back()->with('error', 'Error: Unknown user');
                 }
                 break;
-            case 'banner':
+            case 'group_banner':
                 $group = Group::findOrFail($id);
                 if ($group) {
                     $group->banner = $fileName;
