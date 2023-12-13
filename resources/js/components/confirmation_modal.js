@@ -58,12 +58,13 @@ const callbackTypesAction = {
             `article[data-username="${username}"]`
         );
 
-        const appealCounter = document.getElementById("appeal-counter");
         const content = document.getElementById("content");
-        if (content.children.length === 1) {
-            content.innerHTML = "<p class='text-center'>No appeals found.</p>"
+        const appealCounter = document.getElementById("appeal-counter");
+        if (parseInt(appealCounter.textContent, 10) === 1) {
             appealCounter.textContent = "0";
+            content.innerHTML = `<p id="no-appeals-found-text" class="text-center">No appeals found.</p>`
         }
+
 
         userCard.remove();
     },
