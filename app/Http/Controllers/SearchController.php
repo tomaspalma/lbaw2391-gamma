@@ -65,7 +65,7 @@ class SearchController extends Controller
                 ->paginate(10);
         }
 
-        if ($request->ajax()) {
+        if ($request->is("api*")) {
             return response()->json($groups);
         } else {
             return $groups;
@@ -157,7 +157,7 @@ class SearchController extends Controller
         $rawPosts = [];
 
         if ($query === null) {
-            $rawPosts = Post::where('is_private', '<>', false)->paginate($this->pagination_limits['posts']);
+            $rawPosts = Post::where('is_private', false)->paginate($this->pagination_limits['posts']);
         } else {
             $rawPosts = Post::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?) and not is_private', [$query])
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
