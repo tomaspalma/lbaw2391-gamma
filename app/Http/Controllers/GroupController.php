@@ -19,7 +19,7 @@ class GroupController extends Controller
     public function showGroupForm(Request $request, string $id)
     {
         $group = Group::findOrFail($id);
-        $posts = $group->posts();
+        $posts = $group->posts()->paginate(10);
         $members = $group->all_users();
         $user = Auth::user();
 
