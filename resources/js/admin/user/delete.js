@@ -7,14 +7,14 @@ const deleteConfirmationTriggerButtons = document.querySelectorAll(".delete-conf
 for (const deleteConfirmationTriggerButton of deleteConfirmationTriggerButtons) {
     deleteConfirmationTriggerButton.addEventListener("click", (e) => {
         e.preventDefault();
-        
+
         deleteUserAction(deleteConfirmationTriggerButton);
     });
 }
 
 export function deleteUserAction(deleteConfirmationTriggerButton) {
-    const username = deleteConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-username");
-    const profileImage = deleteConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-user-image");
+    const username = deleteConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-username");
+    const profileImage = deleteConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-user-image");
 
     populateModalText(`
             <div class="flex flex-col align-middle">

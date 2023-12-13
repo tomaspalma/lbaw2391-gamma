@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_group.js', 'resources/js/group/scroll.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/enter_leave.js', 'resources/js/group/scroll.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Group {{ $group->name }}</title>
 
@@ -23,16 +23,16 @@
         <div class="m-4">
             @auth
                 @can('alreadyIn', $group)
-                    <form id="groupForm" action="{{ route('groups.leave', $group) }}" method="post">
+                    <form id="groupForm" action="{{ route('groups.leave', $group) }}" method="post" data-method="delete">
                         @csrf
                         @method('DELETE')
                         <button type="submit" id="leaveGroupButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                            Leave group
+                            Leave Group
                         </button>
                     </form>
                 @else
                     @can('PendingOption', $group)
-                        <form id="groupForm" action="{{ route('groups.remove_request', $group) }}" method="post">
+                        <form id="groupForm" action="{{ route('groups.remove_request', $group) }}" method="post" data-method="delete">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
@@ -40,7 +40,7 @@
                             </button>
                         </form>
                     @else
-                        <form id="groupForm" action="{{ route('groups.enter', $group) }}" method="post">
+                        <form id="groupForm" action="{{ route('groups.enter', $group) }}" method="post" data-method="post">
                             @csrf
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Enter this group
