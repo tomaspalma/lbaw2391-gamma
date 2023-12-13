@@ -75,9 +75,6 @@ const callbackTypesAction = {
         );
         const blockButton = userCard.querySelector(".block-reason-trigger");
 
-        console.log("Unblock button, ", unblockButton);
-        console.log("Block button, ", blockButton);
-
         unblockButton.removeAttribute("hidden");
         blockButton.setAttribute("hidden", true);
 

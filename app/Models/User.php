@@ -95,7 +95,10 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 
     public function normal_notifications()
     {
-        $result = $this->comment_notifications()->concat($this->reaction_notifications())->sortByDesc('date');
+        $result = $this->comment_notifications()
+            ->concat($this->reaction_notifications())
+            ->concat($this->friend_request_notifications())
+            ->sortByDesc('date');
 
         return $result;
     }
@@ -144,6 +147,18 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 
         return $comment_reactions;
     }
+
+    public function friend_request_notifications()
+    {
+        return FriendRequestNot::with('friendRequest')
+            ->whereHas('friendRequest', function ($query) {
+                $query->where('user_id', Auth::user()->id)
+                    ->orWhere('friend_id', Auth::user()->id);
+            })
+            ->orderBy('date', 'desc')
+            ->paginate(15);
+    }
+
 
     public function post_reaction(Post $post)
     {
@@ -230,4 +245,28 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     {
         return FileController::get('profile', $this->id);
     }
+
+    public function sent_pending_friend_requests()
+    {
+        return FriendRequest::where('user_id', $this->id)
+            ->where('is_accepted', null);
+    }
+
+    public function received_pending_friend_requests()
+    {
+        return FriendRequest::where('friend_id', $this->id)
+            ->where('is_accepted', null);
+    }
+
+    public function has_friend_request_to(User $user): bool
+    {
+        return $this->sent_pending_friend_requests()->where('friend_id', $user->id)->exists();
+    }
+
+    public function has_friend_request_from(User $user): bool
+    {
+        return $this->received_pending_friend_requests()->where('user_id', $user->id)->exists();
+    }
+
+
 }

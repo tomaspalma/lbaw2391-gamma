@@ -12,6 +12,10 @@ a {
     @apply text-2xl;
 }
 
+input {
+    @apply rounded-md;
+}
+
 .success {
     @apply text-green-500;
 }
@@ -81,4 +85,16 @@ a {
 
 .toggled-tab {
     @apply border-t-2 border-black;
+}
+
+.snackbar {
+    @apply p-2 flex flex-row justify-between;
+}
+
+.x-icon {
+    @apply fa-solid fa-x;
+}
+
+.copy-link-icon {
+    @apply fa-solid fa-link;
 }

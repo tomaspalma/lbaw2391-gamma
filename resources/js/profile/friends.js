@@ -1,14 +1,12 @@
 window.addEventListener("DOMContentLoaded", (event) => {
-    const form = document.getElementById("groupForm");
+    event.preventDefault();
+    const form = document.getElementById("friendForm");
     if (form) {
         const button = form.querySelector("button");
         let methodField = form.attributes["data-method"];
         const username = document.getElementById("username").textContent;
-        const routePattern = '/group/';
-        const groupID = url.substring(routePattern.length);
         button.addEventListener("click", (e) => {
             e.preventDefault();
-            HTMLFormControlsCollection.log(button);
             fetch(form.action, {
                 method: methodField.value,
                 headers: {
@@ -17,18 +15,27 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         .querySelector('meta[name="csrf-token"]')
                         .getAttribute("content"),
                 },
-                })
+            })
                 .then((response) => {
                     if (response.ok) {
+                        // Update the button text based on the action
                         if (methodField.value.toUpperCase() === "POST") {
                             button.textContent = "Cancel Friend Request";
                             methodField.value = "DELETE";
                         } else if (
                             methodField.value.toUpperCase() === "DELETE"
                         ) {
-                            button.textContent = "Add Friend";
+                            if (button.textContent.includes("Remove Friend")) {
+                                const friendsLink = document.getElementById("friends-link");
+                                const friendsCount = parseInt(friendsLink.textContent,10);
+                                const span = document.createElement("span");
+                                span.className = friendsLink.className;
+                                span.textContent = friendsCount - 1 + " friends";
+                                friendsLink.parentNode.replaceChild(span, friendsLink);
+                            }
+                            button.textContent = "Send Friend Request";
                             methodField.value = "POST";
-                            form.action = `/group/${groupID}/leave`;
+                            form.action = `/api/users/${username}/friends/requests`;
                         }
                     }
                 })

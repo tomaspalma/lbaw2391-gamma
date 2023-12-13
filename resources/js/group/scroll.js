@@ -1,3 +1,4 @@
+import { togglePostCopyLink } from "../post/copy_link";
 import { initReactionJs } from "../post/reactions";
 import { addPaginationListener } from "../search/infinite_scroll";
 
@@ -14,5 +15,9 @@ if (currentUrl.slice(lastSlashIndex + 1) === 'members') {
 } else {
     addPaginationListener(`/api/group/${group_id}/posts`, posts, "?", (entityCard) => {
         initReactionJs(entityCard);
+        const card = document.createElement("div");
+        card.innerHTML = entityCard;
+        togglePostCopyLink(card.querySelectorAll(".post-copy-link-btn"));
+
     }).then(() => { }).catch((e) => console.error(e));
 }

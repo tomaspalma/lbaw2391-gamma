@@ -7,13 +7,14 @@
 
 @include('partials.navbar')
 
+<h1 class="text-xl text-center">Login</h1>
 <div class="flex justify-center">
-    <form method="POST" class="border-2 border-gray-500 p-4 w-96 max-w-screen-md justify-center mt-4" action="{{ route('login') }}">
+    <form method="POST" class="border border-transparent shadow rounded-md p-8 pt-2 w-96 max-w-screen-md justify-center mt-4" action="{{ route('login') }}">
         {{ csrf_field() }}
 
         <div class="mb-4">
             <label for="identifier" class="block text-sm font-medium text-gray-600">E-mail / Username</label>
-            <input placeholder="Email / username" class="mt-1 p-2 w-full border focus:ring-2" id="identifier" name="identifier" value="{{ old('identifier') }}" required autofocus>
+            <input placeholder="Email / username" class="rounded-md mt-1 p-2 w-full border focus:ring-2" id="identifier" name="identifier" value="{{ old('identifier') }}" required autofocus>
             @if ($errors->has('identifier'))
             <span class="text-red-500 text-sm">
                 {{ $errors->first('identifier') }}
@@ -23,9 +24,14 @@
 
         <div class="mb-4">
             <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
-            <input placeholder="Password" class="mt-1 p-2 w-full border focus:ring-2" id="password" type="password" name="password" required>
 
-            <i class="fas fa-eye-slash cursor-pointer" id="togglePassword" style="margin-top: -29px; margin-left: 310px;"></i>
+            
+<div class="relative">
+  <input placeholder="Password" class="mt-1 p-2 pr-10 w-full border rounded-md focus:ring-2" id="password" type="password" name="password" required>
+  <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+    <i class="fas fa-eye-slash cursor-pointer" id="togglePassword"></i>
+  </div>
+</div>
 
             @if ($errors->has('password'))
             <span class="text-red-500 text-sm">
@@ -44,8 +50,8 @@
             </label>
         </div>
 
-        <div class="flex items-center">
-            <button class="bg-blue-500 text-white py-2 px-4 rounded" type="submit">
+        <div class="mt-2 flex justify-between items-center">
+            <button class="bg-black text-white py-2 px-4 rounded" type="submit">
                 Login
             </button>
             <a class="ml-2 blue-link-color" href="{{ route('register') }}">Register</a>

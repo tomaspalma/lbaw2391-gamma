@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 "resources/css/app.css",
                 "resources/js/app.js",
+                "resources/js/components/snackbar.js",
                 "resources/js/search/search_input_preview.js",
                 "resources/js/search/search.js",
                 "resources/js/search/main_search_preview.js",
@@ -28,11 +29,19 @@ export default defineConfig({
                 "resources/js/comment/delete.js",
                 "resources/js/comment/edit.js",
                 "resources/js/post/reactions.js",
+                "resources/js/post/scroll.js",
                 "resources/js/utils.js",
                 "resources/js/notifications/filter.js",
-                "resources/js/group/enter_group.js",
+                "resources/js/group/enter_leave.js",
+                "resources/js/profile/friends.js",
+                "resources/js/friends/requests.js",
                 "resources/js/admin/user/show_appeal_reason.js",
-                "resources/js/components/dropdown.js"
+                "resources/js/components/dropdown.js",
+                "resources/js/group/scroll.js",
+                "resources/js/admin/user/remove_appeal.js",
+                "resources/js/comment/scroll.js",
+                "resources/js/profile/scroll.js",
+                "resources/js/search/main_search/scroll.js",
             ],
             refresh: true,
         }),
@@ -43,5 +52,3 @@ export default defineConfig({
         },
     },
 });
-
-
