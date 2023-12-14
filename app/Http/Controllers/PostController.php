@@ -126,7 +126,7 @@ class PostController extends Controller
 
         $this->authorize('view', $post);
 
-        $comments = $post->comments()->paginate(15);
+        $comments = $post->comments()->orderBy('date', 'desc')->paginate(15);
 
         if ($request->is("api*")) {
             $commentCards = [];
