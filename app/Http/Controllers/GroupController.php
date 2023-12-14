@@ -143,6 +143,16 @@ class GroupController extends Controller
 
     }
 
+    public function declineRequest(string $id){
+
+        DB::transaction(function () use ($id) {
+            DB::table('group_request')
+                ->where('id', $id)
+                ->delete();
+        });
+        return redirect("/groups/requests/");
+    }
+
     public function approveRequest(string $id){
         $grouprequest = GroupRequest::findOrFail($id);
 

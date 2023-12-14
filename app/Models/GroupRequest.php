@@ -44,5 +44,6 @@ class GroupRequest extends Model
                 ->update(['is_accepted' => true]);
         });
     }
+
 }
 ?>

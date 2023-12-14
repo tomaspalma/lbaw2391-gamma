@@ -123,6 +123,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::get('/groups', 'showGroupsForm');
     Route::get('/groups/requests', 'showGroupRequests');
     Route::put('/groups/{id}/approve', 'approveRequest')->name('groups.approve_request');
+    Route::delete('/groups/{id}/decline', 'declineRequest')->name('groups.decline_request');
 });
 
 Route::controller(SearchController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {

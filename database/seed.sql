@@ -565,7 +565,10 @@ CREATE TRIGGER add_friend
         (2, 'Tech Enthusiasts', 'A group dedicated to discussing the latest technology trends and innovations', true, 'prolog.png');
 
     INSERT INTO group_user (user_id, group_id) VALUES
-        (4, 2);
+        (4, 1);
+
+    INSERT INTO group_request(id, user_id, group_id, is_accepted, date) VALUES
+        (1, 4, 2, false, '2023-05-18 15:30:00');
 
     INSERT INTO group_owner (group_id, user_id) VALUES
         (1, 1),
