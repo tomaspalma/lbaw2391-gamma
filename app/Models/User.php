@@ -241,6 +241,13 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->hasOne(AppBan::class, 'banned_user_id');
     }
 
+    public function is_owner(Group $group)
+    {
+        $groupOwner = GroupOwner::where('group_id', $group->id)->where('user_id', $this->id)->get();
+
+        return count($groupOwner);
+    }
+
     public function getProfileImage()
     {
         return FileController::get('profile', $this->id);

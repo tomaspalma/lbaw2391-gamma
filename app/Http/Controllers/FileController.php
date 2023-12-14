@@ -17,6 +17,8 @@ class FileController extends Controller
     static $systemTypes = [
         'profile' => ['png', 'jpg', 'jpeg', 'gif'],
         'post' => ['mp3', 'mp4', 'gif', 'png', 'jpg', 'jpeg'],
+        'group' => ['png', 'jpg', 'jpeg', 'gif'],
+        'group_banner' => ['png', 'jpg', 'jpeg', 'gif'],
     ];
 
     private static function isValidType(string $type)
@@ -38,7 +40,6 @@ class FileController extends Controller
 
     private static function getFileName(string $type, int $id)
     {
-
         $fileName = null;
         switch ($type) {
             case 'profile':
@@ -47,12 +48,21 @@ class FileController extends Controller
             case 'post':
                 $fileName = Post::find($id)->image;
                 break;
+
             case 'groupProfile':
                 $fileName = Group::find($id)->image;
+
+            case 'group':
+                $fileName = Group::find($id)->image;
+                break;
+            case 'group_banner':
+                $fileName = Group::find($id)->banner;
+                break;
         }
 
         return $fileName;
     }
+
 
     private static function delete(string $type, int $id)
     {
@@ -66,6 +76,12 @@ class FileController extends Controller
                     break;
                 case 'post':
                     Post::find($id)->image = null;
+                    break;
+                case 'group':
+                    Group::find($id)->image = null;
+                    break;
+                case 'group_banner':
+                    Group::find($id)->banner = null;
                     break;
             }
         }
@@ -123,6 +139,24 @@ class FileController extends Controller
                 if ($post) {
                     $post->image = $fileName;
                     $post->save();
+                } else {
+                    redirect()->back()->with('error', 'Error: Unknown user');
+                }
+                break;
+            case 'group':
+                $group = Group::findOrFail($id);
+                if ($group) {
+                    $group->image = $fileName;
+                    $group->save();
+                } else {
+                    redirect()->back()->with('error', 'Error: Unknown user');
+                }
+                break;
+            case 'group_banner':
+                $group = Group::findOrFail($id);
+                if ($group) {
+                    $group->banner = $fileName;
+                    $group->save();
                 } else {
                     redirect()->back()->with('error', 'Error: Unknown user');
                 }

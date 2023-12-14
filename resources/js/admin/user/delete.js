@@ -13,8 +13,8 @@ for (const deleteConfirmationTriggerButton of deleteConfirmationTriggerButtons) 
 }
 
 export function deleteUserAction(deleteConfirmationTriggerButton) {
-    const username = deleteConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-username");
-    const profileImage = deleteConfirmationTriggerButton.parentElement.parentElement.getAttribute("data-user-image");
+    const username = deleteConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-username");
+    const profileImage = deleteConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-user-image");
 
     populateModalText(`
             <div class="flex flex-col align-middle">

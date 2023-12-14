@@ -3,17 +3,22 @@ import { configureConfirmationForm, populateModalText } from "../../components/c
 const confirmationModal = document.getElementById("confirmation-modal");
 const deleteUserAppealTriggerButtons = document.querySelectorAll(".remove-confirmation-trigger");
 
-for (const deleteUserAppealTriggerButton of deleteUserAppealTriggerButtons) {
-    deleteUserAppealTriggerButton.addEventListener("click", (e) => {
-        console.log("Clicked");
-        e.preventDefault();
+export function toggleDeleteUserAppealButtons(deleteUserAppealTriggerButtons) {
+    for (const deleteUserAppealTriggerButton of deleteUserAppealTriggerButtons) {
+        deleteUserAppealTriggerButton.addEventListener("click", (e) => {
+            console.log("Clicked");
+            e.preventDefault();
 
-        deleteUserAppealAction(deleteUserAppealTriggerButton);
-    });
+            deleteUserAppealAction(deleteUserAppealTriggerButton);
+        });
+    }
 }
+
+toggleDeleteUserAppealButtons(deleteUserAppealTriggerButtons);
 
 export function deleteUserAppealAction(deleteUserAppealTriggerButton) {
     const username = deleteUserAppealTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-username");
+
 
     populateModalText(`
             <div class="flex flex-col align-middle">

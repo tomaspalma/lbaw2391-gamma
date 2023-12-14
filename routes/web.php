@@ -18,7 +18,6 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Controllers\PostController;
-use App\Http\Middleware\EnsurePostExists;
 use App\Http\Middleware\EnsureUserIsNotAppBanned;
 
 /*
@@ -113,10 +112,11 @@ Route::controller(CommentController::class)->middleware(EnsureUserIsNotAppBanned
     Route::delete('/comment/{id}/reaction', 'remove_reaction')->name('comment.remove.reaction');
 });
 
-
 Route::controller(GroupController::class)->group(function () {
     Route::get('/group/{id}', 'showGroupForm')->name('groupPosts');
-    Route::get('/group/{id}/members', 'showGroupMembers')->name('groupMembers');
+    Route::get('/group/{id}/members/', 'showGroupMembers')->name('groupMembers');
+    Route::post('/group/{id}/members/{username}/block', 'banGroupMember')->name('ban.groupMember');
+    Route::post('/group/{id}/members/{username}/promote', 'promoteUser')->name('promote.groupMember');
     Route::post('/group/{id}/enter', 'addToGroup')->name('groups.enter');
     Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
     Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
@@ -124,6 +124,13 @@ Route::controller(GroupController::class)->group(function () {
     Route::get('/groups/requests', 'showGroupRequests');
     Route::put('/groups/{id}/approve', 'approveRequest')->name('groups.approve_request');
     Route::delete('/groups/{id}/decline', 'declineRequest')->name('groups.decline_request');
+
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/group/{id}/edit', 'edit')->name('group.edit');
+        Route::put('/group/{id}', 'update')->name('group.update');
+    });
+
 });
 
 Route::controller(SearchController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
@@ -172,6 +179,7 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
 
     Route::controller(GroupController::class)->group(function () {
         Route::get('/group/{group_id}/posts', 'showGroupForm')->name('api.group.show_posts');
+        Route::get('/group/{group_id}/members/{filter?}', 'showGroupMembers')->name('api.groupMembers');
     });
 
     Route::controller(UserController::class)->group(function () {

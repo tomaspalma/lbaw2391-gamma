@@ -1,3 +1,5 @@
+import { addSnackbar } from "../components/snackbar";
+
 const leaveModalButtons = document.querySelectorAll(
     ".close-confirmation-modal"
 );
@@ -20,18 +22,49 @@ if (leaveModalButtons) {
 }
 
 const callbackTypesAction = {
+    ban_group_member: (form) => {
+        console.log("Blocked!");
+        const username = form.action.split("/")[6];
+
+        const userCard = document.querySelector(
+            `article[data-username="${username}"]`
+        );
+
+        userCard.remove();
+        form.remove();
+
+        addSnackbar(`You removed ${username} from the group!`, 2000);
+
+    },
+    promote_group_member: (form) => {
+        const username = form.action.split("/")[6];
+        const userCard = document.querySelector(
+            `article[data-username="${username}"]`
+        );
+
+        userCard.querySelector(".normal-user-actions").classList.add("hidden");
+
+        const groupIndicator = document.createElement("span");
+        groupIndicator.classList.add("group-status-text");
+        groupIndicator.textContent = "Owner";
+
+        userCard.querySelector(".display-name").appendChild(groupIndicator);
+
+        addSnackbar(`You promoted ${username}!`, 2000);
+    },
     remove_appeal: (form) => {
         const username = form.action.split("/")[5];
         const userCard = document.querySelector(
             `article[data-username="${username}"]`
         );
 
-        const appealCounter = document.getElementById("appeal-counter");
         const content = document.getElementById("content");
-        if (content.children.length === 1) {
-            content.innerHTML = "<p class='text-center'>No appeals found.</p>"
+        const appealCounter = document.getElementById("appeal-counter");
+        if (parseInt(appealCounter.textContent, 10) === 1) {
             appealCounter.textContent = "0";
+            content.innerHTML = `<p id="no-appeals-found-text" class="text-center">No appeals found.</p>`
         }
+
 
         userCard.remove();
     },
@@ -61,10 +94,7 @@ const callbackTypesAction = {
         window.location.href = window.location.origin + "/feed";
     },
     block_user: (form) => {
-        console.log("Form is: ", form);
         const username = form.action.split("/")[4];
-
-        console.log("Form action is: ", form.action);
 
         const userCard = document.querySelector(
             `article[data-username="${username}"]`
@@ -202,7 +232,7 @@ export function overrideConfirmationForm(
                     callbackTypesAction[callbackType](form);
 
                     confirmationForm.classList.remove("hidden");
-                    restoreColorConfiguration()
+                    restoreColorConfiguration();
                 } else {
                     await thenCallback(res);
                 }
