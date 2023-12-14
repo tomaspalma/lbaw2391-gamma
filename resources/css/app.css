@@ -110,3 +110,11 @@ input {
 .copy-link-icon {
     @apply fa-solid fa-link;
 }
+
+.form-card {
+    @apply border border-gray-200 shadow-lg rounded-md p-8 justify-center;
+}
+
+.form-button {
+    @apply border border-transparent bg-black hover:border-black text-white hover:text-black hover:bg-white transition-colors;
+}
