@@ -23,7 +23,7 @@
             <form id="mobile-search-form" class="relative md:hidden">
                 <input name="search" type="text" id="mobile-search-trigger" class="mt-4 md:hidden block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
             </form>
-            <form id="search-form" class="relative hidden md:block w-full">
+            <form id="search-form" class="relative hidden md:block w-full mb-0">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <span class="sr-only">Search icon</span>
