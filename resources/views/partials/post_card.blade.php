@@ -24,7 +24,12 @@
         </h1>
     </header>
     <p class="my-4">
-        {{ $post->content }}
+        {{ strlen($post->content) <= 400 ? $post->content : substr($post->content, 0, 400) .'...' }}
+        @if(strlen($post->content) > 400)
+        <a class="text-blue-700" href="{{ route('post.show', ['id' => $post->id]) }}">
+            View more
+        </a>
+        @endif
     </p>
     @if($preview === false)
     @php
