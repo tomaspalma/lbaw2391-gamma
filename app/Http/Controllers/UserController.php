@@ -73,7 +73,9 @@ class UserController extends Controller
 
         $this->authorize('can_appeal_appban', $user);
 
-        DB::transaction(function () use ($user, $request) {
+        $appeal = null;
+
+        DB::transaction(function () use ($user, $request, &$appeal) {
             $appban = AppBan::where('banned_user_id', $user->id)->get()[0];
 
             $appeal = AppBanAppeal::create([
@@ -82,11 +84,9 @@ class UserController extends Controller
 
             $appban->appeal = $appeal->id;
             $appban->save();
-
-
-            event(new Appeal($user->username, $user, $appeal));
         });
 
+        event(new Appeal($user->username, $user, $appeal));
 
         return redirect('/');
     }
