@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js', 'resources/js/comment/add.js' , 'resources/js/comment/delete.js', 'resources/js/post/scroll.js', 'resources/js/post/copy_link.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js', 'resources/js/comment/add.js' , 'resources/js/comment/delete.js', 'resources/js/post/scroll.js', 'resources/js/post/copy_link.js', 'resources/js/post/poll.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Post {{$post->title}}</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
@@ -34,6 +34,29 @@
         <div class="mt-6 prose max-w-full">
             {{ $post->content }}
         </div>
+
+        <hr>
+
+        @if($post->poll !== null)
+        <article class="mt-4" id="poll">
+            <h2 class="text-xl font-bold">{{ $poll->title }}</h2>
+            <div class="flex flex-col">
+                @foreach ($pollOptions as $option)
+                <form data-option="{{$option->name}}" data-poll-id="{{$poll->id}}" class="poll-option flex flex-col p-2 border my-2 border-black rounded-md" method="POST" action="{{route('poll.addVote', ['id' => $poll->id])}}">
+                    <button type="submit" name="{{$option}}" class="flex flex-row justify-between">
+                        <span>
+                            {{ $option->name }}
+                            @auth
+                            <i class="text-green-500 fa-solid fa-check"></i>
+                            @endauth
+                        </span>
+                        <span class="option-vote-counter">{{ count($option->votes) }}</span>
+                    </button>
+                </form>
+                @endforeach
+            </div>
+        </article>
+        @endif
 
         <div class="post-action-bar mt-4 flex justify-between items-center">
             @php

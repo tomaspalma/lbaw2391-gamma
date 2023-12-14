@@ -116,6 +116,20 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->paginate(15);
     }
 
+    public function vote_on_post_poll(Post $post)
+    {
+        return DB::table("post")
+            ->join('polls', 'polls.post_id', '=', 'post.id')
+            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
+            ->join('poll_option_votes', 'poll_option_votes.poll_option_id', '=', 'poll_options.id')
+            ->join('users', 'users.id', '=', 'poll_option_votes' . user_id)
+            ->where('users.id', $this->id)->get();
+    }
+
+    public function has_votes_on(PollOption $poll_option)
+    {
+    }
+
     public function comment_reaction(Comment $comment)
     {
         $reactions = Reaction::where('comment_id', $comment->id)->where('author', $this->id)->get();
@@ -258,6 +272,4 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     {
         return $this->received_pending_friend_requests()->where('user_id', $user->id)->exists();
     }
-
-
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PostResource;
 use App\Enums\ReactionType;
 use App\Events\Reaction as EventsReaction;
+use App\Models\Poll;
+use App\Models\PollOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -82,7 +84,6 @@ class PostController extends Controller
 
     public function create(Request $request)
     {
-
         $this->authorize('create', Post::class);
 
         $request->validate([
@@ -90,7 +91,9 @@ class PostController extends Controller
             'content' => 'required|string',
             'attachment' => 'nullable|file',
             'group' => 'nullable|integer',
-            'is_private' => 'required|boolean'
+            'is_private' => 'required|boolean',
+            'poll_title' => 'nullable|string',
+            // 'poll_options' => 'nullable|array'
         ]);
 
         if (!$request->is_private) {
@@ -110,12 +113,25 @@ class PostController extends Controller
             'is_private' => $request->is_private
         ]);
 
+        if (isset($request->poll_title)) {
+            $poll = Poll::create([
+                'title' => $request->poll_title,
+                'post_id' => $post->id
+            ]);
+
+            foreach ($request->poll_options as $option) {
+                PollOption::create([
+                    'name' => $option,
+                    'poll_id' => $poll->id
+                ]);
+            }
+        }
+
         return redirect('/post/' . $post->id);
     }
 
     public function showPost(Request $request, string $id)
     {
-
         // validate id
         if (!is_numeric($id)) {
             // not valid. return to feed
@@ -138,9 +154,16 @@ class PostController extends Controller
             return response()->json($commentCards);
         } else {
 
+            $poll = Poll::where('post_id', $post->id)->get();
+            if (count($poll) > 0) {
+                $pollOptions = PollOption::with("votes")->where('poll_id', $poll[0]->id)->get();
+            }
+
             return view('pages.post', [
                 'post' => $post,
-                'comments' => $comments
+                'comments' => $comments,
+                'poll' => count($poll) == 0 ? null : $poll[0],
+                'pollOptions' => isset($pollOptions) ? $pollOptions : null
             ]);
         }
     }
