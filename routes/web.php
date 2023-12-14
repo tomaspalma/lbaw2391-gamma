@@ -120,6 +120,10 @@ Route::controller(GroupController::class)->group(function () {
     Route::post('/group/{id}/enter', 'addToGroup')->name('groups.enter');
     Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
     Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
+    Route::middleware('auth')->group(function () {
+        Route::get('/group/{id}/edit', 'edit')->name('group.edit');
+        Route::put('/group/{id}', 'update')->name('group.update');
+    });
 });
 
 Route::controller(SearchController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {

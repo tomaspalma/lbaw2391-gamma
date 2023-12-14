@@ -201,4 +201,56 @@ class GroupController extends Controller
             'new_text' => 'Enter this group', 'new_method' => 'post'
         ]);
     }
+
+    public function edit(string $id)
+    {
+        $group = Group::findOrFail($id);
+
+        $this->authorize('edit', $group);
+
+        return view('pages.edit_group', [
+            'group' => $group
+        ]);
+    }
+
+    public function update(Request $request, string $id)
+    {
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|required|string',
+            'privacy' => 'required|in:public,private',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $group = Group::findOrFail($id);
+
+        $this->authorize('edit', $group);
+
+        $sameName = Group::where('name', $request->input('name'))->get();
+
+        if (count($sameName) > 0) {
+            if ($sameName[0]->id != $id) {
+                return redirect()->back()->withErrors(['name' => 'This name is already taken.']);
+            }
+        }
+
+        $group->name = $request->input('name');
+        $group->description = $request->input('description');
+        $group->is_private = $request->input('privacy') === 'private';
+
+        if ($request->hasFile('image')) {
+            FileController::upload($request->file('image'), 'group', $group->id);
+        }
+
+        if ($request->hasFile('banner')) {
+            FileController::upload($request->file('banner'), 'group_banner', $group->id);
+        }
+
+        $group->save();
+
+        return redirect()->route('groupPosts', $group->id)->with('success', 'Group updated successfully.');
+
+    }
 }

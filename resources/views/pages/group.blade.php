@@ -19,7 +19,7 @@
             <img src="{{ $group->getGroupImage() }}" alt="Group Image" class="w-20 h-20 md:w-32 md:h-32 ml-4 object-cover rounded-full -mt-14 border-2 border-white max-w-full">
             <h2 class="text-2xl font-bold ml-4">{{ $group->name }}</h2>
         </div>
-        <div class="m-4">
+        <div class="m-4 flex flex-row">
             @auth
                 @can('alreadyIn', $group)
                     <form id="groupForm" action="{{ route('groups.leave', $group) }}" method="post" data-method="delete">
@@ -46,6 +46,13 @@
                             </button>
                         </form>
                     @endcan
+                @endcan
+                @can('edit', $group)
+                    <a href="{{ route('group.edit', $group) }}">
+                        <button type="submit" class="bg-gray-800 hover:bg-black text-white font-bold py-2 px-4 ml-4 rounded">
+                            Edit
+                        </button>
+                    </a>
                 @endcan
             @endauth
         </div>
