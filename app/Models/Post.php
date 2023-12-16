@@ -94,8 +94,8 @@ class Post extends Model
         }
     }
 
-    public function poll(): HasOne
+    public function poll(): BelongsTo
     {
-        return $this->hasOne(Poll::class);
+        return $this->belongsTo(Poll::class);
     }
 }

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Poll extends Model
 {
@@ -14,11 +16,10 @@ class Poll extends Model
 
     protected $fillable = [
         'title',
-        'post_id'
     ];
 
-    public function post(): BelongsTo
+    public function post(): HasMany
     {
-        return $this->belongsTo(Post::class);
+        return $this->hasMany(Post::class, 'poll_id');
     }
 }

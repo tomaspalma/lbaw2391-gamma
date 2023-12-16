@@ -72,7 +72,6 @@ class PostController extends Controller
 
     public function showCreateForm(): View
     {
-
         $this->authorize('create', Post::class);
 
         $groups = Auth::user()->groups;
@@ -92,8 +91,7 @@ class PostController extends Controller
             'attachment' => 'nullable|file',
             'group' => 'nullable|integer',
             'is_private' => 'required|boolean',
-            'poll_title' => 'nullable|string',
-            // 'poll_options' => 'nullable|array'
+            'poll_options' => 'nullable|array'
         ]);
 
         if (!$request->is_private) {
@@ -113,11 +111,11 @@ class PostController extends Controller
             'is_private' => $request->is_private
         ]);
 
-        if (isset($request->poll_title)) {
-            $poll = Poll::create([
-                'title' => $request->poll_title,
-                'post_id' => $post->id
-            ]);
+        if (isset($request->poll_options) && $request->poll_options[0] !== null) {
+            $poll = Poll::create([]);
+
+            $post->poll_id = $poll->id;
+            $post->save();
 
             foreach ($request->poll_options as $option) {
                 PollOption::create([
@@ -153,16 +151,15 @@ class PostController extends Controller
 
             return response()->json($commentCards);
         } else {
-
-            $poll = Poll::where('post_id', $post->id)->get();
-            if (count($poll) > 0) {
-                $pollOptions = PollOption::with("votes")->where('poll_id', $poll[0]->id)->get();
+            $poll = $post->poll;
+            if ($poll !== null) {
+                $pollOptions = PollOption::with("votes")->where('poll_id', $poll->id)->get();
             }
 
             return view('pages.post', [
                 'post' => $post,
                 'comments' => $comments,
-                'poll' => count($poll) == 0 ? null : $poll[0],
+                'poll' => $poll === null ? null : $poll,
                 'pollOptions' => isset($pollOptions) ? $pollOptions : null
             ]);
         }

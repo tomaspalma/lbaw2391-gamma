@@ -65,6 +65,10 @@ CREATE TABLE groups (
     description TEXT NOT NULL
 );
 
+CREATE TABLE polls (
+    id SERIAL PRIMARY KEY
+);
+
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     author INTEGER REFERENCES users(id),
@@ -73,13 +77,8 @@ CREATE TABLE post (
     attachment TEXT,
     group_id INTEGER REFERENCES groups(id),
     is_private BOOLEAN NOT NULL,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
-);
-
-CREATE TABLE polls (
-    id SERIAL PRIMARY KEY,
-    title TEXT NOT NULL,
-    post_id INTEGER REFERENCES post(id)
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now()),
+    poll_id INTEGER REFERENCES polls(id)
 );
 
 CREATE TABLE poll_options (
@@ -91,7 +90,8 @@ CREATE TABLE poll_options (
 CREATE TABLE poll_option_votes (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
-    poll_option_id INTEGER REFERENCES poll_options(id)
+    poll_option_id INTEGER REFERENCES poll_options(id),
+    poll_id INTEGER REFERENCES polls(id)
 );
 
 CREATE TABLE friends (

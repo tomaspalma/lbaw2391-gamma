@@ -55,10 +55,14 @@
 
                 <article id="poll-creation" class="mt-1 p-2 rounded-md w-full resize-none hidden">
                     <h1 class="text-center text-xl font-bold">Create poll</h1>
-                    <label for="poll-title">Title</label>
-                    <input placeholder="Poll title" type="text" name="poll_title" id="poll-title" class="mt-1 p-2 border border-gray-300 rounded-md w-full" />
                     <h2>Options</h2>
                     <div id="options">
+                        <div class="flex flex-row space-x-1">
+                            <input placeholder="Option" type="text" name="poll_options[]" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
+                            <button class="remove-option-btn mt-1 p-2 border border-gray-300 hover:bg-black hover:text-white transition-colors rounded-md">
+                                -
+                            </button>
+                        </div>
                     </div>
                     <button id="add-poll-option-btn" class="mt-1 p-2 border border-gray-300 hover:bg-black hover:text-white transition-colors rounded-md w-full resize-none">
                         Add option +
