@@ -55,10 +55,46 @@
         </div>
 
         <div class="mb-4">
+            <label for="description" class="text-sm text-gray-600">Description</label>
+            <textarea name="description" id="description"
+                class="mt-1 py-2 px-3 border rounded-md w-full"></textarea>
+        </div>
+
+        <div class="mb-4">
             <label for="academic_status" class="block text-sm font-medium text-gray-600">Academic Status</label>
-            <select name="academic_status" class="mt-1 p-2 w-full border focus:ring-2">
-                <option value="student" selected>Student</option>
-                <option value="teacher">Teacher</option>
+            <select name="academic_status" id="academic_status" class="mt-1 p-2 w-full border focus:ring-2">
+                <option value="Undergraduate">Undergraduate
+                </option>
+                <option value="Graduate">Graduate
+                </option>
+                <option value="Professor">Professor
+                </option> 
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="university" class="block text-sm font-medium text-gray-600">University</label>
+            <select name="university" id="university" class="mt-1 p-2 w-full border focus:ring-2">
+                <option value="Universidade do Porto">Universidade do Porto
+                </option>
+                <option value="Universidade de Lisboa">Universidade de Lisboa
+                </option>
+                <option value="Universidade de Coimbra">Universidade de Coimbra
+                </option>
+                <option value="Universidade de Aveiro">Universidade de Aveiro
+                </option>
+                <option value="Universidade do Minho">Universidade do Minho
+                </option>
+                <option value="Universidade de Évora">Universidade de Évora
+                </option>
+                <option value="Universidade de Trás-os-Montes e Alto Douro">Universidade de Trás-os-Montes e Alto Douro
+                </option>
+                <option value="Universidade da Beira Interior">Universidade da Beira Interior
+                </option>
+                <option value="Universidade dos Açores">Universidade dos Açores
+                </option>
+                <option value="Universidade da Madeira">Universidade da Madeira
+                </option>
             </select>
         </div>
 

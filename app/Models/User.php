@@ -45,6 +45,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'password',
         'image',
         'academic_status',
+        'university',
+        'description',
         'display_name',
         'is_private',
         'role'
