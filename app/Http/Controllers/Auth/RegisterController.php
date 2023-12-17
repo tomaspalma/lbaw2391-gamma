@@ -55,7 +55,7 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'academic_status' => $request->academic_status,
-            'university' => $request->university,
+            'university' => $request->university == 'None' ? null : $request->university,
             'description' => $request->description,
             'display_name' => $request->display_name,
             'is_private' => ($request->is_private == 'yes'),

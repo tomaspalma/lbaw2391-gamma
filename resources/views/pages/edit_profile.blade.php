@@ -55,25 +55,27 @@
                     <label for="university" class="text-sm text-gray-600">University</label>
                     <select name="university" id="university"
                         class="mt-1 py-2 px-3 border rounded-md w-full">
-                        <option value="Universidade do Porto" {{ $user->university === 'Universidade do Porto' ? 'selected' : '' }}>Universidade do Porto
+                        <option value="None" {{ $user->university === null ? 'selected' : '' }}>None
                         </option>
-                        <option value="Universidade de Lisboa" {{ $user->university === 'Universidade de Lisboa' ? 'selected' : '' }}>Universidade de Lisboa
+                        <option value="University of Porto" {{ $user->university === 'University of Porto' ? 'selected' : '' }}>University of Porto
                         </option>
-                        <option value="Universidade de Coimbra" {{ $user->university === 'Universidade de Coimbra' ? 'selected' : '' }}>Universidade de Coimbra
+                        <option value="University of Lisboa" {{ $user->university === 'University of Lisboa' ? 'selected' : '' }}>University of Lisboa
                         </option>
-                        <option value="Universidade de Aveiro" {{ $user->university === 'Universidade de Aveiro' ? 'selected' : '' }}>Universidade de Aveiro
+                        <option value="University of Coimbra" {{ $user->university === 'University of Coimbra' ? 'selected' : '' }}>University of Coimbra
                         </option>
-                        <option value="Universidade do Minho" {{ $user->university === 'Universidade do Minho' ? 'selected' : '' }}>Universidade do Minho
+                        <option value="University of Aveiro" {{ $user->university === 'University of Aveiro' ? 'selected' : '' }}>University of Aveiro
                         </option>
-                        <option value="Universidade de Évora" {{ $user->university === 'Universidade de Évora' ? 'selected' : '' }}>Universidade de Évora
+                        <option value="University of Minho" {{ $user->university === 'University of Minho' ? 'selected' : '' }}>University of Minho
                         </option>
-                        <option value="Universidade de Trás-os-Montes e Alto Douro" {{ $user->university === 'Universidade de Trás-os-Montes e Alto Douro' ? 'selected' : '' }}>Universidade de Trás-os-Montes e Alto Douro
+                        <option value="University of Évora" {{ $user->university === 'University of Évora' ? 'selected' : '' }}>University of Évora
                         </option>
-                        <option value="Universidade da Beira Interior" {{ $user->university === 'Universidade da Beira Interior' ? 'selected' : '' }}>Universidade da Beira Interior
+                        <option value="University of Trás-os-Montes and Alto Douro" {{ $user->university === 'University of Trás-os-Montes and Alto Douro' ? 'selected' : '' }}>University of Trás-os-Montes and Alto Douro
                         </option>
-                        <option value="Universidade dos Açores" {{ $user->university === 'Universidade dos Açores' ? 'selected' : '' }}>Universidade dos Açores
+                        <option value="University of Beira Interior" {{ $user->university === 'University of Beira Interior' ? 'selected' : '' }}>University of Beira Interior
                         </option>
-                        <option value="Universidade da Madeira" {{ $user->university === 'Universidade da Madeira' ? 'selected' : '' }}>Universidade da Madeira
+                        <option value="University of Açores" {{ $user->university === 'University ofs Açores' ? 'selected' : '' }}>University ofs Açores
+                        </option>
+                        <option value="University of Madeira" {{ $user->university === 'University of Madeira' ? 'selected' : '' }}>University of Madeira
                         </option>
                     </select>
                 </div>

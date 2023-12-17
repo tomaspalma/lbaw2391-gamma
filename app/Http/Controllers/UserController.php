@@ -154,7 +154,7 @@ class UserController extends Controller
         $user->display_name = $request->input('display_name');
         $user->username = $request->input('username');
         $user->academic_status = $request->input('academic_status');
-        $user->university = $request->input('university');
+        $user->university = $request->input('university') === 'None' ? null : $request->input('university');
         $user->description = $request->input('description');
         $user->is_private = $request->input('privacy') === 'private';
 

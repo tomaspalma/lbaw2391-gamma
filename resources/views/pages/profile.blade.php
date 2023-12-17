@@ -46,10 +46,12 @@
                     <label class="text-sm text-gray-600">Academic Status</label>
                     <div class="font-semibold text-gray-800">{{$user->academic_status}}</div>
                 </div>
+                @if($user->university)
                 <div class="mb-4">
                     <label class="text-sm text-gray-600">University</label>
                     <div class="font-semibold text-gray-800">{{$user->university}}</div>
                 </div>
+                @endif
                 @endcan
             </div>
         </div>
