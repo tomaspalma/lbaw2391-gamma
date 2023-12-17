@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 "resources/css/app.css",
                 "resources/js/group/filter.js",
+                "resources/js/post/poll.js",
                 "resources/js/app.js",
                 "resources/js/components/snackbar.js",
                 "resources/js/search/search_input_preview.js",

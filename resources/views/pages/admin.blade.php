@@ -28,7 +28,8 @@
             @include('partials.user_card', [ 'user'=> $users[$i], 'adminView' => true])
             @endif
             @endfor
-    </div>
-    @include('partials.confirm_modal')
-
-    @include('partials.footer')
+    </div>    
+</main>
+@include('partials.confirm_modal')
+@include('partials.snackbar')
+@include('partials.footer')
