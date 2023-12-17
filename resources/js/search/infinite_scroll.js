@@ -1,5 +1,10 @@
+let page = 2;
+
+export function resetPageCounter() {
+    page = 2;
+}
+
 export async function addPaginationListener(url, content, separator, normalizationCallback) {
-    let page = 2;
     let enough = false;
 
     let scrolls = 0;

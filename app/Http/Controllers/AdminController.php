@@ -13,22 +13,42 @@ class AdminController extends Controller
         $appeals = AppBanAppeal::paginate(15);
         
         $appeal_number = count(AppBanAppeal::get());
-            
-        return view('pages.admin_user_appeals', [
-            'appeals' => $appeals,
-            'appeal_number' => $appeal_number
-        ]);
+
+        if($request->is("api*")) {
+            $appealCards = [];
+
+            foreach($appeals as $appeal) {
+                $appealCards[] = view('partials.user_card', [ 'user'=> $appeal->appban->user, 'adminView' => true, 'appealView' => true])->render();
+            }
+
+            return response()->json($appealCards);
+        } else {
+            return view('pages.admin_user_appeals', [
+                'appeals' => $appeals,
+                'appeal_number' => $appeal_number
+            ]);
+        }
     }
 
     public function show_admin_user(Request $request)
     {
-        $users = User::all();
+        $users = User::paginate(15);
         $appeal_number = count(AppBanAppeal::get());
+        
+        if($request->is("api*"))  {
+            $userCards = [];
 
-        return view('pages.admin', [
-            'users' => $users,
-            'appeal_number' => $appeal_number
-        ]);
+            foreach ($users as $user) {
+                $userCards[] = view('partials.user_card', [ 'user'=> $user, 'adminView' => true])->render();
+            }
+
+            return response()->json($userCards);
+        } else {
+            return view('pages.admin', [
+                'users' => $users,
+                'appeal_number' => $appeal_number
+            ]);
+        }
     }
 
     /**

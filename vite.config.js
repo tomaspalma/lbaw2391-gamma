@@ -47,6 +47,7 @@ export default defineConfig({
                 "resources/js/comment/scroll.js",
                 "resources/js/profile/scroll.js",
                 "resources/js/search/main_search/scroll.js",
+                "resources/js/admin/user/scroll.js",
                 "resources/js/post/copy_link.js"
             ],
             refresh: true,
