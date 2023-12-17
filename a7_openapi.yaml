@@ -24,6 +24,7 @@ tags:
   - name: 'M08: Groups'
   - name: 'M09: Notifications'
   - name: 'M10: Comments'
+  - name: 'M11: Polls'
 
 paths:
 
@@ -532,6 +533,14 @@ paths:
       description: 'Provide edit profile form. Access: USR'
       tags:
         - 'M05: Users'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
+
       responses:
         '200':
           description: 'Get the view of the edit post form'
@@ -551,6 +560,14 @@ paths:
       description: 'Processes the edit profile form submission. Access: USR'
       tags:
         - 'M05: Users'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
+
       requestBody:
         required: true
         content:
@@ -683,6 +700,14 @@ paths:
       description: 'Get the friends of the user and show them. Access: USR (can only see friends of friends).'
       tags: 
         - 'M05: Users'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
+
       responses:
         '200':
           description: 'OK. Show user friends'
@@ -699,6 +724,14 @@ paths:
       description: 'Accept friend request of user with username. Access: USR'
       tags:
         - 'M05: Users'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
+
       responses:
         '200':
           description: 'Ok. Friend request accepted'
@@ -713,6 +746,14 @@ paths:
       description: 'Remove the friendship of user with username. Access: USR (can only remove if friends)'
       tags:
         - 'M05: Users'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
+
       responses:
         '200':
           description: 'Ok. Friendship removed'
@@ -729,6 +770,13 @@ paths:
       operationId: R510
       summary: 'R511: See pending friend requests'
       description: 'Get the pending friend requests and show them. Access: USR'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
       tags:
         - 'M05: Users'
       responses:
@@ -857,23 +905,33 @@ paths:
                 properties:
                   author:
                     type: string
+                    required: true
                   title:
                     type: string
+                    required: true
                   content:
                     type: string
+                    required: true
                   date:
                     type: string
+                    required: true
                   attachment:
                     type: string
+                    required: true
                   group:
                     type: string
+                    required: true
+                  poll_options:
+                    type: array
+                    required: false
               example:
-                author: killme
+                author: Hannah Skylar
                 title: MongoDB vs ScyllaDB
                 content: Can you provide with an explanation as to which one of those is better?
                 date: 2023-10-29
                 attachment: null
                 group: null
+                poll_options: [MongoDb, SchyllaDB]
         '403':
           description: 'Forbidden. User doesnt own this post.'
 
@@ -1185,8 +1243,11 @@ paths:
       responses:
         '200':
           description: 'HTML with the notification cards'
+<<<<<<< HEAD
           
   /users/{username}/appban/appeal:
+=======
+>>>>>>> main
 
   /comment/{id}/reaction:
     get: 
@@ -1279,7 +1340,10 @@ paths:
           description: 'Removes reaction from comment' 
         '403':
           description: 'Forbidden if the deleting user does not have this reaction' 
-  
+
+
+  /users/{username}/appban/appeal:
+
     get:
       operationId: R507
       summary: 'R507: Show form to appeal app ban'
@@ -1299,7 +1363,7 @@ paths:
             type: string
           required: true
 
-  post:
+    post:
       operationId: R508
       summary: 'R508: Appeal app ban action'
       description: 'Submits the appeal from the user about the app ban they got. Access: USR'
@@ -1522,3 +1586,43 @@ paths:
                  value: '/group/{id}/edit'
         '403':
           description: 'Forbidden'
+
+  /poll/{id}:
+
+    post:
+      operationId: R1101
+      summary: 'R1101: Add vote'
+      description: 'Adds a vote to the poll. Access: USR'
+      tags:
+        - 'M11: Polls'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the poll
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'OK. Vote added.'
+        '403':
+          description: 'Forbidden. User is voting on an option they already voted on.'
+
+  delete:
+      operationId: R1102
+      summary: 'R1102: Remove vote'
+      description: 'Removes a vote from the poll. Access: USR'
+      tags:
+        - 'M11: Polls'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the poll
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'OK. Vote removed.'
+        '403':
+          description: 'Forbidden. User is trying to remove a vote from an option they did not vote on'

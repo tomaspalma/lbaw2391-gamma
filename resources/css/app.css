@@ -118,3 +118,11 @@ input {
 .form-button {
     @apply border border-transparent bg-black hover:border-black text-white hover:text-black hover:bg-white transition-colors;
 }
+
+.unselected-poll-option {
+    @apply border border-black hover:bg-black hover:text-white transition-colors;
+}
+
+.selected-poll-option {
+    @apply bg-black text-white hover:bg-white hover:text-black;
+}

@@ -65,8 +65,9 @@ const callbackTypesAction = {
             content.innerHTML = `<p id="no-appeals-found-text" class="text-center">No appeals found.</p>`
         }
 
-
         userCard.remove();
+
+        addSnackbar(`You removed the appeal from ${username}!`, 2000);
     },
     delete_user: (confirmationForm) => {
         const username = confirmationForm.action.split("/")[4];
@@ -75,6 +76,8 @@ const callbackTypesAction = {
         );
 
         userCard.remove();
+
+        addSnackbar(`You deleted ${username}!`, 2000);
     },
     unblock_user: (confirmationForm) => {
         const username = confirmationForm.action.split("/")[4];
@@ -89,6 +92,8 @@ const callbackTypesAction = {
 
         unblockButton.setAttribute("hidden", true);
         blockButton.removeAttribute("hidden");
+
+        addSnackbar(`You unblocked ${username}!`, 2000);
     },
     delete_post: (confirmationForm) => {
         window.location.href = window.location.origin + "/feed";
@@ -109,6 +114,8 @@ const callbackTypesAction = {
         blockButton.setAttribute("hidden", true);
 
         form.remove();
+
+        addSnackbar(`You blocked ${username}!`, 2000);
     },
     delete_self: (confirmationForm) => {
         fetch("/logout", {

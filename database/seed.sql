@@ -20,6 +20,9 @@ DROP TABLE IF exists group_ban CASCADE;
 DROP TABLE IF exists app_ban CASCADE;
 DROP TABLE IF exists friends CASCADE;
 DROP TABLE IF exists appeal CASCADE;
+DROP TABLE IF exists polls CASCADE;
+DROP TABLE IF exists poll_options CASCADE;
+DROP TABLE IF exists poll_option_votes CASCADE;
 
 -----------------------------------------
 -- Types
@@ -52,6 +55,7 @@ CREATE TABLE password_reset_tokens (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now() CHECK (created_at <= now())
 );
 
+
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL CONSTRAINT unique_group_name UNIQUE,
@@ -59,6 +63,10 @@ CREATE TABLE groups (
     banner TEXT,
     is_private BOOLEAN DEFAULT true NOT NULL,
     description TEXT NOT NULL
+);
+
+CREATE TABLE polls (
+    id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE post (
@@ -69,7 +77,21 @@ CREATE TABLE post (
     attachment TEXT,
     group_id INTEGER REFERENCES groups(id),
     is_private BOOLEAN NOT NULL,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now()),
+    poll_id INTEGER REFERENCES polls(id)
+);
+
+CREATE TABLE poll_options (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    poll_id INTEGER REFERENCES polls(id)
+);
+
+CREATE TABLE poll_option_votes (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    poll_option_id INTEGER REFERENCES poll_options(id),
+    poll_id INTEGER REFERENCES polls(id)
 );
 
 CREATE TABLE friends (
@@ -566,7 +588,17 @@ CREATE TRIGGER add_friend
         -- (16, 'newuser12', 'newuser12@example.com', '$2y$10$nJQYy6oaaPfvqBXqCm9BOuWTjWGpHl.PTIvAdKOHWgsOefh21tDku', 'Graduate', 'New User 12', true, 2, 'image12.png', '2023-11-23 14:18:29+00'),
         -- (17, 'newuser13', 'newuser13@example.com', '$2y$10$y4YYy6JfVX7osIgqkm9ydOySb54keCdkSPJ5Iq.9jkmH3ROVt8K1q', 'Undergraduate', 'New User 13', false, 2, null, '2023-11-23 14:18:29+00'),
         -- (18, 'newuser14', 'newuser14@example.com', '$2y$10$Vd11i4f0b3ti7Ct4ihJSE.4j2lelJ43Rm9W10eTRoTPk9zqAGrMZW', 'Professor', 'New User 14', true, 2, 'image14.png', '2023-11-23 14:18:29+00'),
-        -- (19, 'newuser15', 'newuser15@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00');
+        -- (19, 'newuser15', 'newuser15@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00'),
+        -- (20, 'newuser16', 'newuser16@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00'),
+        -- (21, 'newuser17', 'newuser17@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00'),
+        -- (22, 'newuser18', 'newuser18@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00'),
+        -- (23, 'newuser19', 'newuser19@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00'),
+        -- (24, 'newuser20', 'newuser20@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00'),
+        -- (25, 'newuser21', 'newuser21@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00'),
+        -- (26, 'newuser22', 'newuser22@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00'),
+        -- (27, 'newuser23', 'newuser23@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00'),
+        -- (28, 'newuser24', 'newuser24@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00'),
+        -- (29, 'newuser25', 'newuser25@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Administrator', 'New User 15', false, 1, null, '2023-11-23 14:18:29+00');
 
     INSERT INTO friend_request(user_id, friend_id, is_accepted, date) VALUES
         (2, 3, null, '1940-01-28 12:00:00'),
@@ -598,22 +630,22 @@ CREATE TRIGGER add_friend
         (1, 2),
         -- (1, 1),
         (2, 1),
-        (2, 2),
-        (5, 1),
-        (6, 1),
-        (7, 1),
-        (8, 1),
-        (9, 1),
-        (10, 1),
-        (11, 1),
-        (12, 1),
-        (13, 1),
-        (14, 1),
-        (15, 1),
-        (16, 1),
-        (17, 1),
-        (18, 1),
-        (19, 1);
+        (2, 2);
+        -- (5, 1),
+        -- (6, 1),
+        -- (7, 1),
+        -- (8, 1),
+        -- (9, 1),
+        -- (10, 1),
+        -- (11, 1),
+        -- (12, 1),
+        -- (13, 1),
+        -- (14, 1),
+        -- (15, 1),
+        -- (16, 1),
+        -- (17, 1),
+        -- (18, 1),
+        -- (19, 1);
 
     INSERT INTO group_owner (group_id, user_id) VALUES
         (1, 1),

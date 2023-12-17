@@ -76,6 +76,7 @@ export async function searchPosts(query, searchPreviewContent, preview) {
             if (posts.length == 0) {
                 searchPreviewContent.innerHTML = getNoneFoundText("posts");
             } else {
+                searchPreviewContent.innerHTML = "";
                 for (const postCards of posts) {
                     searchPreviewContent.innerHTML += postCards;
                 }
@@ -124,7 +125,6 @@ function getNoneFoundText(entity) {
 }
 
 export async function getSearchResults(type, query, searchPreviewContent, preview) {
-    console.log("Before type is: ", type);
     type = type.split("-").slice(2).join("-");
 
     console.log(type);

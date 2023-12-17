@@ -13,3 +13,13 @@ export function getUsername() {
 
     return username;
 }
+
+export function addCounter(counter, sum) {
+    const currentValue = parseInt(counter.textContent, 10);
+    counter.textContent = (currentValue + sum) > 0 ? currentValue + sum : 0;
+}
+
+export function subtractCounter(counter, sub, zeroLimit) {
+    const currentValue = parseInt(counter.textContent, 10);
+    counter.textContent = (currentValue - sub) > 0 ? currentValue - sub : 0;
+}

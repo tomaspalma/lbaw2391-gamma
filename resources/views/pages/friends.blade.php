@@ -50,3 +50,5 @@
     <p id="noRequestsMessage" class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700 {{ count($friendRequests) ? 'hidden' : '' }} ">No friend requests found.</p>
     @endif
 </main>
+
+@include('partials.snackbar')

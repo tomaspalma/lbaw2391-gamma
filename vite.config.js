@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 "resources/css/app.css",
                 "resources/js/group/filter.js",
+                "resources/js/post/poll.js",
                 "resources/js/app.js",
                 "resources/js/components/snackbar.js",
                 "resources/js/search/search_input_preview.js",
@@ -38,7 +39,6 @@ export default defineConfig({
                 "resources/js/profile/friends.js",
                 "resources/js/friends/requests.js",
                 "resources/js/friends/scroll.js",
-                "resources/js/group/enter_group.js",
                 "resources/js/group/promote.js",
                 "resources/js/admin/user/show_appeal_reason.js",
                 "resources/js/components/dropdown.js",
