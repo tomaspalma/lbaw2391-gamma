@@ -24,6 +24,7 @@ tags:
   - name: 'M08: Groups'
   - name: 'M09: Notifications'
   - name: 'M10: Comments'
+  - name: 'M11: Polls'
 
 paths:
 
@@ -857,23 +858,33 @@ paths:
                 properties:
                   author:
                     type: string
+                    required: true
                   title:
                     type: string
+                    required: true
                   content:
                     type: string
+                    required: true
                   date:
                     type: string
+                    required: true
                   attachment:
                     type: string
+                    required: true
                   group:
                     type: string
+                    required: true
+                  poll_options:
+                    type: array
+                    required: false
               example:
-                author: killme
+                author: Hannah Skylar
                 title: MongoDB vs ScyllaDB
                 content: Can you provide with an explanation as to which one of those is better?
                 date: 2023-10-29
                 attachment: null
                 group: null
+                poll_options: [MongoDb, SchyllaDB]
         '403':
           description: 'Forbidden. User doesnt own this post.'
 
@@ -1492,3 +1503,45 @@ paths:
                  value: '/group/{id}/edit'
         '403':
           description: 'Forbidden'
+
+  /poll/{id}:
+
+    post:
+      operationId: R1101
+      summary: 'R1101: Add vote'
+      description: 'Adds a vote to the poll. Access: USR'
+      tags:
+        - 'M11: Polls'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the poll
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'OK. Vote added.'
+        '403':
+          description: 'Forbidden. User is voting on an option they already voted on.'
+
+  delete:
+      operationId: R1102
+      summary: 'R1102: Remove vote'
+      description: 'Removes a vote from the poll. Access: USR'
+      tags:
+        - 'M11: Polls'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the poll
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'OK. Vote removed.'
+        '403':
+          description: 'Forbidden. User is trying to remove a vote from an option they did not vote on'
+ 
+
