@@ -18,7 +18,7 @@
         <div class="w-full md:w-1/3 self-center text-center md:text-left">
             <a href="/" class="text-2xl font-bold hover:underline">Gamma</a>
         </div>
-        <div class="flex flex-col items-center md:w-1/3 w-full self-start">
+        <div class="flex flex-col items-center md:w-1/3 w-full justify-center">
             @if(Auth::user() === null || !Auth::user()->is_app_banned())
             <form id="mobile-search-form" class="relative md:hidden">
                 <input name="search" type="text" id="mobile-search-trigger" class="mt-4 md:hidden block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
