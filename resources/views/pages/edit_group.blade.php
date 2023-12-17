@@ -3,7 +3,7 @@
 <body>
     @include('partials.navbar')
 
-    <div class="container mx-auto mt-8 max-w-screen-md ounded-lg shadow-lg p-6 border">
+    <div class="container mx-auto mt-8 max-w-screen-md ounded-lg shadow-lg p-6 border md:mb-12">
         <div class="flex justify-center items-center">
             <h2 class="text-2xl font-bold mb-4 justi">Edit Group</h1>
         </div>
@@ -42,5 +42,6 @@
             </a>
         </form>
     </div>
+    @include('partials.footer')
 </body>
 

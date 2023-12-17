@@ -147,6 +147,20 @@ Route::controller(PasswordController::class)->middleware(EnsureUserIsNotAppBanne
 
 Route::post('/pusher/auth', [PusherController::class, 'authenticate'])->middleware('auth');
 
+// Static pages
+Route::get('/faq', function () {
+    return view('pages.faq');
+})->name('faq');
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
+Route::get('/contacts', function () {
+    return view('pages.contacts');
+})->name('contacts');
+Route::get('/features', function () {
+    return view('pages.features');
+})->name('features');
+
 Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::controller(SearchController::class)->group(function () {
         Route::get('/search/groups/{query?}', 'fullTextGroups');

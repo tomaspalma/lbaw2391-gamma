@@ -35,3 +35,5 @@
     </form>
 </div>
 @endif
+
+@include('partials.footer')

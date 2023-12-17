@@ -83,3 +83,5 @@
 </main>
 
 @include('partials.snackbar')
+
+@include('partials.footer')
