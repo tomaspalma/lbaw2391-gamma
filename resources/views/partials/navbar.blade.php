@@ -81,6 +81,7 @@
                 </li>
                 @endauth
                 @auth
+                @if(!Auth::user()->is_app_banned())
                 <a href="/users/{{Auth::user()->username}}/friends" class="block py-2 pl-3 pr-4">
                     <div class="relative flex flex-row md:flex-col space-x-1 md:space-x-0">
                         <i class="fa-solid fa-user-group text-2xl max-md:hidden"></i>
@@ -90,9 +91,6 @@
                         </span>
                     </div>
                 </a>              
-                @endauth
-                @auth
-                @if(!Auth::user()->is_app_banned())
                 <li>
                     @include('partials.notifications.notification_bell')
                 </li>
