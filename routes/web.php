@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PollController;
 use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Controllers\PostController;
@@ -82,8 +83,14 @@ Route::controller(EmailController::class)->group(function () {
     Route::post('/email/verification-notification', 'resend_verification')->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 });
 
+
 Route::controller(NotificationController::class)->middleware(['auth', EnsureUserIsNotAppBanned::class])->group(function () {
     Route::get('/notifications', 'show_notifications');
+});
+
+Route::controller(PollController::class)->middleware(['auth'])->group(function () {
+    Route::post('/poll/{id}', 'addVote')->name('poll.addVote');
+    Route::delete('/poll/{id}', 'removeVote')->name('poll.removeVote');
 });
 
 // Posts

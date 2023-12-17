@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js', 'resources/js/comment/add.js' , 'resources/js/comment/delete.js', 'resources/js/post/scroll.js', 'resources/js/post/copy_link.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js', 'resources/js/comment/add.js' , 'resources/js/comment/delete.js', 'resources/js/post/scroll.js', 'resources/js/post/copy_link.js', 'resources/js/post/poll.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Post {{$post->title}}</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
@@ -10,7 +10,9 @@
 @include('partials.navbar')
 
 <main class="center">
-    <article data-entity="post" data-entity-id="{{$post->id}}" post-id="{{$post->id}}" class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto shadow-md">
+    <article id="post-article" data-selected-option="{{ Auth::user()->vote_on_post_poll($post)[0]->name ?? '' }}" 
+        data-entity="post" data-entity-id="{{$post->id}}" post-id="{{$post->id}}" 
+        class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto shadow-md">
         <div class="flex justify-between items-center">
             <h2 class="text-4xl font-bold">
                 {{ $post->title }}
@@ -34,6 +36,34 @@
         <div class="mt-6 prose max-w-full">
             {{ $post->content }}
         </div>
+
+        <hr>
+
+        @if($post->poll !== null)
+        <article class="mt-4" id="poll">
+            <h2 class="text-xl font-bold">Poll</h2>
+            <div class="flex flex-col">
+                @foreach ($pollOptions as $option)
+                @php
+                    $isSelected = Auth::user()->has_votes_on_option(app\Models\PollOption::where('name', $option->name)->get()[0]);
+                @endphp
+                <form id="{{$option->name}}" data-selected-vote="{{ $isSelected ? '1' : '0' }}" 
+                    data-option="{{$option->name}}" data-poll-id="{{$poll->id}}" 
+                    class="poll-option flex flex-col p-2 my-2 {{ $isSelected ? 'selected-poll-option' : 'unselected-poll-option' }} rounded-md hover:bg-black hover:text-white transition-colors" method="POST" action="{{route('poll.addVote', ['id' => $poll->id]) }}">
+                    <button type="submit" name="{{$option->name}}" class="flex flex-row justify-between">
+                        <span>
+                            {{ $option->name }}
+                            @auth
+                            <i class="poll-selected-checkmark text-green-500 fa-solid fa-check {{ Auth::user()->has_votes_on_option(app\Models\PollOption::where('name', $option->name)->get()[0]) ? '' : 'hidden' }}"></i>
+                            @endauth
+                        </span>
+                        <span class="option-vote-counter">{{ count($option->votes) }}</span>
+                    </button>
+                </form>
+                @endforeach
+            </div>
+        </article>
+        @endif
 
         <div class="post-action-bar mt-4 flex justify-between items-center">
             @php
