@@ -29,4 +29,6 @@
             @endif
             @endfor
     </div>
-    @include('partials.confirm_modal')
+</main>
+@include('partials.confirm_modal')
+@include('partials.snackbar')

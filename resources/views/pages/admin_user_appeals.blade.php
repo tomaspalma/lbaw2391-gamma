@@ -34,3 +34,4 @@
     </div>
 </main>
 @include('partials.confirm_modal')
+@include('partials.snackbar')

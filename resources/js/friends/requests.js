@@ -1,3 +1,5 @@
+import { addSnackbar } from "../components/snackbar";
+
 function handleFriendRequest(action, username) {
     // Determine the URL and method based on the action
     let url, methodType;
@@ -35,6 +37,12 @@ function handleFriendRequest(action, username) {
                     noRequestsMessage.classList.remove("hidden");
                     friendRequestsCounter.classList.add("hidden");
                 }
+
+                if (action === "accept") {
+                    addSnackbar(`You accepted ${username} friend request`, 2000);
+                } else if (action === "decline") {
+                    addSnackbar(`You declined ${username} friend request`, 2000);
+                }
             }
         })
         .catch((error) => {
@@ -44,7 +52,7 @@ function handleFriendRequest(action, username) {
 
 const friendRequestForm = document.getElementById("friendRequestForm");
 if (friendRequestForm) {
-    friendRequestForm.addEventListener("submit", function (event) {
+    friendRequestForm.addEventListener("submit", function(event) {
         event.preventDefault();
         const username = this.getAttribute("data-username");
         const action = event.submitter.value;
