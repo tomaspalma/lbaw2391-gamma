@@ -533,6 +533,14 @@ paths:
       description: 'Provide edit profile form. Access: USR'
       tags:
         - 'M05: Users'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
+
       responses:
         '200':
           description: 'Get the view of the edit post form'
@@ -552,6 +560,14 @@ paths:
       description: 'Processes the edit profile form submission. Access: USR'
       tags:
         - 'M05: Users'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
+
       requestBody:
         required: true
         content:
@@ -684,6 +700,14 @@ paths:
       description: 'Get the friends of the user and show them. Access: USR (can only see friends of friends).'
       tags: 
         - 'M05: Users'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
+
       responses:
         '200':
           description: 'OK. Show user friends'
@@ -700,6 +724,14 @@ paths:
       description: 'Accept friend request of user with username. Access: USR'
       tags:
         - 'M05: Users'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
+
       responses:
         '200':
           description: 'Ok. Friend request accepted'
@@ -714,6 +746,14 @@ paths:
       description: 'Remove the friendship of user with username. Access: USR (can only remove if friends)'
       tags:
         - 'M05: Users'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
+
       responses:
         '200':
           description: 'Ok. Friendship removed'
@@ -730,6 +770,13 @@ paths:
       operationId: R510
       summary: 'R511: See pending friend requests'
       description: 'Get the pending friend requests and show them. Access: USR'
+      parameters:
+      - in: path
+        name: username
+        description: Username of the user 
+        schema:
+          type: string
+        required: true
       tags:
         - 'M05: Users'
       responses:
@@ -1196,7 +1243,6 @@ paths:
       responses:
         '200':
           description: 'HTML with the notification cards'
-  /users/{username}/appban/appeal:
 
   /comment/{id}/reaction:
     get: 
@@ -1289,7 +1335,10 @@ paths:
           description: 'Removes reaction from comment' 
         '403':
           description: 'Forbidden if the deleting user does not have this reaction' 
-  
+
+
+  /users/{username}/appban/appeal:
+
     get:
       operationId: R507
       summary: 'R507: Show form to appeal app ban'
@@ -1309,7 +1358,7 @@ paths:
             type: string
           required: true
 
-  post:
+    post:
       operationId: R508
       summary: 'R508: Appeal app ban action'
       description: 'Submits the appeal from the user about the app ban they got. Access: USR'
@@ -1384,7 +1433,7 @@ paths:
         '403':
           description: 'Forbidden. User cannot see this post.'
 
-  /api/group/{group_id}/posts:
+  /api/group/{id}/posts:
 
     get:
       operationId: R801
@@ -1543,5 +1592,3 @@ paths:
           description: 'OK. Vote removed.'
         '403':
           description: 'Forbidden. User is trying to remove a vote from an option they did not vote on'
- 
-
