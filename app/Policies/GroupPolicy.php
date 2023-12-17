@@ -62,4 +62,11 @@ class GroupPolicy
             ? Response::allow()
             : Response::deny("You are not an owner of this group.");
     }
+
+    public function create(?User $user): Response
+    {
+        return $user !== null
+            ? Response::allow()
+            : Response::deny('You must be logged in to create a group.');
+    }
 }
