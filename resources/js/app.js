@@ -2,6 +2,11 @@ import Pusher from 'pusher-js';
 import { getCsrfToken, getUsername } from './utils';
 
 import './bootstrap';
+import { toggleUnblockConfirmationButtons } from './admin/user/unblock';
+import { toggleDeleteUserAppealButtons } from './admin/user/remove_appeal';
+import { toggleDropdownArrow } from './components/dropdown';
+import { toggleAppbanAppealReasonDropdown } from './admin/user/show_appeal_reason';
+import { toggleBlockTriggerButtons } from './admin/user/block';
 
 const pusherAppKey = "42e95b477c2a2640c461";
 const cluster = "eu";
@@ -17,12 +22,51 @@ const pusher = new Pusher(pusherAppKey, {
     debug: true
 });
 
-function onNotificationsPage() {
+function onPage(name) {
     const url = window.location.href;
     const urlParts = url.split("/");
 
-    return urlParts[urlParts.length - 1] === 'notifications';
+    return urlParts[urlParts.length - 1] === name;
 }
+
+const adminChannel = pusher.subscribe('private-admin');
+adminChannel.bind('appeal-notification', function(data) {
+    console.log(data);
+
+    if (onPage("user")) {
+        const appealCounter = document.getElementById("appeal-counter");
+        const currentCounter = parseInt(appealCounter.textContent, 10);
+
+        appealCounter.textContent = `${currentCounter + 1}`;
+    } else if (onPage("appeals")) {
+        const appealCounter = document.getElementById("appeal-counter");
+        const currentCounter = parseInt(appealCounter.textContent, 10);
+
+        appealCounter.textContent = `${currentCounter + 1}`;
+
+        const appealNotFoundText = document.getElementById("no-appeals-found-text");
+
+        if (appealNotFoundText) {
+            appealNotFoundText.remove();
+        }
+
+        const content = document.getElementById("content");
+
+        if (document.getElementById("no-appeals-found-text")) {
+            document.getElementById("no-appeals-found-text").remove();
+        }
+
+        const element = document.createElement("div");
+        element.innerHTML = data.message.appeal_card;
+
+        toggleUnblockConfirmationButtons(element.querySelectorAll(".unblock-confirmation-trigger"));
+        toggleBlockTriggerButtons(element.querySelectorAll(".block-reason-trigger"));
+        toggleDeleteUserAppealButtons(element.querySelectorAll(".remove-confirmation-trigger"));
+        toggleAppbanAppealReasonDropdown(element.querySelectorAll(".appban-dropdown-arrow"));
+
+        content.prepend(element);
+    }
+});
 
 const notificationCounter = document.getElementById("notification-counter");
 const channel = pusher.subscribe(`private-user.${getUsername()}`);
@@ -33,7 +77,7 @@ channel.bind('reaction-notification', function(data) {
         const counter = parseInt(notificationCounter.textContent, 10);
         notificationCounter.textContent = (counter + 1);
 
-        if (onNotificationsPage()) {
+        if (onPage("notifications")) {
             const notificationsCards = document.getElementById("notification-cards");
             console.log(notificationsCards.children);
 
@@ -43,10 +87,11 @@ channel.bind('reaction-notification', function(data) {
         }
     }
 });
+
 channel.bind('friend-request-notification', function(data) {
     const message = data.message;
     if (message.user.username !== data.author) {
-        if(message.is_accepted === null) {
+        if (message.is_accepted === null) {
             const friendRequestCounter = document.getElementById("friend-request-counter");
             friendRequestCounter.classList.remove("hidden");
             const counter = parseInt(friendRequestCounter.textContent, 10);
@@ -58,7 +103,7 @@ channel.bind('friend-request-notification', function(data) {
             notificationCounter.textContent = (counter + 1);
         }
 
-        if (onNotificationsPage()) {
+        if (onPage("notifications")) {
             const notificationsCards = document.getElementById("notification-cards");
             notificationsCards.insertAdjacentHTML('afterbegin', message.friend_request_not_view);
         }
@@ -66,7 +111,7 @@ channel.bind('friend-request-notification', function(data) {
 });
 
 channel.bind('comment-notification', function(data) {
-const message = data.message;
+    const message = data.message;
     if (message.user.username !== data.author) {
         notificationCounter.classList.remove("hidden");
         const counter = parseInt(notificationCounter.textContent, 10);
@@ -75,6 +120,6 @@ const message = data.message;
         if (onNotificationsPage()) {
             const notificationsCards = document.getElementById("notification-cards");
             notificationsCards.insertAdjacentHTML('afterbegin', message.comment_not_view);
-            }
         }
+    }
 })

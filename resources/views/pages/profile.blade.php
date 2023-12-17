@@ -29,7 +29,7 @@
                 <input type="hidden" id="auth-user" value="{{ auth()->user()->username }}">
             </div>
             @endcan
-        </div>        
+        </div>
         <div class="mt-6 flex flex-col md:flex-row -mx-3">
             <div class="md:flex-1 px-3">
                 <div class="mb-4">
@@ -41,46 +41,46 @@
                         {{$user->is_private ? 'Private' : 'Public'}}
                     </span>
                 </div>
-            
+
                 <div class="flex justify-between items-center">
-                @can('view_friends', $user)
+                    @can('view_friends', $user)
                     <a href="{{ route('friends_page', ['username' => $user->username]) }}" class="text-l font-bold text-gray-700" id="friends-link">
                         {{$user->friends()->count()}} friend{{$user->friends()->count() == 1 ? '' : 's'}}
                     </a>
-                @else
+                    @else
                     <span class="text-l font-bold text-gray-700" id="friends-link">
                         {{$user->friends()->count()}} friend{{$user->friends()->count() == 1 ? '' : 's'}}
                     </span>
-                @endcan
-                @can('send_friend_request', $user)
+                    @endcan
+                    @can('send_friend_request', $user)
                     <form action="{{ route('send_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="post">
                         @csrf
                         <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                             Send Friend Request
                         </button>
                     </form>
-                @endcan
-                @can('cancel_friend_request', $user)
+                    @endcan
+                    @can('cancel_friend_request', $user)
                     <form action="{{ route('cancel_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                         @csrf
                         <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                             Cancel Friend Request
                         </button>
                     </form>
-                @endcan
-                @can('remove_friend', $user)
+                    @endcan
+                    @can('remove_friend', $user)
                     <form action="{{ route('remove_friend', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                         @csrf
                         <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                             Remove Friend
                         </button>
                     </form>
-                @endcan
-                @can('accept_friend_request', $user)
+                    @endcan
+                    @can('accept_friend_request', $user)
                     <button type="button" onclick="window.location.href='{{ route('friend_requests_page', ['username' => auth()->user()->username]) }}'" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                         See Pending Friend Request
                     </button>
-                @endcan
+                    @endcan
                 </div>
 
                 <div class="mb-4">
@@ -107,3 +107,5 @@
         @endforelse
     </div>
 </div>
+
+@include('partials.snackbar')

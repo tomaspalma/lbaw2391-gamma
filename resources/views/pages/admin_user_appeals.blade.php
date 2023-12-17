@@ -18,14 +18,13 @@
         <li class="flex w-1/2 p-2 justify-center toggled-tab">
             <a href="/admin/user/appeals">
                 Appeals (<span id="appeal-counter">{{$appeal_number}}</span>)
-                <F11>
             </a>
         </li>
         @endauth
     </ul>
     <div id="content">
         @if(count($appeals) === 0)
-        <p class="text-center">No appeals found.</p>
+        <p id="no-appeals-found-text" class="text-center">No appeals found.</p>
         @endif
         <div class="flex flex-col align-middle justify-center" id="admin-search-user-results">
             @foreach ($appeals as $appeal)

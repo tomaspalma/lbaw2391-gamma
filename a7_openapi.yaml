@@ -1185,6 +1185,7 @@ paths:
       responses:
         '200':
           description: 'HTML with the notification cards'
+          
   /users/{username}/appban/appeal:
 
   /comment/{id}/reaction:
@@ -1423,3 +1424,101 @@ paths:
           required: true
 
 
+  /api/group/{id}/members/{filter}:
+
+    get:
+      operationId: R802
+      summary: 'R802: Show posts of groups'
+      description: 'AJAX endpoint to show posts of groups. Access: USR'
+      tags:
+        - 'M08: Groups'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the group 
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: filter
+        description: Role of the user in the group (e.g. Group owner, group member)
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'Returns JSON with HTML of the member cards'
+        '403':
+          description: 'Forbidden. User cannot see the members of this group'
+
+  /group/{id}/edit:
+
+    get:
+      operationId: R803
+      summary: 'R803: Edit Group Form'
+      description: 'Show edit group form. Access: GRO'
+      tags:
+        - 'M08: Groups'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the group 
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: 'OK. Show Group'
+        '403':
+          description: 'Forbidden. User doesnt own this group.'
+
+  /group/{id}:
+
+    put:
+      operationId: R804
+      summary: 'R804: Edit Group Action'
+      description: 'Processes the edit group form submission. Access: GRO'
+      tags:
+        - 'M08: Groups'
+      parameters:
+      - in: path
+        name: id
+        description: Id of the group 
+        schema:
+          type: string
+        required: false
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: text
+                  format: binary
+                banner:
+                  type: text
+                  format: binary
+                name:
+                  type: string
+                description:
+                  type: string
+                is_private:
+                  type: boolean
+      responses:
+        '302':
+          description: 'Redirect to group page (group/{id})'
+          headers:
+           Location:
+             schema:
+               type: string
+             examples:
+               302Success:
+                 description: 'Successful edit. Redirect to group page.'
+                 value: '/group/{id}'
+               302Failure:
+                 description: 'Failed edit. Fix the errors and try again.' 
+                 value: '/group/{id}/edit'
+        '403':
+          description: 'Forbidden'

@@ -7,7 +7,7 @@ const deleteConfirmationTriggerButtons = document.querySelectorAll(".delete-conf
 for (const deleteConfirmationTriggerButton of deleteConfirmationTriggerButtons) {
     deleteConfirmationTriggerButton.addEventListener("click", (e) => {
         e.preventDefault();
-        
+
         deleteUserAction(deleteConfirmationTriggerButton);
     });
 }

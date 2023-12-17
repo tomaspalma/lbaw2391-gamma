@@ -80,9 +80,9 @@ CREATE TABLE friends (
 
 
 CREATE TABLE group_owner(
+    id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
-    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE,
-    PRIMARY KEY (user_id, group_id)
+    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE
 );
 
 CREATE TABLE group_request(
@@ -94,9 +94,9 @@ CREATE TABLE group_request(
 );
 
 CREATE TABLE group_user(
+    id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE,
-    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE,
-    PRIMARY KEY (user_id, group_id)
+    group_id INTEGER REFERENCES groups(id) ON UPDATE CASCADE
 );
 
 CREATE TABLE friend_request(
@@ -139,7 +139,7 @@ CREATE TABLE post_tag(
 
 CREATE TABLE group_request_not(
     id SERIAL PRIMARY KEY, 
-    group_request_id INTEGER REFERENCES group_request(id) ON UPDATE CASCADE,
+    group_request_id INTEGER REFERENCES group_request(id) ON UPDATE CASCADE ON DELETE CASCADE,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
 );
 
@@ -598,7 +598,22 @@ CREATE TRIGGER add_friend
         (1, 2),
         -- (1, 1),
         (2, 1),
-        (2, 2);
+        (2, 2),
+        (5, 1),
+        (6, 1),
+        (7, 1),
+        (8, 1),
+        (9, 1),
+        (10, 1),
+        (11, 1),
+        (12, 1),
+        (13, 1),
+        (14, 1),
+        (15, 1),
+        (16, 1),
+        (17, 1),
+        (18, 1),
+        (19, 1);
 
     INSERT INTO group_owner (group_id, user_id) VALUES
         (1, 1),

@@ -12,4 +12,4 @@ addPaginationListener(
     (entityCard) => {
         initReactionJs(entityCard);
     }
-).then(() => {}).catch((e) => console.error(e));
+).then(() => { }).catch((e) => console.error(e));

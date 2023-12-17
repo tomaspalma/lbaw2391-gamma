@@ -65,7 +65,7 @@ class SearchController extends Controller
                 ->paginate(10);
         }
 
-        if ($request->ajax()) {
+        if ($request->is("api*")) {
             return response()->json($groups);
         } else {
             return $groups;
@@ -114,13 +114,10 @@ class SearchController extends Controller
 
             // Public user
             if (Auth::user() === null) {
-                $users = User::where('id', '<>', 0)
-                    ->where('role', '<>', 1)
-                    ->where('is_private', '=', false)
+                $users = User::where('id', '<>', 0)->where('is_private', false)
                     ->paginate(10);
             } else {
                 $users = User::where('id', '<>', 0)
-                    ->where('is_private', '=', false)
                     ->paginate(10);
             }
 
@@ -138,7 +135,6 @@ class SearchController extends Controller
             $users = [];
 
             $users = User::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
-                ->where('is_private', '=', false)
                 ->where('id', '<>', 0)
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
                 ->paginate(15);
@@ -161,8 +157,6 @@ class SearchController extends Controller
         $rawPosts = [];
 
         if ($query === null) {
-            if (Auth::user() !== null) {
-            }
             $rawPosts = Post::where('is_private', false)->paginate($this->pagination_limits['posts']);
         } else {
             $rawPosts = Post::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?) and not is_private', [$query])
