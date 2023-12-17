@@ -61,7 +61,7 @@ Route::controller(FriendController::class)->middleware([EnsureUserExists::class,
 });
 
 Route::controller(FeedController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
-    Route::get('/feed', 'show_popular');
+    Route::get('/feed', 'show_popular')->name('feed');
     Route::get('/feed/personal', 'show_personal');
 });
 
@@ -118,13 +118,15 @@ Route::controller(CommentController::class)->middleware(EnsureUserIsNotAppBanned
 });
 
 Route::controller(GroupController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
-    Route::get('/group/{id}', 'showGroupForm')->name('groupPosts');
+    Route::get('/group/{id}', 'showGroup')->name('groupPosts');
     Route::get('/group/{id}/members/', 'showGroupMembers')->name('groupMembers');
     Route::post('/group/{id}/members/{username}/block', 'banGroupMember')->name('ban.groupMember');
     Route::post('/group/{id}/members/{username}/promote', 'promoteUser')->name('promote.groupMember');
     Route::post('/group/{id}/enter', 'addToGroup')->name('groups.enter');
     Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
     Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
+    Route::get('/group', 'showCreateForm')->name('group.createForm')->middleware('verified');
+    Route::post('/group', 'create')->name('group.create')->middleware('verified');
     Route::middleware('auth')->group(function () {
         Route::get('/group/{id}/edit', 'edit')->name('group.edit');
         Route::put('/group/{id}', 'update')->name('group.update');
@@ -176,7 +178,7 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
     });
 
     Route::controller(GroupController::class)->group(function () {
-        Route::get('/group/{group_id}/posts', 'showGroupForm')->name('api.group.show_posts');
+        Route::get('/group/{group_id}/posts', 'showGroup')->name('api.group.show_posts');
         Route::get('/group/{group_id}/members/{filter?}', 'showGroupMembers')->name('api.groupMembers');
     });
 

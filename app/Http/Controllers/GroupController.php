@@ -10,13 +10,14 @@ use App\Models\GroupOwner;
 use App\Models\GroupUser;
 use App\Models\User;
 use App\Models\GroupBan;
+use Doctrine\DBAL\Schema\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
 {
-    public function showGroupForm(Request $request, string $id)
+    public function showGroup(Request $request, string $id)
     {
         $group = Group::findOrFail($id);
         $posts = $group->posts()->paginate(10);
@@ -252,5 +253,53 @@ class GroupController extends Controller
 
         return redirect()->route('groupPosts', $group->id)->with('success', 'Group updated successfully.');
 
+    }
+
+    public function showCreateForm()
+    {
+        $this->authorize('create', Group::class);
+
+        return view('pages.create_group', [
+            'bannerImage' => FileController::defaultAsset('group_banner'),
+            'groupImage' => FileController::defaultAsset('group')
+        ]);
+    }
+
+    public function create(Request $request)
+    {
+        $this->authorize('create', Group::class);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'privacy' => 'required|boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+
+        $group = null;
+        DB::transaction(function () use ($request, &$group) {
+            $group = Group::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'is_private' => $request->privacy
+            ]);
+    
+            GroupOwner::create([
+                'group_id' => $group->id,
+                'user_id' => Auth::user()->id
+            ]);
+        });
+
+        if ($request->hasFile('image')) {
+            FileController::upload($request->file('image'), 'group', $group->id);
+        }
+
+        if ($request->hasFile('banner')) {
+            FileController::upload($request->file('banner'), 'group_banner', $group->id);
+        }
+
+        return redirect()->route('groupPosts', $group->id);
     }
 }
