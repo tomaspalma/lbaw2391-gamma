@@ -17,16 +17,25 @@ class FriendController extends Controller
 
         $this->authorize('view_friends', $user);
 
-        $friends = $user->friends()->get();
+        $friends = $user->friends()->paginate(10);
 
         $friendRequests = $user->received_pending_friend_requests()->get();
 
-        return view('pages.friends', [
-            'user' => $user,
-            'friends' => $friends,
-            'tab' => 'friends',
-            'friendRequests' => $friendRequests
-        ]);
+        if ($request->is("api*")) {
+            $friendCards = [];
+            foreach ($friends as $friend) {
+                $friendCards[] = view('partials.user_card', ['user' => $friend, 'adminView' => false])->render();
+            }
+
+            return response()->json($friendCards);
+        } else {
+            return view('pages.friends', [
+                'user' => $user,
+                'friends' => $friends,
+                'tab' => 'friends',
+                'friendRequests' => $friendRequests
+            ]);
+        }
     }
 
     public function show_friend_requests(string $username)
@@ -114,5 +123,4 @@ class FriendController extends Controller
 
         return event(new FriendRequestEvent($request->user(), $user, false));
     }
-
 }

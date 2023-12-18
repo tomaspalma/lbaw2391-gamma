@@ -1,3 +1,4 @@
+import { resetPageCounter } from "./infinite_scroll";
 import { searchUsers } from "./search";
 
 const searchInput = document.getElementById("search-user-admin");
@@ -5,6 +6,7 @@ const searchResults = document.getElementById("admin-search-user-results");
 
 searchInput.addEventListener("input", function(e) {
     searchUsers(e.target.value, searchResults, null, true);
+    resetPageCounter();
 
     const deleteUserForms = document.querySelectorAll(".delete-user-form");
     for (const deleteUserForm of deleteUserForms) {
