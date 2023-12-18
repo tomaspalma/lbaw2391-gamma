@@ -19,7 +19,7 @@
             @method('PUT')
             <div class="md:flex-1 px-3">
                 <div class="flex flex-col w-full items-center mb-2"> 
-                    <img src="{{ $user->getProfileImage() }}" alt="Profile Image" id="imagePreview" class="my-2 rounded-full w-20 h-20 md:w-32 md:h-32 object-cover">
+                    <img src="{{ $user->getProfileImage() }}" alt="{{ $user->username }}'s Profile Image" id="imagePreview" class="my-2 rounded-full w-20 h-20 md:w-32 md:h-32 object-cover">
                     <input type="file" name="image" id="image" class="hidden" onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
                     <button type="button" class=" bg-gray-600 text-white px-4 py-2 rounded" onclick="document.getElementById('image').click()">Upload</button>
                 </div>
