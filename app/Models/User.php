@@ -208,6 +208,20 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->exists();
     }
 
+    public function in_group($group_id): bool{
+        return DB::table('group_user')
+            ->where('user_id', $this->id)
+            ->where('group_id', $group_id)
+            ->exists();
+    }
+
+    public function is_owner($group_id): bool{
+        return DB::table('group_owner')
+            ->where('user_id', $this->id)
+            ->where('group_id', $group_id)
+            ->exists();
+    }
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, "author");
@@ -241,7 +255,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->hasOne(AppBan::class, 'banned_user_id');
     }
 
-    public function is_owner(Group $group)
+    public function groups_is_owner(Group $group)
     {
         $groupOwner = GroupOwner::where('group_id', $group->id)->where('user_id', $this->id)->get();
 

@@ -23,7 +23,7 @@
             </form>
 
 
-            <form id="groupForm" action="{{ route('groups.decline_request', $request->group )}}" method="post">
+            <form id="groupForm" action="{{ route('groups.decline_request', $request->id )}}" method="post">
                 @csrf
                 @method('DELETE')
                 <button id="remove" type="submit" id="leaveGroupButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">

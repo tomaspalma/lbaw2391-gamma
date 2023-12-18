@@ -14,6 +14,8 @@ use App\Models\User;
 class GroupRequest extends Model
 {
     protected $table = 'group_request';
+    protected $primaryKey = 'id';
+
 
     public $timestamps = false;
 
@@ -42,6 +44,16 @@ class GroupRequest extends Model
             DB::table('group_request')
                 ->where('id', $id)
                 ->update(['is_accepted' => true]);
+        });
+    }
+
+    public function decline(){
+        $id = $this->id;
+
+        DB::transaction(function () use ($id) {
+            DB::table('group_request')
+                ->where('id', $id)
+                ->delete();
         });
     }
 

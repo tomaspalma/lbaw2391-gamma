@@ -29,7 +29,7 @@ class FeedController extends Controller
 
         $user = auth()->user();
 
-        $groups = $user->groups;
+        $groups = $user->groups('');
         $raw_posts = $groups->pluck('posts')->flatten();
 
         $friends = $user->friends;
