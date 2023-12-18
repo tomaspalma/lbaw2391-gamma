@@ -29,17 +29,25 @@ class FeedController extends Controller
 
         $user = auth()->user();
 
-        //$groups = $user->groups('owner');
 
 
         $raw_posts = Post::withCount('reactions')
-            ->where('is_private', '=', true)
+            ->where('is_private', '=', false)
             ->where('group_id', '=', null)
             ->orderBy('reactions_count', 'desc')
             ->paginate(10);
 
+        $groups = $user->groups('owner');
+
+        $posts = collect();
+
+        foreach ($groups as $group) {
+            $posts = $posts->merge($group->posts);
+        }
+
         $friends = $user->friends;
         $raw_posts = $raw_posts->merge($friends->pluck('posts')->flatten());
+        $raw_posts = $raw_posts->merge($groups->pluck('group_id')->flatten());
         $raw_posts = Post::withCount('reactions')->whereIn('id', $raw_posts->pluck('id'))->paginate(10);
 
         if ($request->is("api*")) {
@@ -69,6 +77,7 @@ class FeedController extends Controller
             ->where('group_id', '=', null)
             ->orderBy('reactions_count', 'desc')
             ->paginate(10);
+
 
         if ($request->is("api*")) {
             $post_cards = [];

@@ -61,19 +61,6 @@
             @endif
                 </div>
             @endif
-
-            @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group->id))
-                @if(Auth::user()->is_owner($group->id) && !$user->is_owner($group->id))
-                <div class="normal-user-actions">
-                    <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
-                        Promote
-                    </button>
-                    <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="ban-confirmation-trigger">
-                        Ban
-                    </button>
-                </div>
-                @endif
-            @endif
     </div>
 
     @if(isset($appealView) && $appealView)
