@@ -180,7 +180,8 @@ class GroupController extends Controller
             return response()->json([
                 'message' => 'User added to the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded',
                 'new_text' => 'Leave Group', 'new_method' => 'delete',
-                'new_action' => 'leave'
+                'new_action' => 'leave',
+                'sum' => '1',
             ]);
         } else {
 
@@ -197,7 +198,8 @@ class GroupController extends Controller
             return response()->json([
                 'message' => 'User asked to enter the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded',
                 'new_text' => 'Remove Request', 'new_method' => 'delete',
-                'new_action' => 'removeRequest'
+                'new_action' => 'removeRequest',
+                'sum' => '0'
             ]);
         }
     }
@@ -238,7 +240,8 @@ class GroupController extends Controller
             return response()->json([
                 'message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
                 'new_text' => 'Enter this group', 'new_method' => 'post',
-                'new_action' => 'enter'
+                'new_action' => 'enter',
+                'sum' => '-1'
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error removing user from the group', 'message' => $e->getMessage()], 500);
@@ -272,9 +275,10 @@ class GroupController extends Controller
         $group->remove_request($user->id);
 
         return response()->json([
-            'message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
+            'message' => 'Request deleted successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
             'new_text' => 'Enter this group', 'new_method' => 'post',
-            'new_action' => 'enter'
+            'new_action' => 'enter',
+            'sum' => '0'
         ]);
     }
 

@@ -116,7 +116,7 @@
         <h3 class="text-xl font-bold mb-2">About Us</h3>
         <p class="mb-2">{{ $group->description }}</p>
         <div class="border-b border-gray-500 my-4"></div>
-        <p class="mb-2">{{ $members->count() }} members</p>
+        <p class="mb-2" id = "n_members" data_n_members="{{$members->count()}}">{{ $members->count() }} members</p>
         <p class="mb-2">{{ $posts->count() }} posts</p>
         @if($group->is_private)
             <div class="flex items-center">

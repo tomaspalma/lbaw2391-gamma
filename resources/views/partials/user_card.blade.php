@@ -41,7 +41,7 @@
         @endif
 
         @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group->id))
-        @if(Auth::user()->is_owner($group->id) && !$user->is_owner($group->id))
+        @if(Auth::user()->is_owner($group->id) && !$user->is_owner($group->idg))
         <div class="normal-user-actions">
             <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
                 Promote

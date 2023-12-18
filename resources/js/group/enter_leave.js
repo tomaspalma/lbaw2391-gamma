@@ -5,11 +5,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
         let methodField = form.attributes["data-method"];
         const routePattern = '/group/';
         const groupID = window.location.pathname.substring(routePattern.length);
+        const number_members = document.getElementById("n_members")
 
         console.log(methodField.value)
 
         button.addEventListener("click", (e) => {
-            console.log("Button Clicked")
             e.preventDefault()
 
             fetch(form.action, {
@@ -42,6 +42,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     methodField.value = "POST";
                     form.action = `/group/${groupID}/${new_action}`
                 }
+
+                console.log(number_members)
+                number_members.attributes["data_n_members"].value = (parseInt(number_members.attributes["data_n_members"].value, 10) + parseInt(data['sum'], 10)).toString()
+                number_members.textContent = number_members.attributes["data_n_members"].value + " members"
                 e.preventDefault();
             })
             .catch((error) => {
