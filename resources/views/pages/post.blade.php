@@ -9,7 +9,7 @@
 
 @include('partials.navbar')
 
-<main class="center">
+<main class="center md:mb-12">
     <article id="post-article" data-selected-option="{{ Auth::user() ? (Auth::user()->vote_on_post_poll($post)[0]->name ?? '') : '' }}" 
         data-entity="post" data-entity-id="{{$post->id}}" post-id="{{$post->id}}" 
         class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto shadow-md">
