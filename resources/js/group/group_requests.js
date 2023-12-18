@@ -52,13 +52,13 @@ function handleButton(card, ButtonAccept, ButtonRemove, form, isAccept) {
             if(isAccept){
                 console.log("entered here")
                 const successMessage = document.createElement('p');
-                successMessage.textContent = 'Added to group successfully';
+                successMessage.textContent = 'Added to Group';
                 successMessage.classList.add('text-green-500', 'font-bold', 'mt-2');
                 form.appendChild(successMessage);
             }
             else{
                 const successMessage = document.createElement('p');
-                successMessage.textContent = 'Deleted to group successfully';
+                successMessage.textContent = 'Request Declined';
                 successMessage.classList.add('text-red-500', 'font-bold', 'mt-2');
                 form.appendChild(successMessage);
             }
