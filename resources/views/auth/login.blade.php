@@ -1,6 +1,7 @@
 @extends('layouts.head')
 
 <head>
+    @vite(['resources/css/app.css', 'resources/js/auth/login.js', 'resources/js/auth/seePassword.js'])
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>

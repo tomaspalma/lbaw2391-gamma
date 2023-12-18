@@ -2,14 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Passwords\CanResetPassword as PasswordsCanResetPassword;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
@@ -103,7 +99,6 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $result;
     }
 
-
     public function reaction_notifications()
     {
         return ReactionNot::with('reaction')
@@ -130,6 +125,28 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
                 $query->where('author', '<>', Auth::user()->id);
             })->orderBy('date', 'desc')
             ->paginate(15);
+    }
+
+    public function vote_on_post_poll(Post $post)
+    {
+        return DB::table("post")
+            ->join('polls', 'polls.id', '=', 'post.poll_id')
+            ->join('poll_options', 'poll_options.poll_id', '=', 'polls.id')
+            ->join('poll_option_votes', 'poll_option_votes.poll_option_id', '=', 'poll_options.id')
+            ->join('users', 'users.id', '=', 'poll_option_votes.user_id')
+            ->where('users.id', $this->id)->get();
+    }
+
+    public function poll_option_on_post(Post $post) {
+
+    }
+
+    public function has_votes_on_option(PollOption $poll_option)
+    {
+        $vote = PollOptionVote::where('poll_option_id', $poll_option->id)
+            ->where('user_id', $this->id)->get();
+
+        return count($vote) > 0;
     }
 
     public function comment_reaction(Comment $comment)
@@ -215,7 +232,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->exists();
     }
 
-    public function is_owner($group_id): bool{
+    public function is_owner(string $group_id): bool{
         return DB::table('group_owner')
             ->where('user_id', $this->id)
             ->where('group_id', $group_id)
@@ -288,6 +305,4 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     {
         return $this->received_pending_friend_requests()->where('user_id', $user->id)->exists();
     }
-
-
 }

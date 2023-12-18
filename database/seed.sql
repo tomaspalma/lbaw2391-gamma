@@ -20,6 +20,9 @@ DROP TABLE IF exists group_ban CASCADE;
 DROP TABLE IF exists app_ban CASCADE;
 DROP TABLE IF exists friends CASCADE;
 DROP TABLE IF exists appeal CASCADE;
+DROP TABLE IF exists polls CASCADE;
+DROP TABLE IF exists poll_options CASCADE;
+DROP TABLE IF exists poll_option_votes CASCADE;
 
 -----------------------------------------
 -- Types
@@ -52,6 +55,7 @@ CREATE TABLE password_reset_tokens (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now() CHECK (created_at <= now())
 );
 
+
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL CONSTRAINT unique_group_name UNIQUE,
@@ -59,6 +63,10 @@ CREATE TABLE groups (
     banner TEXT,
     is_private BOOLEAN DEFAULT true NOT NULL,
     description TEXT NOT NULL
+);
+
+CREATE TABLE polls (
+    id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE post (
@@ -69,7 +77,21 @@ CREATE TABLE post (
     attachment TEXT,
     group_id INTEGER REFERENCES groups(id),
     is_private BOOLEAN NOT NULL,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now()),
+    poll_id INTEGER REFERENCES polls(id)
+);
+
+CREATE TABLE poll_options (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    poll_id INTEGER REFERENCES polls(id)
+);
+
+CREATE TABLE poll_option_votes (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    poll_option_id INTEGER REFERENCES poll_options(id),
+    poll_id INTEGER REFERENCES polls(id)
 );
 
 CREATE TABLE friends (
