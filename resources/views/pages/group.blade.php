@@ -17,7 +17,7 @@
     <div class="flex flex-col md:flex-row justify-between px-4 md:mx-56">
         <div class="flex items-center">
             <img src="{{ $group->getGroupImage() }}" alt="Group Image" class="w-24 h-24 md:w-32 md:h-32 ml-4 object-cover rounded-full -mt-14 border-2 border-white max-w-full">
-            <h2 class="text-2xl font-bold m-4">{{ $group->name }}</h2>
+            <h2 class="text-2xl font-bold m-4 w-full break-words overflow-auto">{{ $group->name }}</h2>
         </div>
         <div class="mx-4 mt-4 flex flex-row">
             @auth
@@ -109,7 +109,7 @@
             @endcan
         </main>
 
-        <aside class="md:shadow-md md:border-2 md:border-gray-500 px-10 md:p-10 w-96 rounded-lg col-span-10 md:col-span-3 self-start items-start content-start mr-2 md:mr-5">
+        <aside class="md:shadow-md md:border-2 md:border-gray-500 px-2 md:p-10 w-96 rounded-lg col-span-10 md:col-span-3 md:self-start items-start content-start mr-2 md:mr-5 self-center">
             <h3 class="text-xl font-bold mb-2">About Us</h3>
             <p class="mb-2 w-full break-words">{{ $group->description }}</p>
             <div class="border-b border-gray-500 my-4"></div>
