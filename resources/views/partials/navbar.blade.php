@@ -102,6 +102,9 @@
                         <a href="/groups" class="block py-2 pl-3 pr-4 text-xl">
                             <div class="relative flex flex-row md:flex-col md:space-x-0">
                                 <i class="fa-sharp fa-solid fa-people-group text-2xl"></i>
+                                <span id="group-request-counter" class="{{count(Auth::user()->groupRequests()) > 0 ? '' : 'hidden'}} text-xs md:absolute md:bottom-3 md:left-3 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full">
+                                    {{count(Auth::user()->groupRequests())}}
+                                </span>
                             </div>
                         </a>
                     </li>
