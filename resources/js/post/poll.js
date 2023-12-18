@@ -1,4 +1,4 @@
-import { addCounter, getCsrfToken, subtractCounter } from "../utils";
+import { addCounter, getCsrfToken, getUsername, subtractCounter } from "../utils";
 import { addSnackbar } from "../components/snackbar";
 
 const pollAddBtn = document.getElementById("add-poll-btn");
@@ -102,8 +102,8 @@ function removeVoteAction(pollOptionForm, activateSnackbar) {
     pollOptionForm.classList.remove("selected-poll-option");
 
     subtractCounter(pollOptionForm.querySelector(".option-vote-counter"), 1);
-    
-    if(activateSnackbar) {
+
+    if (activateSnackbar) {
         addSnackbar("You removed your vote!", 2000);
     }
 }
@@ -133,13 +133,15 @@ for (const pollOption of pollOptions) {
     pollOption.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const pollId = pollOption.getAttribute("data-poll-id");
-        const pollOptionValue = pollOption.getAttribute("data-option");
+        if (getUsername()) {
+            const pollId = pollOption.getAttribute("data-poll-id");
+            const pollOptionValue = pollOption.getAttribute("data-option");
 
-        if (pollOption.getAttribute("data-selected-vote") === "0") {
-            await addVote(e.target, pollId, pollOptionValue);
-        } else {
-            await removeVote(e.target, pollId, pollOptionValue);
+            if (pollOption.getAttribute("data-selected-vote") === "0") {
+                await addVote(e.target, pollId, pollOptionValue);
+            } else {
+                await removeVote(e.target, pollId, pollOptionValue);
+            }
         }
     });
 }

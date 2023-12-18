@@ -48,7 +48,8 @@ export default defineConfig({
                 "resources/js/profile/scroll.js",
                 "resources/js/search/main_search/scroll.js",
                 "resources/js/admin/user/scroll.js",
-                "resources/js/post/copy_link.js"
+                "resources/js/post/copy_link.js",
+                "resources/js/faq.js",
             ],
             refresh: true,
         }),

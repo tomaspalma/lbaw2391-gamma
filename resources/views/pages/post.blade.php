@@ -9,8 +9,8 @@
 
 @include('partials.navbar')
 
-<main class="center">
-    <article id="post-article" data-selected-option="{{ Auth::user()->vote_on_post_poll($post)[0]->name ?? '' }}" 
+<main class="center md:mb-12">
+    <article id="post-article" data-selected-option="{{ Auth::user() ? (Auth::user()->vote_on_post_poll($post)[0]->name ?? '') : '' }}" 
         data-entity="post" data-entity-id="{{$post->id}}" post-id="{{$post->id}}" 
         class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto shadow-md">
         <div class="flex justify-between items-center">
@@ -40,29 +40,7 @@
         <hr>
 
         @if($post->poll !== null)
-        <article class="mt-4" id="poll">
-            <h2 class="text-xl font-bold">Poll</h2>
-            <div class="flex flex-col">
-                @foreach ($pollOptions as $option)
-                @php
-                    $isSelected = Auth::user()->has_votes_on_option(app\Models\PollOption::where('name', $option->name)->get()[0]);
-                @endphp
-                <form id="{{$option->name}}" data-selected-vote="{{ $isSelected ? '1' : '0' }}" 
-                    data-option="{{$option->name}}" data-poll-id="{{$poll->id}}" 
-                    class="poll-option flex flex-col p-2 my-2 {{ $isSelected ? 'selected-poll-option' : 'unselected-poll-option' }} rounded-md hover:bg-black hover:text-white transition-colors" method="POST" action="{{route('poll.addVote', ['id' => $poll->id]) }}">
-                    <button type="submit" name="{{$option->name}}" class="flex flex-row justify-between">
-                        <span>
-                            {{ $option->name }}
-                            @auth
-                            <i class="poll-selected-checkmark text-green-500 fa-solid fa-check {{ Auth::user()->has_votes_on_option(app\Models\PollOption::where('name', $option->name)->get()[0]) ? '' : 'hidden' }}"></i>
-                            @endauth
-                        </span>
-                        <span class="option-vote-counter">{{ count($option->votes) }}</span>
-                    </button>
-                </form>
-                @endforeach
-            </div>
-        </article>
+            @include('partials.post_poll', ['pollOptions' => $pollOptions])
         @endif
 
         <div class="post-action-bar mt-4 flex justify-between items-center">
@@ -113,3 +91,5 @@
 </main>
 
 @include('partials.snackbar')
+
+@include('partials.footer')

@@ -30,6 +30,14 @@ const reactionIconColor = {
     "STAR": {
         "icon": "fa-star",
         "color": "text-yellow-700"
+    },
+    "HANDSHAKE": {
+        "icon": "fa-handshake",
+        "color": "text-yellow-400"
+    },
+    "HANDPOINTUP": {
+        "icon": "fa-hand-point-up",
+        "color": "text-yellow-400"
     }
 }
 

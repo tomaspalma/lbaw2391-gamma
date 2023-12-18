@@ -36,7 +36,9 @@
             <button class="remove-confirmation-trigger">
                 Remove
             </button>
-            <i class="appban-dropdown-arrow cursor-pointer fa-solid fa-angle-down"></i>
+            <button class="appban-dropdown-arrow">
+                <i class="fa-solid fa-angle-down arrow"></i>
+            </button>
             @endif
             </div>
             @endif
@@ -63,3 +65,4 @@
     </article>
     @endif
 </article>
+

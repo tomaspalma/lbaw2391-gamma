@@ -25,7 +25,9 @@ class Reaction extends Model
         'LIKE',
         'DISLIKE',
         'STAR',
-        'HEART'
+        'HEART',
+        'HANDSHAKE',
+        'HANDPOINTUP'
     ];
 
     protected $casts = [
