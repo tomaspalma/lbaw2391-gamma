@@ -29,7 +29,7 @@ DROP TABLE IF exists poll_option_votes CASCADE;
 -----------------------------------------
 
 DROP TYPE if exists reaction_types;
-CREATE TYPE reaction_types AS ENUM ('LIKE', 'DISLIKE', 'HEART', 'STAR');
+CREATE TYPE reaction_types AS ENUM ('LIKE', 'DISLIKE', 'HEART', 'STAR', 'HANDSHAKE', 'HANDPOINTUP');
 
 -----------------------------------------
 -- Tables
