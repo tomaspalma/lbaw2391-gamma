@@ -18,7 +18,7 @@ export function deleteUserAction(deleteConfirmationTriggerButton) {
 
     populateModalText(`
             <div class="flex flex-col align-middle">
-                <img class="center rounded-full w-10 h-10" src="${profileImage}" />
+                <img class="center rounded-full w-10 h-10" src="${profileImage}" alt="${username}'s Profile Image">
                 <p>Are you sure you want to delete <a class="hover:underline" href="/users/${username}">${username}</a>?</p>
             </div>
         `);

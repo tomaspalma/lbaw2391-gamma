@@ -5,7 +5,7 @@
 <article data-entity="post" data-entity-id="{{$post->id}}" class="shadow-md post-card border border-black rounded-md my-4 p-6 cursor-pointer">
     <div class="flex align-middle justify-between space-x-4">
         <div class="flex space-x-4">
-            <img src="{{ $post->owner->getProfileImage() ?? 'hello'}}" class="rounded-full w-10 h-10">
+            <img src="{{ $post->owner->getProfileImage() ?? 'hello'}}" class="rounded-full w-10 h-10" alt="{{ $post->owner->username }}'s Profile Image">
             <a class="hover:underline" href="{{ route('profile',['username' => $post->owner->username]) }}">{{ $post->owner->username ?? 'hello' }}</a>
             @if($post->group)
             <a class="hover:underline" href="{{route('groupPosts', ['id' => $post->group_id])}}">@ {{ $post->group->name }}</a>

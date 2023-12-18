@@ -13,10 +13,10 @@
 @include('partials.navbar')
 
 <div>
-    <img src="{{ $group->getBannerImage() }}" alt="Group Image" class="w-full h-56 object-cover max-w-full">
+    <img src="{{ $group->getBannerImage() }}" alt="{{ $group->name }}'s Banner Image" class="w-full h-56 object-cover max-w-full">
     <div class="flex flex-row justify-between px-4 mx-56">
         <div class="flex items-center">
-            <img src="{{ $group->getGroupImage() }}" alt="Group Image" class="w-20 h-20 md:w-32 md:h-32 ml-4 object-cover rounded-full -mt-14 border-2 border-white max-w-full">
+            <img src="{{ $group->getGroupImage() }}" alt="{{ $group->name }}'s Image" class="w-20 h-20 md:w-32 md:h-32 ml-4 object-cover rounded-full -mt-14 border-2 border-white max-w-full">
             <h2 class="text-2xl font-bold ml-4">{{ $group->name }}</h2>
         </div>
         <div class="m-4 flex flex-row">
