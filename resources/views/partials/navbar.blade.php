@@ -13,7 +13,7 @@
 </div>
 @endif
 @endauth
-<nav class="bg-white border-black border-b mb-5 p-4 shadow-md">
+<nav class="bg-white border-black border-b @if(!isset($no_margin)) mb-5 @endif p-4 shadow-md">
     <div class="max-w-screen-xl flex flex-col md:flex-row justify-around mx-auto">
         <div class="w-full md:w-1/3 self-center text-center md:text-left">
             <a href="/" class="text-2xl font-bold hover:underline">Gamma</a>
