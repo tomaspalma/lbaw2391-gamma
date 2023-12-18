@@ -229,13 +229,24 @@ class GroupController extends Controller
             $group = Group::findOrFail($id);
 
             $user = Auth::user();
+            
+            if(!$user->is_owner($group->id)){
+                DB::transaction(function () use ($user, $group) {
+                    DB::table('group_user')
+                        ->where('user_id', $user->id)
+                        ->where('group_id', $group->id)
+                        ->delete();
+                });
+            }
 
-            DB::transaction(function () use ($user, $group) {
-                DB::table('group_user')
-                    ->where('user_id', $user->id)
-                    ->where('group_id', $group->id)
-                    ->delete();
-            });
+            else{
+                DB::transaction(function () use ($user, $group) {
+                    DB::table('group_owner')
+                        ->where('user_id', $user->id)
+                        ->where('group_id', $group->id)
+                        ->delete();
+                });
+            }
 
             return response()->json([
                 'message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',

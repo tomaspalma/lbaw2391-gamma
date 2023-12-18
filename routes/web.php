@@ -97,6 +97,7 @@ Route::controller(PollController::class)->middleware(['auth', EnsureUserIsNotApp
 Route::controller(PostController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get('/post/{id}', 'showPost')->name('post.show');
     Route::get('/post', 'showCreateForm')->name('post.createForm')->middleware('verified');
+    Route::get('group/post/{id}', 'showCreateFormGroup')->name('post.createFormGroup')->middleware('verified');
     Route::post('/post', 'create')->name('post.create')->middleware('verified');
     Route::get('/post/{id}/edit', 'showEditForm');
     Route::put('/post/{id}/edit', 'update')->name('post.update');
