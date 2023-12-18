@@ -56,8 +56,11 @@ class FeedController extends Controller
     {
         $raw_posts = [];
 
+        $user = auth()->user();
+
         $raw_posts = Post::withCount('reactions')
             ->where('is_private', '=', false)
+            ->where('group_id', '=', null)
             ->orderBy('reactions_count', 'desc')
             ->paginate(10);
 
