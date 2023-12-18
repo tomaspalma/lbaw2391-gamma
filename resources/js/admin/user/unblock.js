@@ -2,7 +2,6 @@ import { configureConfirmationForm, populateModalText } from "../../components/c
 
 const confirmationModal = document.getElementById("confirmation-modal");
 
-
 export function toggleUnblockConfirmationButtons(unblockConfirmationTriggerButtons) {
     for (const unblockConfirmationTriggerButton of unblockConfirmationTriggerButtons) {
         unblockConfirmationTriggerButton.addEventListener("click", (e) => {

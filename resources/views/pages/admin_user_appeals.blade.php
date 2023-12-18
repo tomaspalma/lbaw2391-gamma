@@ -2,7 +2,7 @@
 
 <head>
     <title>{{ config('app.name', 'Laravel') }} | User appban appeals</title>
-    @vite(['resources/js/search/admin_user_search.js', 'resources/js/admin/user/remove_appeal.js'])
+    @vite(['resources/js/search/admin_user_search.js', 'resources/js/admin/user/remove_appeal.js', 'resources/js/admin/user/scroll.js'])
 </head>
 
 @include('partials.navbar')

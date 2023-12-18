@@ -175,6 +175,10 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::get("/search/{query?}", 'showSearch');
     });
 
+    Route::controller(FriendController::class)->group(function () {
+        Route::get('/users/{username}/friends', 'show_friends')->name('show.friends');
+    });
+
     Route::controller(FeedController::class)->group(function () {
         Route::get('/feed/popular', 'show_popular');
         Route::get('/feed/personal', 'show_personal');
@@ -201,5 +205,10 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::middleware(EnsureUserIsAdmin::class)->group(function () {
             Route::delete("/users/{username}/appeal", 'remove_appeal')->name('admin.remove_appeal');
         });
+    });
+
+    Route::controller(AdminController::class)->group(function() {
+        Route::get("/admin/user", 'show_admin_user')->name('api.admin.show_users');
+        Route::get("/admin/user/appeals", 'show_user_appeals')->name('api.admin.show_user_appeals');
     });
 });
