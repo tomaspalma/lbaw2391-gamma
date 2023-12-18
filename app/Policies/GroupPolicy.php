@@ -23,8 +23,9 @@ class GroupPolicy
             }
 
             $userIds = $group->users->pluck('id')->toArray();
+            $ownersIds = $group->owners->pluck('id')->toArray();
 
-            return (in_array($user->id, $userIds) || $user->is_admin())
+            return (in_array($user->id, $userIds) || in_array($user->id, $ownersIds) || $user->is_admin())
                 ? Response::allow()
                 : Response::deny('This group is private.');
         }
@@ -39,7 +40,8 @@ class GroupPolicy
             return Response::deny();
         }
         $userIds = $group->users->pluck('id')->toArray();
-        if (in_array($user->id, $userIds)) {
+        $ownersIds = $group->owners->pluck('id')->toArray();
+        if (in_array($user->id, $userIds) || in_array($user->id, $ownersIds)) {
             return Response::allow();
         }
         return Response::deny();

@@ -5,7 +5,7 @@
             <div>
                 <a href="{{ '/users/' . $user->username }}" class="no-underline">
                     <h2 class="text-xl font-bold display-name">{{ $user->display_name }}
-                    @if(isset($group) && $user->is_owner($group))
+                    @if(isset($group) && $user->is_owner($group->id))
                     <span class="group-status-text">Owner</span>
                     @endif
                     </h2>
@@ -40,8 +40,8 @@
         @endif
         @endif
 
-        @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group))
-        @if(Auth::user()->is_owner($group) && !$user->is_owner($group))
+        @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group->id))
+        @if(Auth::user()->is_owner($group->id) && !$user->is_owner($group->id))
         <div class="normal-user-actions">
             <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
                 Promote

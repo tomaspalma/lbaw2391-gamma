@@ -60,6 +60,11 @@ class Group extends Model
         return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id');
     }
 
+    public function owners(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_owner', 'group_id', 'user_id');
+    }
+
 
     public function getProfileImage()
     {

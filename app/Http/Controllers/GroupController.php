@@ -55,8 +55,9 @@ class GroupController extends Controller
 
         $groupsNormal = $user->groups('normal');
         $groupsOwner = $user->groups('owner');
+        $requests = $user->groupRequests();
 
-        return view('pages.groups', ['feed' => 'groups', 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
+        return view('pages.groups', ['feed' => 'groups', 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'requests' => $requests]);
     }
 
     public function showGroupRequests(Request $request){
@@ -67,8 +68,10 @@ class GroupController extends Controller
         }
 
         else{
+            $groupsNormal = $user->groups('normal');
+            $groupsOwner = $user->groups('owner');
             $requests = $user->groupRequests();
-            return view('pages.groups', ['feed' => 'requests', 'requests' => $requests]);
+            return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
         }
     }
 
