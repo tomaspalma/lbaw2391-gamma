@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PollController;
 use App\Http\Middleware\EnsureUserExists;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Controllers\PostController;
@@ -35,9 +36,9 @@ use App\Http\Middleware\EnsureUserIsNotAppBanned;
 Route::redirect('/', '/feed');
 
 // Users
-Route::controller(UserController::class)->middleware(EnsureUserExists::class)->group(function () {
-    Route::get('/users/{username}', 'show')->name('profile');
+Route::controller(UserController::class)->middleware([EnsureUserExists::class])->group(function () {
     Route::middleware([EnsureUserIsNotAppBanned::class])->group(function () {
+        Route::get('/users/{username}', 'show')->name('profile');
         Route::get('/users/{username}/edit', 'edit')->name('edit_profile');
         Route::put('/users/{username}/edit', 'update')->name('profile_update');
         Route::delete('/users/{username}', 'delete_user');
@@ -49,7 +50,7 @@ Route::controller(UserController::class)->middleware(EnsureUserExists::class)->g
 });
 
 // Friends
-Route::controller(FriendController::class)->middleware(EnsureUserExists::class)->middleware('auth')->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
+Route::controller(FriendController::class)->middleware([EnsureUserExists::class, EnsureUserIsNotAppBanned::class])->middleware('auth')->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get('/users/{username}/friends', 'show_friends')->name('friends_page');
     Route::get('/users/{username}/friends/requests', 'show_friend_requests')->name('friend_requests_page');
     Route::post('/api/users/{username}/friends/requests', 'send_friend_request')->name('send_friend_request');
@@ -76,29 +77,33 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
-Route::controller(EmailController::class)->group(function () {
+Route::controller(EmailController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get('/email/verify', 'show_email_verification_notice')->middleware('auth')->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', 'verify')->middleware(['auth', 'signed'])->name('verification.verify');
     Route::post('/email/verification-notification', 'resend_verification')->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 });
 
+
 Route::controller(NotificationController::class)->middleware(['auth', EnsureUserIsNotAppBanned::class])->group(function () {
     Route::get('/notifications', 'show_notifications');
+});
+
+Route::controller(PollController::class)->middleware(['auth', EnsureUserIsNotAppBanned::class])->group(function () {
+    Route::post('/poll/{id}', 'addVote')->name('poll.addVote');
+    Route::delete('/poll/{id}', 'removeVote')->name('poll.removeVote');
 });
 
 // Posts
 Route::controller(PostController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get('/post/{id}', 'showPost')->name('post.show');
-    Route::middleware(['auth', EnsureUserIsNotAppBanned::class])->group(function () {
-        Route::get('/post', 'showCreateForm')->name('post.createForm')->middleware('verified');
-        Route::post('/post', 'create')->name('post.create')->middleware('verified');
-        Route::get('/post/{id}/edit', 'showEditForm');
-        Route::put('/post/{id}/edit', 'update')->name('post.update');
-        Route::delete('/post/{id}', 'delete')->name('post.delete');
-        Route::get('/post/{id}/reaction', 'get_reactions')->name('post.reactions');
-        Route::post('/post/{id}/reaction', 'add_reaction')->name('post.add.reaction');
-        Route::delete('/post/{id}/reaction', 'remove_reaction')->name('post.remove.reaction');
-    });
+    Route::get('/post', 'showCreateForm')->name('post.createForm')->middleware('verified');
+    Route::post('/post', 'create')->name('post.create')->middleware('verified');
+    Route::get('/post/{id}/edit', 'showEditForm');
+    Route::put('/post/{id}/edit', 'update')->name('post.update');
+    Route::delete('/post/{id}', 'delete')->name('post.delete');
+    Route::get('/post/{id}/reaction', 'get_reactions')->name('post.reactions');
+    Route::post('/post/{id}/reaction', 'add_reaction')->name('post.add.reaction');
+    Route::delete('/post/{id}/reaction', 'remove_reaction')->name('post.remove.reaction');
 });
 
 // Comments
@@ -112,7 +117,7 @@ Route::controller(CommentController::class)->middleware(EnsureUserIsNotAppBanned
     Route::delete('/comment/{id}/reaction', 'remove_reaction')->name('comment.remove.reaction');
 });
 
-Route::controller(GroupController::class)->group(function () {
+Route::controller(GroupController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get('/group/{id}', 'showGroupForm')->name('groupPosts');
     Route::get('/group/{id}/members/', 'showGroupMembers')->name('groupMembers');
     Route::post('/group/{id}/members/{username}/block', 'banGroupMember')->name('ban.groupMember');
@@ -145,7 +150,21 @@ Route::controller(PasswordController::class)->middleware(EnsureUserIsNotAppBanne
     Route::post('/reset-password/{token}', 'reset_password')->name('password.update');
 });
 
-Route::post('/pusher/auth', [PusherController::class, 'authenticate'])->middleware('auth');
+Route::post('/pusher/auth', [PusherController::class, 'authenticate'])->middleware(['auth', EnsureUserIsNotAppBanned::class]);
+
+// Static pages
+Route::get('/faq', function () {
+    return view('pages.faq');
+})->name('faq');
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
+Route::get('/contacts', function () {
+    return view('pages.contacts');
+})->name('contacts');
+Route::get('/features', function () {
+    return view('pages.features');
+})->name('features');
 
 Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::controller(SearchController::class)->group(function () {
@@ -154,6 +173,10 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::get('/search/posts/{query?}', 'fullTextPosts');
         Route::get('/admin/search/users/{query?}', 'adminFullTextUsers')->middleware(['auth', EnsureUserIsAdmin::class]);
         Route::get("/search/{query?}", 'showSearch');
+    });
+
+    Route::controller(FriendController::class)->group(function () {
+        Route::get('/users/{username}/friends', 'show_friends')->name('show.friends');
     });
 
     Route::controller(FeedController::class)->group(function () {
@@ -182,5 +205,10 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::middleware(EnsureUserIsAdmin::class)->group(function () {
             Route::delete("/users/{username}/appeal", 'remove_appeal')->name('admin.remove_appeal');
         });
+    });
+
+    Route::controller(AdminController::class)->group(function() {
+        Route::get("/admin/user", 'show_admin_user')->name('api.admin.show_users');
+        Route::get("/admin/user/appeals", 'show_user_appeals')->name('api.admin.show_user_appeals');
     });
 });

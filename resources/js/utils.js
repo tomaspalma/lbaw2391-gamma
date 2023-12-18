@@ -9,7 +9,21 @@ export function getCurrentSearchQuery() {
 }
 
 export function getUsername() {
-    const username = document.querySelector("meta[name='username']").getAttribute("content");
+    const username = document.querySelector("meta[name='username']")
 
-    return username;
+    if (!username) {
+        return null;
+    }
+
+    return username.getAttribute("content");
+}
+
+export function addCounter(counter, sum) {
+    const currentValue = parseInt(counter.textContent, 10);
+    counter.textContent = (currentValue + sum) > 0 ? currentValue + sum : 0;
+}
+
+export function subtractCounter(counter, sub, zeroLimit) {
+    const currentValue = parseInt(counter.textContent, 10);
+    counter.textContent = (currentValue - sub) > 0 ? currentValue - sub : 0;
 }

@@ -20,13 +20,16 @@ DROP TABLE IF exists group_ban CASCADE;
 DROP TABLE IF exists app_ban CASCADE;
 DROP TABLE IF exists friends CASCADE;
 DROP TABLE IF exists appeal CASCADE;
+DROP TABLE IF exists polls CASCADE;
+DROP TABLE IF exists poll_options CASCADE;
+DROP TABLE IF exists poll_option_votes CASCADE;
 
 -----------------------------------------
 -- Types
 -----------------------------------------
 
 DROP TYPE if exists reaction_types;
-CREATE TYPE reaction_types AS ENUM ('LIKE', 'DISLIKE', 'HEART', 'STAR');
+CREATE TYPE reaction_types AS ENUM ('LIKE', 'DISLIKE', 'HEART', 'STAR', 'HANDSHAKE', 'HANDPOINTUP');
 
 -----------------------------------------
 -- Tables
@@ -54,6 +57,7 @@ CREATE TABLE password_reset_tokens (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now() CHECK (created_at <= now())
 );
 
+
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL CONSTRAINT unique_group_name UNIQUE,
@@ -61,6 +65,10 @@ CREATE TABLE groups (
     banner TEXT,
     is_private BOOLEAN DEFAULT true NOT NULL,
     description TEXT NOT NULL
+);
+
+CREATE TABLE polls (
+    id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE post (
@@ -71,7 +79,21 @@ CREATE TABLE post (
     attachment TEXT,
     group_id INTEGER REFERENCES groups(id),
     is_private BOOLEAN NOT NULL,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now()),
+    poll_id INTEGER REFERENCES polls(id)
+);
+
+CREATE TABLE poll_options (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    poll_id INTEGER REFERENCES polls(id)
+);
+
+CREATE TABLE poll_option_votes (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    poll_option_id INTEGER REFERENCES poll_options(id),
+    poll_id INTEGER REFERENCES polls(id)
 );
 
 CREATE TABLE friends (
@@ -553,28 +575,43 @@ CREATE TRIGGER add_friend
         (1, 'johndoe', 'johndoe@example.com', '$2y$10$oI17OO.VH15Kn0i6S840ce6BB.9AH6iAjTfUeCDgz1zVzQbNJ4iiG', 'Undergraduate', 'John Doe', true, 2, 'tHMLkLWZFQhuzM3hSzpOtKsuIMG4X2FcUKrikcGA.png', '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Lisboa'),
         (2, 'alanturing', 'alanturing@example.com', 'password2', 'Professor', 'Alan Turing', false, 2, null, '2023-11-23 14:18:29+00', 'A professor in Computer Science', 'University of Porto'),
         (3, 'adalovelace', 'adalovelace@example.com', 'password3', 'Graduate', 'Ada Lovelace', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Coimbra'),
-        (4, 'admin', 'admin@example.com', '$2y$10$ehcHOK3hnZA7L4h5PvpQge3VfdFbaSxryczs9GzK9lUDNxMcKoWua', 'Undergraduate', 'Admin User', false, 1, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Porto'),
-        (5, 'newuser1', 'newuser1@example.com', '$2y$10$3M0VIGcqNMTJ9.PZ8mW3f.9qDokvlX/j64fcsOLtkI8.XyegXzSxC', 'Undergraduate', 'New User 1', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Minho'),
-        (6, 'newuser2', 'newuser2@example.com', '$2y$10$ZoykCj4aGdzqibHBzqsWUuhu3uVKq.TwRasA5h5HX5OZ/4fA2iJF.', 'Graduate', 'New User 2', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Porto'),
-        (7, 'newuser3', 'newuser3@example.com', '$2y$10$5wUkMCw/ghAB.FTti8Zvh.KZWHzJLOXG3k7FWgMEq8k5IiAAsOaaW', 'Undergraduate', 'New User 3', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Aveiro'),
-        (8, 'newuser4', 'newuser4@example.com', '$2y$10$wI4TQbF7SG2G1LyTBRST7.BG2wLOer3ce5HqEXE.AhOlFrfA/HPHK', 'Professor', 'New User 4', true, 2, null, '2023-11-23 14:18:29+00', 'A professor in Mathematics', 'University of Porto'),
-        (9, 'newuser5', 'newuser5@example.com', '$2y$10$CWM8JizGogNl2iN2LSzTzOa/LcIaTTd6/4hS7LhC16.NfPlndTThK', 'Undergraduate', 'New User 5', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Lisboa'),
-        (10, 'newuser6', 'newuser6@example.com', '$2y$10$Bx/eakJBb2SPhtSCcqYXfeiKZERQJVL6trMs.I1JLCNnA1vBl2lKW', 'Undergraduate', 'New User 6', true, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Porto'),
-        (11, 'newuser7', 'newuser7@example.com', '$2y$10$Km.LJSBxGQGYP7bN20.Fd.TZEl4H8DdJbDsDCnZaEjnDUe8JZU3BW', 'Graduate', 'New User 7', false, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Coimbra'),
-        (12, 'newuser8', 'newuser8@example.com', '$2y$10$3pCO2UzQYx7gMFCvFwBisegLsPIQ9fHznxADW7NRHRuF9DKd32rSG', 'Undergraduate', 'New User 8', true, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Porto'),
-        (13, 'newuser9', 'newuser9@example.com', '$2y$10$jDJzMz27bMlcb2eXYAqzwud8/SowFbSQ0FJ1u/JDAMNwGKUEKGIVS', 'Professor', 'New User 9', false, 2, null, '2023-11-23 14:18:29+00', 'A professor in Physics', 'University of Coimbra'),
-        (14, 'newuser10', 'newuser10@example.com', '$2y$10$aZqPTzWD4O6ZL20izSRd8eJG0OoRd/uq0cgtcWE0XzRQtBd2PtdKK', 'Undergraduate', 'New User 10', true, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Porto'),
-        (15, 'newuser11', 'newuser11@example.com', '$2y$10$8F8N8h4M/4E1Vdqf6MtJI.2bGfrZ/.cnK/L2J1v7Z7Ei.eMdrXK9W', 'Undergraduate', 'New User 11', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Minho'),
-        (16, 'newuser12', 'newuser12@example.com', '$2y$10$nJQYy6oaaPfvqBXqCm9BOuWTjWGpHl.PTIvAdKOHWgsOefh21tDku', 'Graduate', 'New User 12', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Porto'),
-        (17, 'newuser13', 'newuser13@example.com', '$2y$10$y4YYy6JfVX7osIgqkm9ydOySb54keCdkSPJ5Iq.9jkmH3ROVt8K1q', 'Undergraduate', 'New User 13', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Lisboa'),
-        (18, 'newuser14', 'newuser14@example.com', '$2y$10$Vd11i4f0b3ti7Ct4ihJSE.4j2lelJ43Rm9W10eTRoTPk9zqAGrMZW', 'Professor', 'New User 14', true, 2, null, '2023-11-23 14:18:29+00', 'A professor in Chemistry', 'University of Porto'),
-        (19, 'newuser15', 'newuser15@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Undergraduate', 'New User 15', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Lisboa');
+        (4, 'admin', 'admin@example.com', '$2y$10$ehcHOK3hnZA7L4h5PvpQge3VfdFbaSxryczs9GzK9lUDNxMcKoWua', 'Undergraduate', 'Admin User', false, 1, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Porto');
+        -- (5, 'newuser1', 'newuser1@example.com', '$2y$10$3M0VIGcqNMTJ9.PZ8mW3f.9qDokvlX/j64fcsOLtkI8.XyegXzSxC', 'Undergraduate', 'New User 1', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Minho'),
+        -- (6, 'newuser2', 'newuser2@example.com', '$2y$10$ZoykCj4aGdzqibHBzqsWUuhu3uVKq.TwRasA5h5HX5OZ/4fA2iJF.', 'Graduate', 'New User 2', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Porto'),
+        -- (7, 'newuser3', 'newuser3@example.com', '$2y$10$5wUkMCw/ghAB.FTti8Zvh.KZWHzJLOXG3k7FWgMEq8k5IiAAsOaaW', 'Undergraduate', 'New User 3', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Aveiro'),
+        -- (8, 'newuser4', 'newuser4@example.com', '$2y$10$wI4TQbF7SG2G1LyTBRST7.BG2wLOer3ce5HqEXE.AhOlFrfA/HPHK', 'Professor', 'New User 4', true, 2, null, '2023-11-23 14:18:29+00', 'A professor in Mathematics', 'University of Porto'),
+        -- (9, 'newuser5', 'newuser5@example.com', '$2y$10$CWM8JizGogNl2iN2LSzTzOa/LcIaTTd6/4hS7LhC16.NfPlndTThK', 'Undergraduate', 'New User 5', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Lisboa'),
+        -- (10, 'newuser6', 'newuser6@example.com', '$2y$10$Bx/eakJBb2SPhtSCcqYXfeiKZERQJVL6trMs.I1JLCNnA1vBl2lKW', 'Undergraduate', 'New User 6', true, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Porto'),
+        -- (11, 'newuser7', 'newuser7@example.com', '$2y$10$Km.LJSBxGQGYP7bN20.Fd.TZEl4H8DdJbDsDCnZaEjnDUe8JZU3BW', 'Graduate', 'New User 7', false, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Coimbra'),
+        -- (12, 'newuser8', 'newuser8@example.com', '$2y$10$3pCO2UzQYx7gMFCvFwBisegLsPIQ9fHznxADW7NRHRuF9DKd32rSG', 'Undergraduate', 'New User 8', true, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Porto'),
+        -- (13, 'newuser9', 'newuser9@example.com', '$2y$10$jDJzMz27bMlcb2eXYAqzwud8/SowFbSQ0FJ1u/JDAMNwGKUEKGIVS', 'Professor', 'New User 9', false, 2, null, '2023-11-23 14:18:29+00', 'A professor in Physics', 'University of Coimbra'),
+        -- (14, 'newuser10', 'newuser10@example.com', '$2y$10$aZqPTzWD4O6ZL20izSRd8eJG0OoRd/uq0cgtcWE0XzRQtBd2PtdKK', 'Undergraduate', 'New User 10', true, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Porto'),
+        -- (15, 'newuser11', 'newuser11@example.com', '$2y$10$8F8N8h4M/4E1Vdqf6MtJI.2bGfrZ/.cnK/L2J1v7Z7Ei.eMdrXK9W', 'Undergraduate', 'New User 11', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Minho'),
+        -- (16, 'newuser12', 'newuser12@example.com', '$2y$10$nJQYy6oaaPfvqBXqCm9BOuWTjWGpHl.PTIvAdKOHWgsOefh21tDku', 'Graduate', 'New User 12', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Porto'),
+        -- (17, 'newuser13', 'newuser13@example.com', '$2y$10$y4YYy6JfVX7osIgqkm9ydOySb54keCdkSPJ5Iq.9jkmH3ROVt8K1q', 'Undergraduate', 'New User 13', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Lisboa'),
+        -- (18, 'newuser14', 'newuser14@example.com', '$2y$10$Vd11i4f0b3ti7Ct4ihJSE.4j2lelJ43Rm9W10eTRoTPk9zqAGrMZW', 'Professor', 'New User 14', true, 2, null, '2023-11-23 14:18:29+00', 'A professor in Chemistry', 'University of Porto'),
+        -- (19, 'newuser15', 'newuser15@example.com', '$2y$10$t/RloAt7nERBfAnC.F6Z6ecUVlMc8GbqzgWt6NMSu7/bfN4TkCvdG', 'Undergraduate', 'New User 15', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Lisboa');
 
 
     INSERT INTO friend_request(user_id, friend_id, is_accepted, date) VALUES
         (2, 3, null, '1940-01-28 12:00:00'),
         (1, 2, null, '1940-01-28 12:00:00'),
         (1, 4, null, '2023-05-17 15:30:00');
+        -- (1, 5, null, '2023-05-17 15:30:00'),
+        -- (1, 6, null, '2023-05-17 15:30:00'),
+        -- (1, 7, null, '2023-05-17 15:30:00'),
+        -- (1, 8, null, '2023-05-17 15:30:00'),
+        -- (1, 9, null, '2023-05-17 15:30:00'),
+        -- (1, 10, null, '2023-05-17 15:30:00'),
+        -- (1, 11, null, '2023-05-17 15:30:00'),
+        -- (1, 12, null, '2023-05-17 15:30:00'),
+        -- (1, 13, null, '2023-05-17 15:30:00'),
+        -- (1, 14, null, '2023-05-17 15:30:00'),
+        -- (1, 15, null, '2023-05-17 15:30:00'),
+        -- (1, 16, null, '2023-05-17 15:30:00'),
+        -- (1, 17, null, '2023-05-17 15:30:00'),
+        -- (1, 18, null, '2023-05-17 15:30:00'),
+        -- (1, 19, null, '2023-05-17 15:30:00');
     
     UPDATE friend_request SET is_accepted = true WHERE user_id = 2 OR user_id = 1;
 
@@ -586,22 +623,22 @@ CREATE TRIGGER add_friend
         (1, 2),
         -- (1, 1),
         (2, 1),
-        (2, 2),
-        (5, 1),
-        (6, 1),
-        (7, 1),
-        (8, 1),
-        (9, 1),
-        (10, 1),
-        (11, 1),
-        (12, 1),
-        (13, 1),
-        (14, 1),
-        (15, 1),
-        (16, 1),
-        (17, 1),
-        (18, 1),
-        (19, 1);
+        (2, 2);
+        -- (5, 1),
+        -- (6, 1),
+        -- (7, 1),
+        -- (8, 1),
+        -- (9, 1),
+        -- (10, 1),
+        -- (11, 1),
+        -- (12, 1),
+        -- (13, 1),
+        -- (14, 1),
+        -- (15, 1),
+        -- (16, 1),
+        -- (17, 1),
+        -- (18, 1),
+        -- (19, 1);
 
     INSERT INTO group_owner (group_id, user_id) VALUES
         (1, 1),

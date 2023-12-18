@@ -48,10 +48,8 @@
                     @endcan
                 @endcan
                 @can('edit', $group)
-                    <a href="{{ route('group.edit', $group) }}">
-                        <button type="submit" class="bg-gray-800 hover:bg-black text-white font-bold py-2 px-4 ml-4 rounded">
+                    <a href="{{ route('group.edit', $group) }}" class="bg-gray-800 hover:bg-black text-white font-bold py-2 px-4 ml-4 rounded h-fit">
                             Edit
-                        </button>
                     </a>
                 @endcan
             @endauth
@@ -135,3 +133,5 @@
 @include('partials.confirm_modal')
 
 @include('partials.snackbar')
+
+@include('partials.footer')

@@ -39,7 +39,8 @@ class GroupPolicy
             return Response::deny();
         }
         $userIds = $group->users->pluck('id')->toArray();
-        if (in_array($user->id, $userIds)) {
+        $ownerIds = $group->group_owners()->pluck('users.id')->toArray();
+        if (in_array($user->id, $userIds) || in_array($user->id, $ownerIds)) {
             return Response::allow();
         }
         return Response::deny();

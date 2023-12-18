@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PostResource;
 use App\Enums\ReactionType;
 use App\Events\Reaction as EventsReaction;
+use App\Models\Poll;
+use App\Models\PollOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -70,7 +72,6 @@ class PostController extends Controller
 
     public function showCreateForm(): View
     {
-
         $this->authorize('create', Post::class);
 
         $groups = Auth::user()->groups;
@@ -82,7 +83,6 @@ class PostController extends Controller
 
     public function create(Request $request)
     {
-
         $this->authorize('create', Post::class);
 
         $request->validate([
@@ -90,7 +90,8 @@ class PostController extends Controller
             'content' => 'required|string',
             'attachment' => 'nullable|file',
             'group' => 'nullable|integer',
-            'is_private' => 'required|boolean'
+            'is_private' => 'required|boolean',
+            'poll_options' => 'nullable|array'
         ]);
 
         if (!$request->is_private) {
@@ -110,12 +111,25 @@ class PostController extends Controller
             'is_private' => $request->is_private
         ]);
 
+        if (isset($request->poll_options) && $request->poll_options[0] !== null) {
+            $poll = Poll::create([]);
+
+            $post->poll_id = $poll->id;
+            $post->save();
+
+            foreach ($request->poll_options as $option) {
+                PollOption::create([
+                    'name' => $option,
+                    'poll_id' => $poll->id
+                ]);
+            }
+        }
+
         return redirect('/post/' . $post->id);
     }
 
     public function showPost(Request $request, string $id)
     {
-
         // validate id
         if (!is_numeric($id)) {
             // not valid. return to feed
@@ -126,7 +140,7 @@ class PostController extends Controller
 
         $this->authorize('view', $post);
 
-        $comments = $post->comments()->paginate(15);
+        $comments = $post->comments()->orderBy('date', 'desc')->paginate(15);
 
         if ($request->is("api*")) {
             $commentCards = [];
@@ -137,10 +151,16 @@ class PostController extends Controller
 
             return response()->json($commentCards);
         } else {
+            $poll = $post->poll;
+            if ($poll !== null) {
+                $pollOptions = PollOption::with("votes")->where('poll_id', $poll->id)->get();
+            }
 
             return view('pages.post', [
                 'post' => $post,
-                'comments' => $comments
+                'comments' => $comments,
+                'poll' => $poll === null ? null : $poll,
+                'pollOptions' => isset($pollOptions) ? $pollOptions : null
             ]);
         }
     }

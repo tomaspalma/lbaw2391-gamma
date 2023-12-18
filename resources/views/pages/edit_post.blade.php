@@ -55,3 +55,5 @@
         </form>
     </div>
 </main>
+
+@include('partials.footer')

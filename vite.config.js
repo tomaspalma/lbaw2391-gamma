@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 "resources/css/app.css",
                 "resources/js/group/filter.js",
+                "resources/js/post/poll.js",
                 "resources/js/app.js",
                 "resources/js/components/snackbar.js",
                 "resources/js/search/search_input_preview.js",
@@ -37,6 +38,7 @@ export default defineConfig({
                 "resources/js/group/enter_leave.js",
                 "resources/js/profile/friends.js",
                 "resources/js/friends/requests.js",
+                "resources/js/friends/scroll.js",
                 "resources/js/group/promote.js",
                 "resources/js/admin/user/show_appeal_reason.js",
                 "resources/js/components/dropdown.js",
@@ -45,7 +47,9 @@ export default defineConfig({
                 "resources/js/comment/scroll.js",
                 "resources/js/profile/scroll.js",
                 "resources/js/search/main_search/scroll.js",
-                "resources/js/post/copy_link.js"
+                "resources/js/admin/user/scroll.js",
+                "resources/js/post/copy_link.js",
+                "resources/js/faq.js",
             ],
             refresh: true,
         }),

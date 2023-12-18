@@ -8,7 +8,7 @@
 
 @include('partials.navbar')
 
-<div class="max-w-screen-md mx-auto pb-4">
+<div class="max-w-screen-md mx-auto pb-4 md:mb-8">
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black">
         <div class="flex justify-between items-center">
             <h2 class="text-2xl font-bold text-gray-700 mx-auto">Edit Profile</h2>
@@ -113,3 +113,5 @@
         </form>
     </div>
 </div>
+
+@include('partials.footer')
