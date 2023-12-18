@@ -111,7 +111,7 @@
 
         <aside class="md:shadow-md md:border-2 md:border-gray-500 px-10 md:p-10 w-96 rounded-lg col-span-10 md:col-span-3 self-start items-start content-start mr-2 md:mr-5">
             <h3 class="text-xl font-bold mb-2">About Us</h3>
-            <p class="mb-2">{{ $group->description }}</p>
+            <p class="mb-2 w-full break-words">{{ $group->description }}</p>
             <div class="border-b border-gray-500 my-4"></div>
             <p class="mb-2">{{ $members->count() }} members</p>
             <p class="mb-2">{{ $posts->count() }} posts</p>
