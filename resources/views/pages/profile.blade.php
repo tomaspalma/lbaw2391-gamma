@@ -10,7 +10,7 @@
 
 @include('partials.confirm_modal')
 
-<div class="max-w-screen-md mx-auto pb-4">
+<div class="max-w-screen-md mx-auto pb-4 md:mb-4">
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black">
         <div class="grid grid-cols-3 items-center">
             <div></div>
@@ -109,3 +109,5 @@
 </div>
 
 @include('partials.snackbar')
+
+@include('partials.footer')

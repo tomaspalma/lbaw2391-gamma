@@ -101,6 +101,18 @@
                 </li>
                 @endif
                 @endauth
+                <li class="md:hidden">
+                    <a href="{{ route('about') }}" class="block py-2 pl-3 pr-4">About Us</a>
+                </li>
+                <li class="md:hidden">
+                    <a href="{{ route('features') }}" class="block py-2 pl-3 pr-4">Main Features</a>
+                </li>
+                <li class="md:hidden">
+                    <a href="{{ route('faq') }}" class="block py-2 pl-3 pr-4">FAQ</a>
+                </li>
+                <li class="md:hidden">
+                    <a href="{{ route('contacts') }}" class="block py-2 pl-3 pr-4">Contacts</a>
+                </li>
             </ul>
         </div>
     </div>

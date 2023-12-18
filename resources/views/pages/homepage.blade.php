@@ -9,7 +9,7 @@
 
 @include('partials.navbar')
 
-<main class="center">
+<main class="center md:mb-12">
     @can('create', App\Models\Post::class)
     <a href="{{ route('post.createForm') }}" class="my-4 block mx-auto px-4 py-2 bg-black text-white text-center rounded">Create Post</a>
     @endcan
@@ -40,3 +40,5 @@
 </main>
 
 @include('partials.snackbar')
+
+@include('partials.footer')
