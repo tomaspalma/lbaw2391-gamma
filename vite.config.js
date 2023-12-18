@@ -35,6 +35,7 @@ export default defineConfig({
                 "resources/js/utils.js",
                 "resources/js/notifications/filter.js",
                 "resources/js/group/enter_leave.js",
+                "resources/js/group/enter_requests.js",
                 "resources/js/profile/friends.js",
                 "resources/js/friends/requests.js",
                 "resources/js/group/promote.js",

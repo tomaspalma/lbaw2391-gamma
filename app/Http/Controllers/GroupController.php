@@ -362,7 +362,9 @@ class GroupController extends Controller
 
         $groupRequest->decline();
 
-        return redirect("/groups/requests/");
+        return response()->json([
+            'message' => 'Request declined successfully'
+        ]);
     }
 
     public function approveRequest(string $id){
@@ -392,7 +394,9 @@ class GroupController extends Controller
 
         $grouprequest->approve();
 
-        return redirect("/groups/requests/");
+        return response()->json([
+            'message' => 'Request accepted successfully'
+        ]);
     }
 
 }

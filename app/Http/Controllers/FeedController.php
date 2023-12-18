@@ -29,8 +29,14 @@ class FeedController extends Controller
 
         $user = auth()->user();
 
-        $groups = $user->groups('');
-        $raw_posts = $groups->pluck('posts')->flatten();
+        //$groups = $user->groups('owner');
+
+
+        $raw_posts = Post::withCount('reactions')
+            ->where('is_private', '=', true)
+            ->where('group_id', '=', null)
+            ->orderBy('reactions_count', 'desc')
+            ->paginate(10);
 
         $friends = $user->friends;
         $raw_posts = $raw_posts->merge($friends->pluck('posts')->flatten());
