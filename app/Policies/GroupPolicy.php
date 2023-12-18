@@ -10,7 +10,7 @@ class GroupPolicy
 {
     public function can_modify(User $user, Group $group)
     {
-        return $user->is_owner($group)
+        return $user->is_owner($group->id)
             ? Response::allow()
             : Response::deny("You are not an owner of this group.");
     }
@@ -57,7 +57,7 @@ class GroupPolicy
 
     public function edit(User $user, Group $group): Response
     {
-        return $user->is_owner($group)
+        return $user->is_owner($group->id)
             ? Response::allow()
             : Response::deny("You are not an owner of this group.");
     }

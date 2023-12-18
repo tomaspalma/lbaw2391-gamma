@@ -90,7 +90,7 @@ class GroupController extends Controller
         $this->authorize('can_modify', $group);
 
         DB::transaction(function () use ($request, $user, $group) {
-            if ($user->is_owner($group)) {
+            if ($user->is_owner($group->id)) {
                 GroupOwner::where('user_id', $user->id)->delete();
             } else {
                 GroupUser::where('user_id', $user->id)->delete();
@@ -176,7 +176,8 @@ class GroupController extends Controller
             $group->users()->attach($user->id);
             return response()->json([
                 'message' => 'User added to the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded',
-                'new_text' => 'Leave Group', 'new_method' => 'delete'
+                'new_text' => 'Leave Group', 'new_method' => 'delete',
+                'new_action' => 'leave'
             ]);
         } else {
 
@@ -192,7 +193,8 @@ class GroupController extends Controller
 
             return response()->json([
                 'message' => 'User asked to enter the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded',
-                'new_text' => 'Remove Request', 'new_method' => 'delete'
+                'new_text' => 'Remove Request', 'new_method' => 'delete',
+                'new_action' => 'removeRequest'
             ]);
         }
     }
@@ -232,7 +234,8 @@ class GroupController extends Controller
 
             return response()->json([
                 'message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
-                'new_text' => 'Enter this group', 'new_method' => 'post'
+                'new_text' => 'Enter this group', 'new_method' => 'post',
+                'new_action' => 'enter'
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error removing user from the group', 'message' => $e->getMessage()], 500);
@@ -242,6 +245,8 @@ class GroupController extends Controller
     public function removeRequest(string $id)
     {
         $user = Auth::user();
+
+        $group = Group::findOrFail($id);
         if (!Auth::check()){
             return response()->json([
                 'error' => [
@@ -251,7 +256,7 @@ class GroupController extends Controller
             ], 401);
         }
 
-        if(!$user->in_pending($id)){
+        if(!$user->is_pending($id)){
             return response()->json([
                 'error' => [
                     'code' => 401,
@@ -260,22 +265,13 @@ class GroupController extends Controller
             ], 401);
         }
 
-        $group = Group::findOrFail($id);
 
-        $user = Auth::user();
-
-        DB::transaction(function () use ($user, $group) {
-            DB::table('group_request')
-                ->where('user_id', $user->id)
-                ->where('group_id', $group->id)
-                ->delete();
-        });
-
-
+        $group->remove_request($user->id);
 
         return response()->json([
             'message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
-            'new_text' => 'Enter this group', 'new_method' => 'post'
+            'new_text' => 'Enter this group', 'new_method' => 'post',
+            'new_action' => 'enter'
         ]);
     }
 
@@ -363,6 +359,8 @@ class GroupController extends Controller
     }
 
     public function approveRequest(string $id){
+
+        $groupRequest = GroupRequest::findOrFail($id);
         
         $user = Auth::user();
         if (!Auth::check()){
@@ -374,7 +372,7 @@ class GroupController extends Controller
             ], 401);
         }
 
-        if(!$user->is_owner($id)){
+        if(!$user->is_owner($groupRequest->group->id)){
             return response()->json([
                 'error' => [
                     'code' => 401,

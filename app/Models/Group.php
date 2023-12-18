@@ -43,6 +43,18 @@ class Group extends Model
         return $this->group_owners()->paginate(10)->merge($this->users()->paginate(10));
     }
 
+    public function remove_request($user_id){
+
+        $group_id = $this->id;
+
+        DB::transaction(function () use ($user_id, $group_id) {
+            DB::table('group_request')
+                ->where('group_id', $group_id)
+                ->where('user_id', $user_id)
+                ->delete();
+        });
+    }
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id');

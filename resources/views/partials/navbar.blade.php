@@ -101,7 +101,7 @@
                     <li>
                         <a href="/groups" class="block py-2 pl-3 pr-4 text-xl">
                             <div class="relative flex flex-row md:flex-col md:space-x-0">
-                                <i class="fa-sharp fa-solid fa-people-group"></i>
+                                <i class="fa-sharp fa-solid fa-people-group text-2xl"></i>
                             </div>
                         </a>
                     </li>

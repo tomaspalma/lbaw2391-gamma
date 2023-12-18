@@ -33,12 +33,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
                 button.classList = data['new_color']
                 button.textContent = data['new_text']
+                const new_action = data['new_action']
+                
                 if (methodField.value.toUpperCase() === "POST") {
                     methodField.value = "DELETE";
-                    form.action = `/group/${groupID}/leave`
+                    form.action = `/group/${groupID}/${new_action}`
                 } else if (methodField.value.toUpperCase() === "DELETE") {
                     methodField.value = "POST";
-                    form.action = `/group/${groupID}/enter`
+                    form.action = `/group/${groupID}/${new_action}`
                 }
                 e.preventDefault();
             })

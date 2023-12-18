@@ -27,6 +27,7 @@ class GroupRequest extends Model
         'date'
     ];
 
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -55,6 +56,10 @@ class GroupRequest extends Model
                 ->where('id', $id)
                 ->delete();
         });
+    }
+
+    public function remove(){
+        $this->decline();
     }
 
 }
