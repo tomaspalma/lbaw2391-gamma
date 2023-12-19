@@ -10,7 +10,7 @@
 @include('partials.navbar')
 
 <main class="center">
-    <div class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
+    <div class="border border-black p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
         <h2 class="text-2xl font-semibold mb-4">Create a New Post</h2>
 
         <form action="{{ route('post.create') }}" method="post" class="grid grid-cols-2 gap-4">
@@ -19,7 +19,7 @@
             <div class="mb-4 col-span-2">
                 <label for="title" class="block text-sm font-medium text-gray-600">Title:</label>
                 <input type="text" name="title" id="title" class="mt-1 p-2 border border-gray-300 rounded-md w-full" required>
-            </div>
+            </div>  
 
                 <div class="mb-4">
                     <label for="group" class="block text-sm font-medium text-gray-600 {{ $in_group_already ? 'hidden' : '' }}">Group:</label>
@@ -76,3 +76,5 @@
         </form>
     </div>
 </main>
+
+@include('partials.footer')

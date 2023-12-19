@@ -9,9 +9,13 @@ export function getCurrentSearchQuery() {
 }
 
 export function getUsername() {
-    const username = document.querySelector("meta[name='username']").getAttribute("content");
+    const username = document.querySelector("meta[name='username']")
 
-    return username;
+    if (!username) {
+        return null;
+    }
+
+    return username.getAttribute("content");
 }
 
 export function addCounter(counter, sum) {

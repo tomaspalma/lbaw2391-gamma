@@ -4,3 +4,4 @@
 
 @include('partials.auth.email_validation_notice_text')
 
+@include('partials.footer')

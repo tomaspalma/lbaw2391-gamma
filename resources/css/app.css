@@ -39,6 +39,10 @@ input {
     @apply text-yellow-700;
 }
 
+.handshake-color {
+    @apply text-yellow-400;
+}
+
 .dislike-color {
     @apply text-red-500;
 }
@@ -67,11 +71,11 @@ input {
     @apply bg-white text-purple-700;
 }
 
-.star-highlighted {
+.star-highlighted, .handshake-highlighted, .handpointup-highlighted {
     @apply bg-yellow-400 text-white;
 }
 
-.star-nonhighlighted {
+.star-nonhighlighted, .handshake-nonhighlighted, .handpointup-nonhighlighted {
     @apply bg-white text-yellow-700;
 }
 

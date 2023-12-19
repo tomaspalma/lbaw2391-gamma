@@ -160,6 +160,20 @@ Route::controller(PasswordController::class)->middleware(EnsureUserIsNotAppBanne
 
 Route::post('/pusher/auth', [PusherController::class, 'authenticate'])->middleware(['auth', EnsureUserIsNotAppBanned::class]);
 
+// Static pages
+Route::get('/faq', function () {
+    return view('pages.faq');
+})->name('faq');
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
+Route::get('/contacts', function () {
+    return view('pages.contacts');
+})->name('contacts');
+Route::get('/features', function () {
+    return view('pages.features');
+})->name('features');
+
 Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::controller(SearchController::class)->group(function () {
         Route::get('/search/groups/{query?}', 'fullTextGroups');
@@ -167,6 +181,10 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::get('/search/posts/{query?}', 'fullTextPosts');
         Route::get('/admin/search/users/{query?}', 'adminFullTextUsers')->middleware(['auth', EnsureUserIsAdmin::class]);
         Route::get("/search/{query?}", 'showSearch');
+    });
+
+    Route::controller(FriendController::class)->group(function () {
+        Route::get('/users/{username}/friends', 'show_friends')->name('show.friends');
     });
 
     Route::controller(FeedController::class)->group(function () {
@@ -195,5 +213,10 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::middleware(EnsureUserIsAdmin::class)->group(function () {
             Route::delete("/users/{username}/appeal", 'remove_appeal')->name('admin.remove_appeal');
         });
+    });
+
+    Route::controller(AdminController::class)->group(function() {
+        Route::get("/admin/user", 'show_admin_user')->name('api.admin.show_users');
+        Route::get("/admin/user/appeals", 'show_user_appeals')->name('api.admin.show_user_appeals');
     });
 });

@@ -1243,6 +1243,11 @@ paths:
       responses:
         '200':
           description: 'HTML with the notification cards'
+<<<<<<< HEAD
+          
+  /users/{username}/appban/appeal:
+=======
+>>>>>>> main
 
   /comment/{id}/reaction:
     get: 
@@ -1453,6 +1458,35 @@ paths:
           description: 'Returns JSON with HTML of the post cards'
         '403':
           description: 'Forbidden. User cannot see the posts of this group'
+
+  /api/users/{username}/friends:
+    get:
+      operationId: R509
+      summary: 'R509: Retrieve friends of user'
+      description: 'Retrieve html of friends card of user. Access: VST, USR'
+      tags:
+        - 'M05: Users'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    html:
+                      type: string
+        
+      parameters:
+        - in: path
+          name: username
+          description: Username of the user
+          schema:
+            type: string
+          required: true
+
 
   /api/group/{id}/members/{filter}:
 
