@@ -251,12 +251,13 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->exists();
     }
 
-    public function is_owner(string $group_id): bool{
+    public function is_owner($group): bool{
         return DB::table('group_owner')
             ->where('user_id', $this->id)
-            ->where('group_id', $group_id)
+            ->where('group_id', $group)
             ->exists();
     }
+    
 
     public function belongs_group(string $group_id): bool{
         return DB::table('group_user')

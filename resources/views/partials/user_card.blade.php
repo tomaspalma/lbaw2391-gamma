@@ -5,7 +5,7 @@
             <div>
                 <a href="{{ '/users/' . $user->username }}" class="no-underline">
                     <h2 class="text-xl font-bold display-name">{{ $user->display_name }}
-                        @if(isset($group) && $user->is_owner($group->id))
+                        @if(isset($group->id) && $user->is_owner($group->id))
                         <span class="group-status-text">Owner</span>
                         @endif
 
@@ -25,22 +25,22 @@
         </div>
 
         @if($adminView)
-        <div class="flex space-x-8 mt-4 md:mt-0 justify-center items-center">
+            <div class="flex space-x-8 mt-4 md:mt-0 justify-center items-center">
+                @if(!isset($appealView) || !$appealView)
+                    <button>
+                        <a target="_blank" href="{{ '/users/' . $user->username . '/edit' }}">Edit</a>
+                    </button>
+                @endif
+                <button class="block-reason-trigger" {{ $user->is_app_banned() ? 'hidden' : '' }}>
+                    Block
+                </button>
+            <button class="unblock-confirmation-trigger" {{ !$user->is_app_banned() ? 'hidden' : '' }}>
+                Unblock
+            </button>
             @if(!isset($appealView) || !$appealView)
-            <button>
-                <a target="_blank" href="{{ '/users/' . $user->username . '/edit' }}">Edit</a>
+            <button class="delete-confirmation-trigger">
+                Delete
             </button>
-            @endif
-            <button class="block-reason-trigger" {{ $user->is_app_banned() ? 'hidden' : '' }}>
-                Block
-            </button>
-        <button class="unblock-confirmation-trigger" {{ !$user->is_app_banned() ? 'hidden' : '' }}>
-            Unblock
-        </button>
-        @if(!isset($appealView) || !$appealView)
-        <button class="delete-confirmation-trigger">
-            Delete
-        </button>
         @endif
         @if(isset($appealView) && $appealView)
         <button class="remove-confirmation-trigger">
@@ -74,8 +74,8 @@
             </div>
             @endif
 
-            @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group))
-            @if(Auth::user()->is_owner($group) && !$user->is_owner($group))
+            @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group->id))
+            @if(Auth::user()->is_owner($group->id) && !$user->is_owner($group->id))
             <div class="normal-user-actions">
                 <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
                     Promote
