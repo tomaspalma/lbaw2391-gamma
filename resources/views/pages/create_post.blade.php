@@ -24,10 +24,14 @@
                 <div class="mb-4">
                     <label for="group" class="block text-sm font-medium text-gray-600 {{ $in_group_already ? 'hidden' : '' }}">Group:</label>
                     <select name="group" id="group" class="mt-1 p-2 border border-gray-300 rounded-md w-full {{ $in_group_already ? 'hidden' : '' }}">
-                        <option value="{{ $groupp->id }}">{{$in_group_already ? $groupp->name : 'None'}}</option>
-                        @foreach ($groups as $group)
-                        <option value="{{ $group->id }}">{{ $group->name }}</option>
-                        @endforeach
+                        @if ($in_group_already)
+                            <option value="{{ $groupp->id }}">{{ $groupp->name }}</option>
+                        @else
+                            <option value="" seleced>None</option>
+                            @foreach ($groups as $group)
+                                <option value="{{ $group->id }}">{{ $group->name }}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
 
