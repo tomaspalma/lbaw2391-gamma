@@ -649,8 +649,6 @@ CREATE TRIGGER add_friend
 
     INSERT INTO group_owner (group_id, user_id) VALUES
         (1, 1),
-        (1, 2),
-        (2, 1),
         (2, 2);
 
     INSERT INTO post (author, title, content, attachment, group_id, is_private, date) VALUES
