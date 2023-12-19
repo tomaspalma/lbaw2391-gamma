@@ -434,6 +434,11 @@ class GroupController extends Controller
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        $sameName = Group::where('name', $request->input('name'))->get();
+
+        if (count($sameName) > 0) {
+            return redirect()->back()->withErrors(['name' => 'This name is already taken.']);
+        }
 
         $group = null;
         DB::transaction(function () use ($request, &$group) {
