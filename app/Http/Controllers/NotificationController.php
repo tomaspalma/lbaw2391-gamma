@@ -15,6 +15,8 @@ class NotificationController extends Controller
             $notifications = $request->user()->comment_notifications();
         } elseif ($filter === 'friend-requests') {
             $notifications = $request->user()->friend_request_notifications();
+        } elseif ($filter === 'group-requests'){
+            $notifications = $request->user()->group_request_notifications();
         } else {
             $notifications = $request->user()->normal_notifications();
         }

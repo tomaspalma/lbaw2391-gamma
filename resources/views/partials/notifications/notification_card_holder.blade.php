@@ -31,6 +31,11 @@
     ])
     @endif
 
+        @include('partials.notifications.reactions_notification', [
+        'notification' => $notification,
+        'date' => $date
+        ])
+
     @if(!$notification->read)
     @php
     $notification->read = true;

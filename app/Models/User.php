@@ -160,6 +160,14 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->paginate(15);
     }
 
+    public function group_request_notifications()
+    {
+        return GroupRequestNot::with('user_id')
+            ->wherehas('user_id', $this->id)
+            ->orderBy('date', 'desc')
+            ->paginate(15);
+    }
+
 
     public function post_reaction(Post $post)
     {
