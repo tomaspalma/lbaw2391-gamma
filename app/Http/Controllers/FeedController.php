@@ -64,25 +64,10 @@ class FeedController extends Controller
 
         $user = auth()->user();
 
-        /*
         $raw_posts = Post::withCount('reactions')
-            ->where('is_private', '=', false)
-            ->where('group_id', '=', null)
-            ->orderBy('reactions_count', 'desc')
-            ->paginate(10);
-        */
-
-        $raw_posts = Post::where('is_private', false)
-            ->where(function ($query) {
-                $query->whereNull('group_id')
-                    ->orWhere(function ($query) {
-                        $query->whereNotNull('group_id')
-                            ->whereHas('group', function ($query) {
-                                $query->where('is_private', false);
-                            });
-                    });
-            })
-            ->paginate(10);
+        ->where('is_private', '=', false)
+        ->orderBy('reactions_count', 'desc')
+        ->paginate(10);
         
 
 
