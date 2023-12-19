@@ -10,7 +10,7 @@ class GroupPolicy
 {
     public function can_modify(User $user, Group $group)
     {
-        return $user->is_owner($group)
+        return $user->is_owner($group->id)
             ? Response::allow()
             : Response::deny("You are not an owner of this group.");
     }
@@ -23,8 +23,9 @@ class GroupPolicy
             }
 
             $userIds = $group->users->pluck('id')->toArray();
+            $ownersIds = $group->owners->pluck('id')->toArray();
 
-            return (in_array($user->id, $userIds) || $user->is_admin())
+            return (in_array($user->id, $userIds) || in_array($user->id, $ownersIds) || $user->is_admin())
                 ? Response::allow()
                 : Response::deny('This group is private.');
         }
@@ -58,7 +59,7 @@ class GroupPolicy
 
     public function edit(User $user, Group $group): Response
     {
-        return $user->is_owner($group)
+        return $user->is_owner($group->id)
             ? Response::allow()
             : Response::deny("You are not an owner of this group.");
     }

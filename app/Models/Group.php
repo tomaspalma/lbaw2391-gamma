@@ -10,6 +10,7 @@ use App\Http\Controllers\FileController;
 use Illuminate\Support\Facades\DB;
 
 
+use App\Models\GroupRequest;
 class Group extends Model
 {
     use HasFactory;
@@ -21,7 +22,8 @@ class Group extends Model
         'name',
         'description',
         'is_private',
-        'tsvectors'
+        'tsvectors',
+        'image'
     ];
 
 
@@ -30,9 +32,27 @@ class Group extends Model
         return $this->hasMany(Post::class, "group_id");
     }
 
+
+    public function requests(): HasMany
+    {
+        return $this->hasMany(GroupRequest::class, 'group_id')->where('is_accepted', false);
+    }
+
     public function all_users()
     {
         return $this->group_owners()->paginate(10)->merge($this->users()->paginate(10));
+    }
+
+    public function remove_request($user_id){
+
+        $group_id = $this->id;
+
+        DB::transaction(function () use ($user_id, $group_id) {
+            DB::table('group_request')
+                ->where('group_id', $group_id)
+                ->where('user_id', $user_id)
+                ->delete();
+        });
     }
 
     public function users(): BelongsToMany
@@ -40,6 +60,16 @@ class Group extends Model
         return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id');
     }
 
+    public function owners(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_owner', 'group_id', 'user_id');
+    }
+
+
+    public function getProfileImage()
+    {
+        return FileController::get('groupProfile', $this->id);
+    }
 
     public function getGroupImage()
     {

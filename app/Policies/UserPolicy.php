@@ -51,9 +51,20 @@ class UserPolicy
         return ($user->id === $model->id || $user->is_admin()) ? Response::allow() : Response::deny('You do not own this profile.');
     }
 
-    public function view(User $user, User $model): response
+    public function view_information(User $user, User $model): Response
     {
-        return $user->is_friend($model) ? Response::allow() : Response::deny('You are not friends of the user.');
+        if ($user === null) {
+            return Response::deny('You must be logged in to view information.');
+        } else if ($user->id === $model->id) {
+            return Response::allow();
+        } else if (!$model->is_private) {
+            return Response::allow();
+        }
+        else if ($user->is_friend($model)) {
+            return Response::allow();
+        } else {
+            return Response::deny('You are not friends with this user.');
+        }
     }
 
     public function view_friends(User $user, User $model): Response

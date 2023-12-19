@@ -29,12 +29,18 @@ class FeedController extends Controller
 
         $user = auth()->user();
 
-        $groups = $user->groups;
-        $raw_posts = $groups->pluck('posts')->flatten();
 
-        $friends = $user->friends;
-        $raw_posts = $raw_posts->merge($friends->pluck('posts')->flatten());
-        $raw_posts = Post::withCount('reactions')->whereIn('id', $raw_posts->pluck('id'))->paginate(10);
+        $raw_posts = Post::whereIn('author', function ($query) use ($user) {
+            $query->select('friend2')
+                ->from('friends')
+                ->where('friend1', $user->id)
+                ->unionAll(function ($query) use ($user) {
+                    $query->select('friend1')
+                        ->from('friends')
+                        ->where('friend2', $user->id);
+                });
+        })
+        ->paginate(10);
 
         if ($request->is("api*")) {
             $post_cards = [];
@@ -56,10 +62,14 @@ class FeedController extends Controller
     {
         $raw_posts = [];
 
+        $user = auth()->user();
+
         $raw_posts = Post::withCount('reactions')
-            ->where('is_private', '=', false)
-            ->orderBy('reactions_count', 'desc')
-            ->paginate(10);
+        ->where('is_private', '=', false)
+        ->orderBy('reactions_count', 'desc')
+        ->paginate(10);
+        
+
 
         if ($request->is("api*")) {
             $post_cards = [];

@@ -21,27 +21,27 @@
                 <input type="text" name="title" id="title" class="mt-1 p-2 border border-gray-300 rounded-md w-full" required>
             </div>  
 
-            <div class="mb-4">
-                <label for="group" class="block text-sm font-medium text-gray-600">Group:</label>
-                <select name="group" id="group" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
-                    <option value="">None</option>
-                    @foreach ($groups as $group)
-                    <option value="{{ $group->id }}">{{ $group->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="mb-4">
+                    <label for="group" class="block text-sm font-medium text-gray-600 {{ $in_group_already ? 'hidden' : '' }}">Group:</label>
+                    <select name="group" id="group" class="mt-1 p-2 border border-gray-300 rounded-md w-full {{ $in_group_already ? 'hidden' : '' }}">
+                        <option value="{{ $groupp->id }}">{{$in_group_already ? $groupp->name : 'None'}}</option>
+                        @foreach ($groups as $group)
+                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="mb-4">
-                <label for="is_private" class="block text-sm font-medium text-gray-600">Privacy:</label>
-                <select name="is_private" id="is_private" class="mt-1 p-2 border border-gray-300 rounded-md w-full" required>
-                    @can('publicPost', App\Models\Post::class)
-                    <option value="0">Public</option>
-                    @else
-                    <option value="0" disabled>Public</option>
-                    @endcan
-                    <option value="1">Private</option>
-                </select>
-            </div>
+                <div class="mb-4">
+                    <label for="is_private" class="block text-sm font-medium text-gray-600 {{ $in_group_already ? 'hidden' : '' }}">Privacy:</label>
+                    <select name="is_private" id="is_private" class="mt-1 p-2 border border-gray-300 rounded-md w-full {{ $in_group_already ? 'hidden' : '' }}" required>
+                        @can('publicPost', App\Models\Post::class)
+                        <option value="0">Public</option>
+                        @else
+                        <option value="0" disabled>Public</option>
+                        @endcan
+                        <option value="1">Private</option>
+                    </select>
+                </div>
 
             <div class="mb-4 col-span-2">
                 <label for="content" class="block text-sm font-medium text-gray-600">Content:</label>

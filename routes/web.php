@@ -97,6 +97,7 @@ Route::controller(PollController::class)->middleware(['auth', EnsureUserIsNotApp
 Route::controller(PostController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
     Route::get('/post/{id}', 'showPost')->name('post.show');
     Route::get('/post', 'showCreateForm')->name('post.createForm')->middleware('verified');
+    Route::get('group/post/{id}', 'showCreateFormGroup')->name('post.createFormGroup')->middleware('verified');
     Route::post('/post', 'create')->name('post.create')->middleware('verified');
     Route::get('/post/{id}/edit', 'showEditForm');
     Route::put('/post/{id}/edit', 'update')->name('post.update');
@@ -125,10 +126,17 @@ Route::controller(GroupController::class)->middleware(EnsureUserIsNotAppBanned::
     Route::post('/group/{id}/enter', 'addToGroup')->name('groups.enter');
     Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
     Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
+    Route::get('/groups', 'showGroupsForm');
+    Route::get('/groups/requests', 'showGroupRequests');
+    Route::put('/groups/{id}/approve', 'approveRequest')->name('groups.approve_request');
+    Route::delete('/groups/{id}/decline', 'declineRequest')->name('groups.decline_request');
+
+
     Route::middleware('auth')->group(function () {
         Route::get('/group/{id}/edit', 'edit')->name('group.edit');
         Route::put('/group/{id}', 'update')->name('group.update');
     });
+
 });
 
 Route::controller(SearchController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {

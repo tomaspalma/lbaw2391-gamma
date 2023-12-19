@@ -5,7 +5,7 @@
             <div>
                 <a href="{{ '/users/' . $user->username }}" class="no-underline">
                     <h2 class="text-xl font-bold display-name">{{ $user->display_name }}
-                        @if(isset($group) && $user->is_owner($group))
+                        @if(isset($group) && $user->is_owner($group->id))
                         <span class="group-status-text">Owner</span>
                         @endif
 
@@ -34,13 +34,34 @@
             <button class="block-reason-trigger" {{ $user->is_app_banned() ? 'hidden' : '' }}>
                 Block
             </button>
+        <button class="unblock-confirmation-trigger" {{ !$user->is_app_banned() ? 'hidden' : '' }}>
+            Unblock
+        </button>
+        @if(!isset($appealView) || !$appealView)
+        <button class="delete-confirmation-trigger">
+            Delete
+        </button>
+        @endif
+        @if(isset($appealView) && $appealView)
+        <button class="remove-confirmation-trigger">
+            Remove
+        </button>
+        <i class="appban-dropdown-arrow cursor-pointer fa-solid fa-angle-down"></i>
+        @endif
+        @endif
+
+        @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group->id))
+        @if(Auth::user()->is_owner($group->id) && !$user->is_owner($group->id))
+        <div class="normal-user-actions">
+            <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
+                Promote
             <button class="unblock-confirmation-trigger" {{ !$user->is_app_banned() ? 'hidden' : '' }}>
                 Unblock
             </button>
             @if(!isset($appealView) || !$appealView)
-            <button class="delete-confirmation-trigger">
-                Delete
-            </button>
+                <button class="delete-confirmation-trigger">
+                    Delete
+                </button>
             @endif
             @if(isset($appealView) && $appealView)
             <button class="remove-confirmation-trigger">
@@ -59,20 +80,19 @@
                 <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
                     Promote
                 </button>
-                <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="ban-confirmation-trigger">
-                    Ban
-                </button>
-            </div>
+                <i class="appban-dropdown-arrow cursor-pointer fa-solid fa-angle-down"></i>
             @endif
-
+                </div>
             @endif
     </div>
 
     @if(isset($appealView) && $appealView)
-    <article data-username="{{ $user->username }}" class="hidden appban-appeal-reason">
-        <h1 class="text-base font-bold text-center">Appeal</h1>
-        <p>{{ $appeal->reason }}</p>
-    </article>
+        <article data-username="{{ $user->username }}" class="hidden appban-appeal-reason">
+            <h1 class="text-base font-bold text-center">Appeal</h1>
+            <p>{{ $appeal->reason }}</p>
+        </article>
+
+    @endif
     @endif
 </article>
 

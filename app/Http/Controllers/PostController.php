@@ -6,6 +6,7 @@ use App\Http\Resources\PostResource;
 use App\Enums\ReactionType;
 use App\Events\Reaction as EventsReaction;
 use App\Models\Poll;
+use App\Models\Group;
 use App\Models\PollOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -74,10 +75,35 @@ class PostController extends Controller
     {
         $this->authorize('create', Post::class);
 
-        $groups = Auth::user()->groups;
+        $groupsOwner = Auth::user()->groups('owner')->get();
+        $groupsNormal = Auth::user()->groups('normal')->get();
+
+        $groups = $groupsOwner->merge($groupsNormal);
+
 
         return view('pages.create_post', [
-            'groups' => $groups
+            'groups' => $groups,
+            'in_group_already' => false
+        ]);
+    }
+
+    public function showCreateFormGroup(Request $request, string $id): View
+    {
+        $this->authorize('create', Post::class);
+
+        $user = Auth::user();
+
+        $groupsOwner = Auth::user()->groups('owner')->get();
+        $groupsNormal = Auth::user()->groups('normal')->get();
+
+        $groups = $groupsOwner->merge($groupsNormal);
+
+        $groupp = Group::findOrFail($id);
+
+        return view('pages.create_post', [
+            'groups' => $groups,
+            'in_group_already' => true,
+            'groupp' => $groupp
         ]);
     }
 

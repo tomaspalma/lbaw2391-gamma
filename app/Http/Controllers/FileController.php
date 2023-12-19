@@ -48,6 +48,10 @@ class FileController extends Controller
             case 'post':
                 $fileName = Post::find($id)->image;
                 break;
+
+            case 'groupProfile':
+                $fileName = Group::find($id)->image;
+
             case 'group':
                 $fileName = Group::find($id)->image;
                 break;
