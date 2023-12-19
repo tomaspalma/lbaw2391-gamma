@@ -30,17 +30,19 @@
     'date' => $date
     ])
     @endif
-
-        @include('partials.notifications.reactions_notification', [
+    
+    @if(isset($notification->group_request_id))
+        @include('partials.notifications.group_requests_notification', [
         'notification' => $notification,
         'date' => $date
         ])
+    @endif
 
     @if(!$notification->read)
-    @php
-    $notification->read = true;
-    $notification->save();
-    @endphp
+        @php
+            $notification->read = true;
+            $notification->save();
+        @endphp
     @endif
 
     @endforeach

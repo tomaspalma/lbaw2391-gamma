@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\GroupRequest;
@@ -14,17 +14,19 @@ class GroupRequestNot extends Model
 
     protected $table = 'group_request_not';
     public $timestamps = false;
-
-
     protected $fillable = [
         'group_request_id',
-        'seen'
+        'seen',
+        'is_acceptance'
     ];
 
-    public function groupRequest(): BelongsTo
+    public function groupRequest(): HasOne
     {
-        return $this->belongsTo(GroupRequest::class, 'friend_request_id');
+        return $this->hasOne(GroupRequest::class, 'id', 'group_request_id');
     }
+
+
+    
 
     /*
     public function friendRequest(): BelongsTo

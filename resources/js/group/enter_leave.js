@@ -7,10 +7,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const groupID = window.location.pathname.substring(routePattern.length);
         const number_members = document.getElementById("n_members")
 
-        console.log(methodField.value)
 
         button.addEventListener("click", (e) => {
             e.preventDefault()
+
+            console.log(methodField.value)
 
             fetch(form.action, {
                 method: methodField.value,

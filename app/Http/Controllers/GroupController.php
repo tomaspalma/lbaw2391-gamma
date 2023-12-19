@@ -184,9 +184,10 @@ class GroupController extends Controller
                 'sum' => '1',
             ]);
         } else {
-
+            
             $last_id = DB::select('SELECT id FROM group_request ORDER BY id DESC LIMIT 1')[0]->id;
             $new_id = $last_id + 1;
+            
             DB::table('group_request')->insert([
                 'id' => $new_id,
                 'user_id' => $user->id,

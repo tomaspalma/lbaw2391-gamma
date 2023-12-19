@@ -96,6 +96,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         $result = $this->comment_notifications()
             ->concat($this->reaction_notifications())
             ->concat($this->friend_request_notifications())
+            ->concat($this->group_request_notifications())
             ->sortByDesc('date');
 
         return $result;
@@ -180,13 +181,16 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 
     public function group_request_notifications()
     {
-        return GroupRequestNot::with('user_id')
-            ->wherehas('user_id', $this->id)
-            ->orderBy('date', 'desc')
+        return GroupRequestNot::select('group_request_not.*')
+            ->join('group_request', 'group_request.id', '=', 'group_request_not.group_request_id')
+            ->join('groups', 'groups.id', '=', 'group_request.group_id')
+            ->join('group_owner', 'group_owner.group_id', '=', 'groups.id')
+            ->where('group_owner.user_id', Auth::user()->id)
+            ->where('group_request_not.is_acceptance', '=', false)
+            ->orderBy('group_request_not.date', 'desc')
             ->paginate(15);
     }
-
-
+    
     public function post_reaction(Post $post)
     {
         $reactions = Reaction::where('post_id', $post->id)->where('author', $this->id)->get();
@@ -235,15 +239,15 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->exists();
     }
 
-    public function in_group($group_id): bool{
+    public function in_group($group): bool{
         return DB::table('group_user')
             ->where('user_id', $this->id)
-            ->where('group_id', $group_id)
+            ->where('group_id', $group->id)
             ->exists() 
             || 
             DB::table('group_owner')
             ->where('user_id', $this->id)
-            ->where('group_id', $group_id)
+            ->where('group_id', $group->id)
             ->exists();
     }
 

@@ -164,7 +164,9 @@ CREATE TABLE post_tag(
 CREATE TABLE group_request_not(
     id SERIAL PRIMARY KEY, 
     group_request_id INTEGER REFERENCES group_request(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now())
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK(date <= now()),
+    read BOOLean DEFAULT false,
+    is_acceptance BOOLean DEFAULT false
 );
 
 CREATE TABLE friend_request_not(
@@ -620,15 +622,12 @@ CREATE TRIGGER add_friend
         (2, 'Tech Enthusiasts', 'A group dedicated to discussing the latest technology trends and innovations', true, 'prolog.png');
 
     INSERT INTO group_user (user_id, group_id) VALUES
-        (1, 2),
-        -- (1, 1),
-        (2, 1),
-        (2, 2);
-        -- (5, 1),
+        -- (2, 2);
+        (3, 1),
         -- (6, 1),
         -- (7, 1),
         -- (8, 1),
-        -- (9, 1),
+        (4, 1);
         -- (10, 1),
         -- (11, 1),
         -- (12, 1),
@@ -641,8 +640,7 @@ CREATE TRIGGER add_friend
         -- (19, 1);
 
     INSERT INTO group_request(id, user_id, group_id, is_accepted, date) VALUES
-        (1, 4, 2, false, '2023-05-18 15:30:00'),
-        (2, 4, 2, true, '2023-08-01 12:00:00'),
+        (1, 4, 2, true, '2023-08-01 12:00:00');
         -- (3, 9, 2, false, '2023-09-21 00:00:00'),
         -- (4, 10, 2, false, '2023-09-21 00:00:00'),
         -- (5, 11, 2, false, '2023-09-21 00:00:00');
