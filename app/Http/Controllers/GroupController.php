@@ -50,10 +50,6 @@ class GroupController extends Controller
     public function showGroupsForm(Request $request){
         $user = Auth::user();
 
-        if (!Auth::check()) {
-            abort(401, 'Unauthorized: Authentication required.');
-        }
-
         $groupsNormal = $user->groups('normal');
         $groupsOwner = $user->groups('owner');
         $requests = $user->groupRequests();
@@ -64,16 +60,11 @@ class GroupController extends Controller
     public function showGroupRequests(Request $request){
         $user = Auth::user();
 
-        if (!Auth::check()) {
-            abort(401, 'Unauthorized: Authentication required.');
-        }
+        $groupsNormal = $user->groups('normal');
+        $groupsOwner = $user->groups('owner');
+        $requests = $user->groupRequests();
+        return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
 
-        else{
-            $groupsNormal = $user->groups('normal');
-            $groupsOwner = $user->groups('owner');
-            $requests = $user->groupRequests();
-            return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
-        }
     }
 
     public function banGroupMember(Request $request, int $id, string $username)
@@ -167,15 +158,6 @@ class GroupController extends Controller
 
         $user = Auth::user();
 
-        if (!Auth::check()){
-            return response()->json([
-                'error' => [
-                    'code' => 401,
-                    'message' => 'Unauthorized: Authentication required.'
-                ]
-            ], 401);
-        }
-
         if (!$group->is_private) {
             $group->users()->attach($user->id);
             return response()->json([
@@ -208,14 +190,6 @@ class GroupController extends Controller
     public function removeToGroup(string $id)
     {
         $user = Auth::user();
-        if (!Auth::check()){
-            return response()->json([
-                'error' => [
-                    'code' => 401,
-                    'message' => 'Unauthorized: Authentication required.'
-                ]
-            ], 401);
-        }
 
         if(!$user->in_group($id)){
             return response()->json([
@@ -265,14 +239,6 @@ class GroupController extends Controller
         $user = Auth::user();
 
         $group = Group::findOrFail($id);
-        if (!Auth::check()){
-            return response()->json([
-                'error' => [
-                    'code' => 401,
-                    'message' => 'Unauthorized: Authentication required.'
-                ]
-            ], 401);
-        }
 
         if(!$user->is_pending($id)){
             return response()->json([
@@ -353,14 +319,6 @@ class GroupController extends Controller
 
 
         $user = Auth::user();
-        if (!Auth::check()){
-            return response()->json([
-                'error' => [
-                    'code' => 401,
-                    'message' => 'Unauthorized: Authentication required.'
-                ]
-            ], 401);
-        }
 
         if(!$user->is_owner($groupRequest->group->id)){
             return response()->json([
@@ -384,14 +342,6 @@ class GroupController extends Controller
         $groupRequest = GroupRequest::findOrFail($id);
         
         $user = Auth::user();
-        if (!Auth::check()){
-            return response()->json([
-                'error' => [
-                    'code' => 401,
-                    'message' => 'Unauthorized: Authentication required.'
-                ]
-            ], 401);
-        }
 
         if(!$user->is_owner($groupRequest->group->id)){
             return response()->json([
