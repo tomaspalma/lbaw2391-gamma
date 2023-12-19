@@ -198,6 +198,7 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
     Route::controller(GroupController::class)->group(function () {
         Route::get('/group/{group_id}/posts', 'showGroup')->name('api.group.show_posts');
         Route::get('/group/{group_id}/members/{filter?}', 'showGroupMembers')->name('api.groupMembers');
+        Route::get('/group/group_name/{group_name}', 'checkGroupNameExists');
     });
 
     Route::controller(UserController::class)->group(function () {

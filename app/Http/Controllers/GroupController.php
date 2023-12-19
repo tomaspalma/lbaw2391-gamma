@@ -302,4 +302,15 @@ class GroupController extends Controller
 
         return redirect()->route('groupPosts', $group->id);
     }
+
+    public function checkGroupNameExists(string $group_name)
+    {
+        $group = Group::where('name', $group_name)->get();
+
+        if(count($group) > 0) {
+            return response()->json(['exists' => true]);
+        } else {
+            return response()->json(['exists' => false]);
+        }
+    }
 }
