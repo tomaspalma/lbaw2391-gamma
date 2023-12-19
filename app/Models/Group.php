@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 
 use App\Models\GroupRequest;
+
 class Group extends Model
 {
     use HasFactory;
@@ -43,7 +44,8 @@ class Group extends Model
         return $this->group_owners()->paginate(10)->merge($this->users()->paginate(10));
     }
 
-    public function remove_request($user_id){
+    public function remove_request($user_id)
+    {
 
         $group_id = $this->id;
 
@@ -63,12 +65,6 @@ class Group extends Model
     public function owners(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_owner', 'group_id', 'user_id');
-    }
-
-
-    public function getProfileImage()
-    {
-        return FileController::get('groupProfile', $this->id);
     }
 
     public function getGroupImage()

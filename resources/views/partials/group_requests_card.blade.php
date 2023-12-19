@@ -1,7 +1,7 @@
 <article class="my-4 p-2 border-b flex flex-col justify-between align-middle space-x-2 request" id="{{$request->id}}">
     <div class="flex flex-row justify-between">
         <div class="flex flex-row space-x-2 align-middle">
-            <img class="rounded-full w-10 h-10" src="{{$request->group->getProfileImage()}}" alt="Profile Picture">
+            <img class="rounded-full w-10 h-10" src="{{$request->group->getGroupImage()}}" alt="{{$request->group->name}}'s Image">
             <h1>
                 <a href="/group/{{$request->group_id}}" class="underline">
                     {{$request->group->name}}
