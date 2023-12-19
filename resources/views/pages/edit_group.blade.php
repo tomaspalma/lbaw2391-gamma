@@ -1,11 +1,18 @@
 @extends('layouts.head')
 
+<head>
+    @vite(['resources/css/app.css', 'resources/js/group/edit.js'])
+
+    <title>{{ config('app.name', 'Laravel') }} | Editing Group {{ $group->name }}</title>
+    <link href="{{ url('css/post.css') }}" rel="stylesheet">
+</head>
+
 <body>
     @include('partials.navbar')
 
     <div class="container mx-auto mt-8 max-w-screen-md ounded-lg shadow-lg p-6 border md:mb-12">
         <div class="flex justify-center items-center">
-            <h2 class="text-2xl font-bold mb-4 justi">Edit Group</h1>
+            <h2 class="text-2xl font-bold mb-4 justi">Edit Group {{ $group->name }}</h1>
         </div>
         <form action="{{ route('group.update', $group->id) }}" method="post" enctype="multipart/form-data">
             @csrf
@@ -20,11 +27,30 @@
                 <button type="button" class=" bg-black hover:bg-gray-600 text-white m-2 px-4 py-2 rounded" onclick="document.getElementById('banner').click()">Upload Banner</button>
             </div>
 
-            <label for="name" class="text-sm text-gray-600">Group Name</label>
-            <input type="text" id="name" name="name" value="{{ $group->name }}" class="w-full border p-2 mb-4">
+            @error('image')
+                <p class="text-red-500 text-sm">{{ $message }}. Max size is 2mb.</p>
+            @enderror
+            @error('banner')
+                <p class="text-red-500 text-sm">{{ $message }}. Max size is 2mb.</p>
+            @enderror
 
-            <label for="description" class="text-sm text-gray-600">Group Description</label>
-            <textarea id="description" name="description" class="w-full border p-2 mb-4">{{ $group->description }}</textarea>
+            <div class="mb-4">
+                <input type="hidden" id="old_name" name="old_name" value="{{ $group->name }}">
+                <label for="name" class="text-sm text-gray-600">Group Name</label>
+                <input type="text" id="name" name="name" value="{{ $group->name }}" class="w-full border p-2">
+                @error('name')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+                <p id="name_error" class="text-red-500 text-sm hidden">Group name already taken.</p>
+            </div>
+
+            <div class="mb-4">
+                <label for="description" class="text-sm text-gray-600">Group Description</label>
+                <textarea id="description" name="description" class="w-full border p-2">{{ $group->description }}</textarea>
+                @error('description')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+            </div>
 
             <label for="privacy" class="text-sm text-gray-600">Privacy</label>
             <select id="privacy" name="privacy" class="w-full border p-2 mb-4">
@@ -32,7 +58,8 @@
                 <option value="private" {{ $group->is_private ? 'selected' : '' }}>Private</option>
             </select>
 
-            <button type="submit" class="bg-black hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+
+            <button type="submit" id="submit" class="bg-black hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
                 Submit
             </button>
             <a href="{{ route('groupPosts', $group->id) }}">

@@ -28,24 +28,28 @@
             </div>
 
             @error('image')
-                <p class="text-red-500 text-xs italic">{{ $message }}. Max size is 2mb.</p>
+                <p class="text-red-500 text-sm">{{ $message }}. Max size is 2mb.</p>
             @enderror
             @error('banner')
-                <p class="text-red-500 text-xs italic">{{ $message }}. Max size is 2mb.</p>
+                <p class="text-red-500 text-sm">{{ $message }}. Max size is 2mb.</p>
             @enderror
 
-            <label for="name" class="text-sm mt-2 text-gray-600">Group Name *</label>
-            <input type="text" id="name" name="name" value="{{ old('name') }}" class="w-full border p-2 mb-2">
-            @error('name')
-                <p class="text-red-500 text-xs italic">{{ $message }}</p> 
-            @enderror
-            <p id="name_error" class="text-red-500 text-xs italic hidden">Group name already taken.</p>
+            <div class="mb-4">
+                <label for="name" class="text-sm text-gray-600">Group Name *</label>
+                <input type="text" id="name" name="name" value="{{ old('name') }}" class="w-full border p-2">
+                @error('name')
+                    <p class="text-red-500 text-sm">{{ $message }}</p> 
+                @enderror
+                <p id="name_error" class="text-red-500 text-sm hidden">Group name already taken.</p>
+            </div>
 
-            <label for="description" class="text-sm mt-2 text-gray-600">Group Description *</label>
-            <textarea id="description" name="description" value="{{ old('description') }}" class="w-full border p-2 mb-2"></textarea>
-            @error('description')
-                <p class="text-red-500 text-xs italic">{{ $message }}</p>
-            @enderror
+            <div class="mb-4">
+                <label for="description" class="text-sm text-gray-600">Group Description *</label>
+                <textarea id="description" name="description" value="{{ old('description') }}" class="w-full border p-2"></textarea>
+                @error('description')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+            </div>
 
             <label for="privacy" class="text-sm mt-2 text-gray-600">Privacy *</label>
             <select id="privacy" name="privacy" class="w-full border p-2 mb-2">
@@ -59,6 +63,5 @@
             <a href="{{ route('feed') }}" class="bg-white hover:bg-gray-100 text-black hover:no-underline font-bold py-2 px-4 rounded">Cancel</a>
         </form>
     </div>
+    @include('partials.footer')
 </body>
-
-@include('partials.footer')
