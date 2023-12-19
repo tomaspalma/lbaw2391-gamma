@@ -616,8 +616,8 @@ CREATE TRIGGER add_friend
     UPDATE friend_request SET is_accepted = true WHERE user_id = 2 OR user_id = 1;
 
     INSERT INTO groups(id, name, description, is_private, image) VALUES 
-        (1, 'Prolog Enthusiasts', 'A community for discussing Prolog programming language and related topics', false, ' '),
-        (2, 'Tech Enthusiasts', 'A group dedicated to discussing the latest technology trends and innovations', true, 'prolog.png');
+        (1, 'Prolog Enthusiasts', 'A community for discussing Prolog programming language and related topics', false, null),
+        (2, 'Tech Enthusiasts', 'A group dedicated to discussing the latest technology trends and innovations', true, null);
 
     INSERT INTO group_user (user_id, group_id) VALUES
         (1, 2),
@@ -642,7 +642,7 @@ CREATE TRIGGER add_friend
 
     INSERT INTO group_request(id, user_id, group_id, is_accepted, date) VALUES
         (1, 4, 2, false, '2023-05-18 15:30:00'),
-        (2, 4, 2, true, '2023-08-01 12:00:00'),
+        (2, 4, 2, true, '2023-08-01 12:00:00');
         -- (3, 9, 2, false, '2023-09-21 00:00:00'),
         -- (4, 10, 2, false, '2023-09-21 00:00:00'),
         -- (5, 11, 2, false, '2023-09-21 00:00:00');
