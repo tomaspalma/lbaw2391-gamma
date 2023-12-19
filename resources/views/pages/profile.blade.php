@@ -11,12 +11,8 @@
 @include('partials.confirm_modal')
 
 <div class="max-w-screen-md mx-auto pb-4 md:mb-4">
-    <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black">
-        <div class="grid grid-cols-3 items-center">
-            <div></div>
-            <div class="text-center">
-                <h2 class="text-2xl font-bold text-gray-700">Profile</h2>
-            </div>
+    <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black flex flex-col">
+        <div class="flex items-center justify-end">
             @can('update', $user)
             <div class="relative inline-block text-left justify-self-end">
                 <button id="" class="dropdownButton text-black font-bold py-2 px-4 rounded">
@@ -30,30 +26,46 @@
             </div>
             @endcan
         </div>
-        <div class="mt-6 flex flex-col md:flex-row -mx-3">
+        <div class="flex flex-col md:flex-row -mx-3 items-center text-center md:text-start">
             <div class="md:flex-1 px-3">
                 <div class="mb-4">
-                    <img src="{{ $user->getProfileImage() }}" class="rounded-full w-32 h-32 md:w-48 md:h-48 mx-auto object-cover" alt="{{ $user->username }}'s Profile Image">
+                    <img src="{{ $user->getProfileImage() }}" class="rounded-full w-24 h-24 md:w-40 md:h-40 mx-auto object-cover" alt="{{ $user->username }}'s Profile Image">
                 </div>
-                <div class="flex items-end mb-4 justify-center">
-                    <label class="text-xl font-bold text-gray-700">{{$user->display_name}}</label>
-                    <span class="ml-2 text-xs text-gray-600 pb-1">
-                        {{$user->is_private ? 'Private' : 'Public'}}
-                    </span>
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-700">{{ $user->display_name }}</h2>
+                    <p id="username" class="text-gray-500">{{ $user->username }}</p>
                 </div>
-
-                <div class="flex justify-between items-center">
+            </div>
+            <div class="md:flex-1 px-3 mt-4 md:mt-0 w-full md:w-1/2 md:mr-4">
+                @if($user->description)
+                    <p class="mb-4 text-gray-700 w-full break-words">{{ $user->description }}</p>
+                @endif
+                @can('view_information', $user)
+                <div class="mb-4">
+                    <label class="text-sm text-gray-600">Academic Status</label>
+                    <p class="font-semibold text-gray-800">{{$user->academic_status}}</p>
+                </div>
+                @if($user->university)
+                <div class="mb-4">
+                    <label class="text-sm text-gray-600">University</label>
+                    <p class="font-semibold text-gray-800">{{$user->university}}</p>
+                </div>
+                @endif
+                @endcan
+                @if(auth()->user() && $user->id == auth()->user()->id)
+                <div class="mb-4">
+                    <label class="text-sm text-gray-600">Email</label>
+                    <p class="font-semibold text-gray-800">{{$user->email}}</p>
+                </div>
+                @endif
+                <div class="flex flex-col space-y-2">
                     @can('view_friends', $user)
                     <a href="{{ route('friends_page', ['username' => $user->username]) }}" class="text-l font-bold text-gray-700" id="friends-link">
                         {{$user->friends()->count()}} friend{{$user->friends()->count() == 1 ? '' : 's'}}
                     </a>
-                    @else
-                    <span class="text-l font-bold text-gray-700" id="friends-link">
-                        {{$user->friends()->count()}} friend{{$user->friends()->count() == 1 ? '' : 's'}}
-                    </span>
                     @endcan
                     @can('send_friend_request', $user)
-                    <form action="{{ route('send_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="post">
+                    <form class="m-0" action="{{ route('send_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="post">
                         @csrf
                         <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                             Send Friend Request
@@ -61,7 +73,7 @@
                     </form>
                     @endcan
                     @can('cancel_friend_request', $user)
-                    <form action="{{ route('cancel_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
+                    <form class="m-0" action="{{ route('cancel_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                         @csrf
                         <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                             Cancel Friend Request
@@ -69,7 +81,7 @@
                     </form>
                     @endcan
                     @can('remove_friend', $user)
-                    <form action="{{ route('remove_friend', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
+                    <form class="m-0" action="{{ route('remove_friend', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                         @csrf
                         <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
                             Remove Friend
@@ -81,19 +93,6 @@
                         See Pending Friend Request
                     </button>
                     @endcan
-                </div>
-
-                <div class="mb-4">
-                    <label class="text-sm text-gray-600">Username</label>
-                    <div class="font-semibold text-gray-800" id="username">{{$user->username}}</div>
-                </div>
-                <div class="mb-4">
-                    <label class="text-sm text-gray-600">Email</label>
-                    <div class="font-semibold text-gray-800">{{$user->email}}</div>
-                </div>
-                <div class="mb-4">
-                    <label class="text-sm text-gray-600">Academic Status</label>
-                    <div class="font-semibold text-gray-800">{{$user->academic_status}}</div>
                 </div>
             </div>
         </div>
