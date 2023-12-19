@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Group;
+use App\Models\GroupRequest;
 use App\Models\GroupOwner;
 use App\Models\GroupUser;
 use App\Models\User;
@@ -46,8 +47,40 @@ class GroupController extends Controller
         }
     }
 
+    public function showGroupsForm(Request $request){
+        $user = Auth::user();
+
+        if (!Auth::check()) {
+            abort(401, 'Unauthorized: Authentication required.');
+        }
+
+        $groupsNormal = $user->groups('normal');
+        $groupsOwner = $user->groups('owner');
+        $requests = $user->groupRequests();
+
+        return view('pages.groups', ['feed' => 'groups', 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'requests' => $requests]);
+    }
+
+    public function showGroupRequests(Request $request){
+        $user = Auth::user();
+
+        if (!Auth::check()) {
+            abort(401, 'Unauthorized: Authentication required.');
+        }
+
+        else{
+            $groupsNormal = $user->groups('normal');
+            $groupsOwner = $user->groups('owner');
+            $requests = $user->groupRequests();
+            return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
+        }
+    }
+
     public function banGroupMember(Request $request, int $id, string $username)
+
     {
+        $owner = Auth::user();
+
         $rules = array('reason' => 'required|string');
         $validator = Validator::make($request->all(), $rules);
 
@@ -61,7 +94,7 @@ class GroupController extends Controller
         $this->authorize('can_modify', $group);
 
         DB::transaction(function () use ($request, $user, $group) {
-            if ($user->is_owner($group)) {
+            if ($user->is_owner($group->id)) {
                 GroupOwner::where('user_id', $user->id)->delete();
             } else {
                 GroupUser::where('user_id', $user->id)->delete();
@@ -78,6 +111,7 @@ class GroupController extends Controller
 
     public function promoteUser(Request $request, int $id, string $username)
     {
+
         $group = Group::find($id);
         $user = User::where('username', $username)->get()[0];
 
@@ -133,11 +167,22 @@ class GroupController extends Controller
 
         $user = Auth::user();
 
+        if (!Auth::check()){
+            return response()->json([
+                'error' => [
+                    'code' => 401,
+                    'message' => 'Unauthorized: Authentication required.'
+                ]
+            ], 401);
+        }
+
         if (!$group->is_private) {
             $group->users()->attach($user->id);
             return response()->json([
                 'message' => 'User added to the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded',
-                'new_text' => 'Leave Group', 'new_method' => 'delete'
+                'new_text' => 'Leave Group', 'new_method' => 'delete',
+                'new_action' => 'leave',
+                'sum' => '1',
             ]);
         } else {
 
@@ -153,28 +198,62 @@ class GroupController extends Controller
 
             return response()->json([
                 'message' => 'User asked to enter the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded',
-                'new_text' => 'Remove Request', 'new_method' => 'delete'
+                'new_text' => 'Remove Request', 'new_method' => 'delete',
+                'new_action' => 'removeRequest',
+                'sum' => '0'
             ]);
         }
     }
 
     public function removeToGroup(string $id)
     {
+        $user = Auth::user();
+        if (!Auth::check()){
+            return response()->json([
+                'error' => [
+                    'code' => 401,
+                    'message' => 'Unauthorized: Authentication required.'
+                ]
+            ], 401);
+        }
+
+        if(!$user->in_group($id)){
+            return response()->json([
+                'error' => [
+                    'code' => 401,
+                    'message' => 'Unauthorized: User not in the group.'
+                ]
+            ], 401);
+        }
+
         try {
             $group = Group::findOrFail($id);
 
             $user = Auth::user();
+            
+            if(!$user->is_owner($group->id)){
+                DB::transaction(function () use ($user, $group) {
+                    DB::table('group_user')
+                        ->where('user_id', $user->id)
+                        ->where('group_id', $group->id)
+                        ->delete();
+                });
+            }
 
-            DB::transaction(function () use ($user, $group) {
-                DB::table('group_user')
-                    ->where('user_id', $user->id)
-                    ->where('group_id', $group->id)
-                    ->delete();
-            });
+            else{
+                DB::transaction(function () use ($user, $group) {
+                    DB::table('group_owner')
+                        ->where('user_id', $user->id)
+                        ->where('group_id', $group->id)
+                        ->delete();
+                });
+            }
 
             return response()->json([
                 'message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
-                'new_text' => 'Enter this group', 'new_method' => 'post'
+                'new_text' => 'Enter this group', 'new_method' => 'post',
+                'new_action' => 'enter',
+                'sum' => '-1'
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error removing user from the group', 'message' => $e->getMessage()], 500);
@@ -183,23 +262,35 @@ class GroupController extends Controller
 
     public function removeRequest(string $id)
     {
-
-        $group = Group::findOrFail($id);
-
         $user = Auth::user();
 
-        DB::transaction(function () use ($user, $group) {
-            DB::table('group_request')
-                ->where('user_id', $user->id)
-                ->where('group_id', $group->id)
-                ->delete();
-        });
+        $group = Group::findOrFail($id);
+        if (!Auth::check()){
+            return response()->json([
+                'error' => [
+                    'code' => 401,
+                    'message' => 'Unauthorized: Authentication required.'
+                ]
+            ], 401);
+        }
+
+        if(!$user->is_pending($id)){
+            return response()->json([
+                'error' => [
+                    'code' => 401,
+                    'message' => 'Unauthorized: User do not have a pending request'
+                ]
+            ], 401);
+        }
 
 
+        $group->remove_request($user->id);
 
         return response()->json([
-            'message' => 'User removed from the group successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
-            'new_text' => 'Enter this group', 'new_method' => 'post'
+            'message' => 'Request deleted successfully', 'new_color' => 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
+            'new_text' => 'Enter this group', 'new_method' => 'post',
+            'new_action' => 'enter',
+            'sum' => '0'
         ]);
     }
 
@@ -216,6 +307,7 @@ class GroupController extends Controller
 
     public function update(Request $request, string $id)
     {
+
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -254,6 +346,71 @@ class GroupController extends Controller
         return redirect()->route('groupPosts', $group->id)->with('success', 'Group updated successfully.');
 
     }
+
+    public function declineRequest(string $id){
+        
+        $groupRequest = GroupRequest::findOrFail($id);
+
+
+        $user = Auth::user();
+        if (!Auth::check()){
+            return response()->json([
+                'error' => [
+                    'code' => 401,
+                    'message' => 'Unauthorized: Authentication required.'
+                ]
+            ], 401);
+        }
+
+        if(!$user->is_owner($groupRequest->group->id)){
+            return response()->json([
+                'error' => [
+                    'code' => 401,
+                    'message' => 'Unauthorized: Not a Group Owner',
+                    'temp' => $groupRequest
+                ]
+            ], 401);
+        }
+
+        $groupRequest->decline();
+
+        return response()->json([
+            'message' => 'Request declined successfully'
+        ]);
+    }
+
+    public function approveRequest(string $id){
+
+        $groupRequest = GroupRequest::findOrFail($id);
+        
+        $user = Auth::user();
+        if (!Auth::check()){
+            return response()->json([
+                'error' => [
+                    'code' => 401,
+                    'message' => 'Unauthorized: Authentication required.'
+                ]
+            ], 401);
+        }
+
+        if(!$user->is_owner($groupRequest->group->id)){
+            return response()->json([
+                'error' => [
+                    'code' => 401,
+                    'message' => 'Unauthorized: Not a Group Owner'
+                ]
+            ], 401);
+        }
+
+        $grouprequest = GroupRequest::findOrFail($id);
+
+        $grouprequest->approve();
+
+        return response()->json([
+            'message' => 'Request accepted successfully'
+        ]);
+    }
+
 
     public function showCreateForm()
     {

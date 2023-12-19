@@ -1,5 +1,3 @@
-import { addSnackbar } from "../components/snackbar";
-
 window.addEventListener("DOMContentLoaded", (event) => {
     event.preventDefault();
     const form = document.getElementById("friendForm");
@@ -28,12 +26,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
                             methodField.value.toUpperCase() === "DELETE"
                         ) {
                             if (button.textContent.includes("Remove Friend")) {
-                                const friendsLink = document.getElementById("friends-link");
-                                const friendsCount = parseInt(friendsLink.textContent, 10);
-                                const span = document.createElement("span");
-                                span.className = friendsLink.className;
-                                span.textContent = friendsCount - 1 + " friends";
-                                friendsLink.parentNode.replaceChild(span, friendsLink);
+                                const friendsLink =
+                                    document.getElementById("friends-link");
+                                friendsLink.remove();
                             }
                             button.textContent = "Send Friend Request";
                             methodField.value = "POST";

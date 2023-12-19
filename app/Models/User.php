@@ -41,6 +41,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'password',
         'image',
         'academic_status',
+        'university',
+        'description',
         'display_name',
         'is_private',
         'role'
@@ -68,9 +70,25 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     ];
 
 
-    public function groups(): BelongsToMany
+    public function groups(string $type): BelongsToMany
+    {   
+        if ($type == 'owner') return $this->belongsToMany(Group::class, 'group_owner', 'group_id', 'user_id');
+        else
+            return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
+    }
+
+    public function groupRequests()
     {
-        return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
+        $groupsOwner = $this->groups('owner')->get();
+    
+        $allRequests = [];
+    
+        foreach ($groupsOwner as $group) {
+            $requests = $group->requests()->get();
+            $allRequests = array_merge($allRequests, $requests->all());
+        }
+    
+        return $allRequests;
     }
 
     public function normal_notifications()
@@ -209,6 +227,32 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->exists();
     }
 
+    public function in_group($group_id): bool{
+        return DB::table('group_user')
+            ->where('user_id', $this->id)
+            ->where('group_id', $group_id)
+            ->exists() 
+            || 
+            DB::table('group_owner')
+            ->where('user_id', $this->id)
+            ->where('group_id', $group_id)
+            ->exists();
+    }
+
+    public function is_owner(string $group_id): bool{
+        return DB::table('group_owner')
+            ->where('user_id', $this->id)
+            ->where('group_id', $group_id)
+            ->exists();
+    }
+
+    public function belongs_group(string $group_id): bool{
+        return DB::table('group_user')
+            ->where('user_id', $this->id)
+            ->where('group_id', $group_id)
+            ->exists();
+    }
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, "author");
@@ -242,7 +286,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return $this->hasOne(AppBan::class, 'banned_user_id');
     }
 
-    public function is_owner(Group $group)
+    public function groups_is_owner(Group $group)
     {
         $groupOwner = GroupOwner::where('group_id', $group->id)->where('user_id', $this->id)->get();
 

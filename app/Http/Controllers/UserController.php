@@ -138,9 +138,10 @@ class UserController extends Controller
         $request->validate([
             'display_name' => 'required|string|max:255',
             'username' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
             'password' => 'nullable|string|min:8|confirmed',
-            'academic_status' => 'required|in:student,teacher',
+            'academic_status' => 'required|in:Undergraduate,Graduate,Professor',
+            'university' => 'required|string|max:255',
+            'description' => 'nullable|string|max:512',
             'privacy' => 'required|in:public,private',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -152,8 +153,9 @@ class UserController extends Controller
         // Update the user information
         $user->display_name = $request->input('display_name');
         $user->username = $request->input('username');
-        $user->email = $request->input('email');
         $user->academic_status = $request->input('academic_status');
+        $user->university = $request->input('university') === 'None' ? null : $request->input('university');
+        $user->description = $request->input('description');
         $user->is_private = $request->input('privacy') === 'private';
 
         // Update the password if provided
@@ -262,7 +264,6 @@ class UserController extends Controller
      * */
     private function switch_user_content_to_deleted_user($user_id)
     {
-        echo $user_id;
 
         DB::table('post')->where('author', $user_id)->update(['author' => 0]);
         DB::table('comment')->where('author', $user_id)->update(['author' => 0]);

@@ -56,6 +56,7 @@
         </div>
     </div>
 
+
     <div class="md:grid md:grid-cols-12 md:gap-4 flex flex-col-reverse">
         <main class="col-span-12 md:col-span-8 justify mx-auto w-full">
             @can('alreadyIn', $group)

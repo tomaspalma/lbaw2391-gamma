@@ -28,25 +28,54 @@
                     <input type="text" name="display_name" id="display_name" value="{{ $user->display_name }}"
                         class="mt-1 py-2 px-3 border rounded-md w-full">
                 </div>
-                <div class="">
+                <div class="mb-4">
                     <input type="hidden" id="old-username" value="{{ $user->username }}">
                     <label for="username" class="text-sm text-gray-600">Username</label>
                     <input type="text" name="username" id="username" value="{{ $user->username }}"
                         class="mt-1 py-2 px-3 border rounded-md w-full">
+                    <div id="username-error" class="text-red-700 text-sm"></div>
                 </div>
-                <div id="username-error" class="text-red-700 text-sm mb-4"></div>
                 <div class="mb-4">
-                    <label for="email" class="text-sm text-gray-600">Email</label>
-                    <input type="email" name="email" id="email" value="{{ $user->email }}"
-                        class="mt-1 py-2 px-3 border rounded-md w-full" readonly>
+                    <label for="description" class="text-sm text-gray-600">Description</label>
+                    <textarea name="description" id="description"
+                        class="mt-1 py-2 px-3 border rounded-md w-full">{{ $user->description }}</textarea>
                 </div>
                 <div class="mb-4">
                     <label for="academic_status" class="text-sm text-gray-600">Academic Status</label>
                     <select name="academic_status" id="academic_status"
                         class="mt-1 py-2 px-3 border rounded-md w-full">
-                        <option value="student" {{ $user->academic_status === 'student' ? 'selected' : '' }}>Student
+                        <option value="Undergraduate" {{ $user->academic_status === 'Undergraduate' ? 'selected' : '' }}>Undergraduate
                         </option>
-                        <option value="teacher" {{ $user->academic_status === 'teacher' ? 'selected' : '' }}>Teacher
+                        <option value="Graduate" {{ $user->academic_status === 'Graduate' ? 'selected' : '' }}>Graduate
+                        </option>
+                        <option value="Professor" {{ $user->academic_status === 'Professor' ? 'selected' : '' }}>Professor 
+                    </select>
+                </div>
+                <div class = "mb-4">
+                    <label for="university" class="text-sm text-gray-600">University</label>
+                    <select name="university" id="university"
+                        class="mt-1 py-2 px-3 border rounded-md w-full">
+                        <option value="None" {{ $user->university === null ? 'selected' : '' }}>None
+                        </option>
+                        <option value="University of Porto" {{ $user->university === 'University of Porto' ? 'selected' : '' }}>University of Porto
+                        </option>
+                        <option value="University of Lisboa" {{ $user->university === 'University of Lisboa' ? 'selected' : '' }}>University of Lisboa
+                        </option>
+                        <option value="University of Coimbra" {{ $user->university === 'University of Coimbra' ? 'selected' : '' }}>University of Coimbra
+                        </option>
+                        <option value="University of Aveiro" {{ $user->university === 'University of Aveiro' ? 'selected' : '' }}>University of Aveiro
+                        </option>
+                        <option value="University of Minho" {{ $user->university === 'University of Minho' ? 'selected' : '' }}>University of Minho
+                        </option>
+                        <option value="University of Évora" {{ $user->university === 'University of Évora' ? 'selected' : '' }}>University of Évora
+                        </option>
+                        <option value="University of Trás-os-Montes and Alto Douro" {{ $user->university === 'University of Trás-os-Montes and Alto Douro' ? 'selected' : '' }}>University of Trás-os-Montes and Alto Douro
+                        </option>
+                        <option value="University of Beira Interior" {{ $user->university === 'University of Beira Interior' ? 'selected' : '' }}>University of Beira Interior
+                        </option>
+                        <option value="University of Açores" {{ $user->university === 'University ofs Açores' ? 'selected' : '' }}>University ofs Açores
+                        </option>
+                        <option value="University of Madeira" {{ $user->university === 'University of Madeira' ? 'selected' : '' }}>University of Madeira
                         </option>
                     </select>
                 </div>
