@@ -1,7 +1,14 @@
 <article id="comment-{{$comment->id}}" data-entity="comment" data-entity-id="{{$comment->id}}" class="comment grid grid-cols-2 gap-y-4">
     <div class="flex flex-row flex-nowrap gap-x-4">
-        <img src="{{ $comment->owner->getProfileImage() ?? 'hello' }}" class="rounded-full self-center w-8 h-8">
-        <p class="text-gray-600">{{ $comment->owner->username }}</p>
+        <img src="{{ $comment->owner->getProfileImage() ?? 'hello' }}" class="rounded-full self-center w-8 h-8" alt="{{ $comment->owner->username }}'s Profile Image">
+        <p class="text-gray-600">
+                {{ $comment->owner->username }}
+            @auth
+                @if(Auth::user()->username === $comment->owner->username)
+                    (<span class="italic">you</span>)
+                @endif
+            @endauth
+        </p>
         <span class="text-gray-600">
             <time>{{ $comment->format_date() }} </time>
         </span>

@@ -34,7 +34,7 @@ export function blockUserAction(blockConfirmationTriggerButton, apiUrl, method, 
 
     populateModalText(`
             <div class="flex flex-col align-middle">
-                <img class="center rounded-full w-10 h-10" src="${profileImage}" />
+                <img class="center rounded-full w-10 h-10" src="${profileImage}" alt="${username}'s Profile Image">
                 ${form}
             </div >
         `);

@@ -26,8 +26,16 @@
         </div>
 
         <div class="flex space-x-4 mt-4">
-            <img src="{{ $post->owner->getProfileImage() ?? 'hello' }}" class="rounded-full w-10 h-10">
-            <a class="text-lg text-gray-600 hover:underline" href="{{ route('profile',['username' => $post->owner->username]) }}">{{ $post->owner->username }}</a>
+            <img src="{{ $post->owner->getProfileImage() ?? 'hello' }}" class="rounded-full w-10 h-10" alt="{{ $post->owner->username }}'s Profile Image">
+
+            <a class="text-lg text-gray-600 hover:underline" href="{{ route('profile',['username' => $post->owner->username]) }}">
+                {{ $post->owner->username }}
+                @auth
+                    @if(Auth::user()->username === $post->owner->username)
+                        (<span class="italic">you</span>)
+                    @endif
+                @endauth
+            </a>
             @if($post->group)
             <a class="text-lg text-gray-600 hover:underline" href="{{route('groupPosts', ['id' => $post->group_id])}}">@ {{ $post->group->name }}</a>
             @endif
