@@ -2,12 +2,12 @@
 
 <head>
     <title>{{ config('app.name', 'Laravel') }} | Admin dashboard</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/admin_user_search.js', 'resources/js/admin/user/block.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/admin_user_search.js', 'resources/js/admin/user/block.js', 'resources/js/admin/user/scroll.js'])
 </head>
 
 @include('partials.navbar')
 
-<main class="center mx-4">
+<main class="center mx-4 md:mb-12">
     @include('partials.admin.common')
     <ul class="tab-container">
         <li class="flex w-1/2 p-2 justify-center toggled-tab">
@@ -28,5 +28,8 @@
             @include('partials.user_card', [ 'user'=> $users[$i], 'adminView' => true])
             @endif
             @endfor
-    </div>
-    @include('partials.confirm_modal')
+    </div>    
+</main>
+@include('partials.confirm_modal')
+@include('partials.snackbar')
+@include('partials.footer')

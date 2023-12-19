@@ -2,12 +2,12 @@
 
 <head>
     <title>{{ config('app.name', 'Laravel') }} | User appban appeals</title>
-    @vite(['resources/js/search/admin_user_search.js', 'resources/js/admin/user/remove_appeal.js'])
+    @vite(['resources/js/search/admin_user_search.js', 'resources/js/admin/user/remove_appeal.js', 'resources/js/admin/user/scroll.js'])
 </head>
 
 @include('partials.navbar')
 
-<main class="center mx-4">
+<main class="center mx-4 md:mb-12">
     @include('partials.admin.common')
     <ul class="tab-container">
         <li class="flex w-1/2 p-2 justify-center">
@@ -34,3 +34,7 @@
     </div>
 </main>
 @include('partials.confirm_modal')
+
+@include('partials.snackbar')
+
+@include('partials.footer')

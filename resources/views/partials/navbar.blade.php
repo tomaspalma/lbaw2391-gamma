@@ -13,7 +13,7 @@
 </div>
 @endif
 @endauth
-<nav class="bg-white border-black border-b mb-5 p-4 shadow-md">
+<nav class="bg-white border-black border-b @if(!isset($no_margin)) mb-5 @endif p-4 shadow-md">
     <div class="max-w-screen-xl flex flex-col md:flex-row justify-around mx-auto">
         <div class="w-full md:w-1/3 self-center text-center md:text-left">
             <a href="/" class="text-2xl font-bold hover:underline">Gamma</a>
@@ -101,6 +101,18 @@
                 </li>
                 @endif
                 @endauth
+                <li class="md:hidden">
+                    <a href="{{ route('about') }}" class="block py-2 pl-3 pr-4">About Us</a>
+                </li>
+                <li class="md:hidden">
+                    <a href="{{ route('features') }}" class="block py-2 pl-3 pr-4">Main Features</a>
+                </li>
+                <li class="md:hidden">
+                    <a href="{{ route('faq') }}" class="block py-2 pl-3 pr-4">FAQ</a>
+                </li>
+                <li class="md:hidden">
+                    <a href="{{ route('contacts') }}" class="block py-2 pl-3 pr-4">Contacts</a>
+                </li>
             </ul>
         </div>
     </div>

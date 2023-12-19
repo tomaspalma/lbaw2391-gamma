@@ -4,13 +4,17 @@ const confirmationModal = document.getElementById("confirmation-modal");
 
 const deleteConfirmationTriggerButtons = document.querySelectorAll(".delete-confirmation-trigger");
 
-for (const deleteConfirmationTriggerButton of deleteConfirmationTriggerButtons) {
-    deleteConfirmationTriggerButton.addEventListener("click", (e) => {
-        e.preventDefault();
+export function toggleDeleteConfirmationButtons(deleteConfirmationTriggerButtons) {
+    for (const deleteConfirmationTriggerButton of deleteConfirmationTriggerButtons) {
+        deleteConfirmationTriggerButton.addEventListener("click", (e) => {
+            e.preventDefault();
 
-        deleteUserAction(deleteConfirmationTriggerButton);
-    });
+            deleteUserAction(deleteConfirmationTriggerButton);
+        });
+    }
 }
+
+toggleDeleteConfirmationButtons(deleteConfirmationTriggerButtons);
 
 export function deleteUserAction(deleteConfirmationTriggerButton) {
     const username = deleteConfirmationTriggerButton.parentElement.parentElement.parentElement.getAttribute("data-username");
@@ -18,7 +22,7 @@ export function deleteUserAction(deleteConfirmationTriggerButton) {
 
     populateModalText(`
             <div class="flex flex-col align-middle">
-                <img class="center rounded-full w-10 h-10" src="${profileImage}" />
+                <img class="center rounded-full w-10 h-10" src="${profileImage}" alt="${username}'s Profile Image">
                 <p>Are you sure you want to delete <a class="hover:underline" href="/users/${username}">${username}</a>?</p>
             </div>
         `);

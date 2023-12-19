@@ -2,7 +2,6 @@ import { configureConfirmationForm, populateModalText } from "../../components/c
 
 const confirmationModal = document.getElementById("confirmation-modal");
 
-
 export function toggleUnblockConfirmationButtons(unblockConfirmationTriggerButtons) {
     for (const unblockConfirmationTriggerButton of unblockConfirmationTriggerButtons) {
         unblockConfirmationTriggerButton.addEventListener("click", (e) => {
@@ -22,7 +21,7 @@ export function unblockUserAction(unblockConfirmationTriggerButton) {
 
     populateModalText(`
             <div class="flex flex-col align-middle">
-                <img class="center rounded-full w-10 h-10" src="${profileImage}" />
+                <img class="center rounded-full w-10 h-10" src="${profileImage}" alt="${username}'s Profile Image">
                 <p>Are you sure you want to unblock ${username}?</p>
             </div>
         `);
