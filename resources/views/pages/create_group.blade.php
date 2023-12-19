@@ -10,15 +10,13 @@
         <form action="{{ route('group.create') }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('POST')
-            <div class="flex flex-col w-full items-center mb-2"> 
-                <img src="{{ $bannerImage }}" alt="Banner Image" id="bannerPreview" class="my-2 h-20 w-60 md:h-32 md:w-96 object-cover">
-                <input type="file" name="banner" id="banner" class="hidden" onchange="document.getElementById('bannerPreview').src = window.URL.createObjectURL(this.files[0])">
-                <button type="button" class=" bg-gray-600 text-white px-4 py-2 rounded" onclick="document.getElementById('banner').click()">Upload Banner</button>
-            </div>
-            <div class="flex flex-col w-full items-center mb-2"> 
-                <img src="{{ $groupImage }}" alt="Group Image" id="imagePreview" class="my-2 rounded-full w-20 h-20 md:w-32 md:h-32 object-cover">
+            <img src="{{ $bannerImage }}" alt="Banner Image" id="bannerPreview" class="w-full h-32 md:h-56 object-cover max-w-full">
+            <img src="{{ $groupImage }}" alt="Group Image" id="imagePreview" class="w-24 h-24 md:w-32 md:h-32 ml-4 object-cover rounded-full -mt-14 border-2 border-white max-w-full">
+            <div class="flex flex-row w-full items-center mb-2"> 
                 <input type="file" name="image" id="image" class="hidden" onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
-                <button type="button" class=" bg-gray-600 text-white px-4 py-2 rounded" onclick="document.getElementById('image').click()">Upload Image</button>
+                <button type="button" class=" bg-black text-white px-4 py-2 rounded" onclick="document.getElementById('image').click()">Upload Image</button>
+                <input type="file" name="banner" id="banner" class="hidden" onchange="document.getElementById('bannerPreview').src = window.URL.createObjectURL(this.files[0])">
+                <button type="button" class=" bg-black text-white m-2 px-4 py-2 rounded" onclick="document.getElementById('banner').click()">Upload Banner</button>
             </div>
             <label for="name" class="text-sm text-gray-600">Group Name</label>
             <input type="text" id="name" name="name" class="w-full border p-2 mb-4">
@@ -32,11 +30,12 @@
                 <option value=1>Private</option>
             </select>
 
-            <button type="submit" class="bg-gray-800 hover:bg-black text-white font-bold py-2 px-4 rounded">
+            <button type="submit" class="bg-black hover:bg-black text-white font-bold py-2 px-4 rounded">
                 Submit
             </button>
-            <a href="{{ route('feed') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">Cancel</a>
+            <a href="{{ route('feed') }}" class="bg-white hover:bg-gray-100 text-black hover:no-underline font-bold py-2 px-4 rounded">Cancel</a>
         </form>
     </div>
 </body>
 
+@include('partials.footer')
