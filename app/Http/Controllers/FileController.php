@@ -33,7 +33,7 @@ class FileController extends Controller
         return in_array(strtolower($extension), $allowedExtensions);
     }
 
-    private static function defaultAsset(string $type)
+    public static function defaultAsset(string $type)
     {
         return asset('media/' . $type . '/' . self::$default);
     }

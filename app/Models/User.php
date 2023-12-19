@@ -72,7 +72,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 
     public function groups(string $type): BelongsToMany
     {   
-        if ($type == 'owner') return $this->belongsToMany(Group::class, 'group_owner', 'group_id', 'user_id');
+        if ($type == 'owner') return $this->belongsToMany(Group::class, 'group_owner', 'user_id', 'group_id');
         else
             return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
     }
