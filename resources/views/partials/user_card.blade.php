@@ -8,8 +8,18 @@
                         @if(isset($group) && $user->is_owner($group))
                         <span class="group-status-text">Owner</span>
                         @endif
+
+                        @auth
+                            @if(Auth::user()->username === $user->username)
+                                <span class="font-normal text-sm">
+                                    (<span class="italic">you</span>)
+                                </span>
+                            @endif
+                        @endauth
                     </h2>
-                    <p class="text-gray-500">{{ $user->username }}</p>
+                    <p class="text-gray-500">
+                        {{ $user->username }}
+                    </p>
                 </a>
             </div>
         </div>
