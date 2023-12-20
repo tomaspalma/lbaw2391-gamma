@@ -1,28 +1,25 @@
-export function deleteComment(deleteButton) {
-    let commentId = deleteButton.target.getAttribute('comment-id');
-    fetch('/comment/' + commentId, {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-    })
-    .then((response) => {
-        if(response.ok) {
-            // delete hr between comment
-            document.querySelector(`[comment-id="${commentId}"]`).parentElement.parentElement.parentElement.nextElementSibling.remove();
-            // delete comment from the page
-            document.querySelector(`[comment-id="${commentId}"]`).parentElement.parentElement.parentElement.remove();
+import {
+    configureConfirmationForm,
+    populateModalText,
+} from "../components/confirmation_modal";
 
-            // if there is no comment left add the no comment message
-            if(document.getElementById('comments').childElementCount == 0) {
-                let p = document.createElement('p');
-                p.setAttribute('id', 'no-comment');
-                p.innerText = 'No comments yet.';
-                document.getElementById('comments').appendChild(p);
-            }
-        }
-    })
-    .catch((error) => {
-        console.log(error);
-    });
+export function deleteCommentAction(deleteConfirmationTriggerButton) {
+    const confirmationModal = document.getElementById("confirmation-modal");
+
+    const commentId =
+        deleteConfirmationTriggerButton.target.getAttribute("comment-id");
+
+    populateModalText(`
+        <div class="flex flex-col align-middle">
+            <p>Are you sure you want to delete this comment?</p>
+        </div>
+    `);
+    configureConfirmationForm(
+        `/comment/${commentId}`,
+        "DELETE",
+        "delete_comment",
+        "bg-red-500",
+        "text-red-500"
+    );
+    confirmationModal.classList.remove("hidden");
 }
