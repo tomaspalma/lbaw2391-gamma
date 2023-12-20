@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GroupRequestNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -167,16 +168,20 @@ class GroupController extends Controller
                 'sum' => '1',
             ]);
         } else {
-
-            $last_id = DB::select('SELECT id FROM group_request ORDER BY id DESC LIMIT 1')[0]->id;
-            $new_id = $last_id + 1;
+            
+            
             DB::table('group_request')->insert([
-                'id' => $new_id,
                 'user_id' => $user->id,
                 'group_id' => $group->id,
                 'is_accepted' => false,
                 'date' => now(),
             ]);
+
+            $id = DB::select('SELECT id FROM group_request ORDER BY id DESC LIMIT 1')[0]->id;
+
+            $groupRequest = GroupRequest::findOrFail($id);
+
+            event(new GroupRequestNotification($user->id, $groupRequest, false));
 
             return response()->json([
                 'message' => 'User asked to enter the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded',
@@ -190,8 +195,10 @@ class GroupController extends Controller
     public function removeToGroup(string $id)
     {
         $user = Auth::user();
+        $group = Group::findOrFail($id);
 
-        if(!$user->in_group($id)){
+        
+        if(!$user->in_group($group)){
             return response()->json([
                 'error' => [
                     'code' => 401,
@@ -199,9 +206,9 @@ class GroupController extends Controller
                 ]
             ], 401);
         }
+        
 
         try {
-            $group = Group::findOrFail($id);
 
             $user = Auth::user();
             
@@ -355,6 +362,8 @@ class GroupController extends Controller
         $grouprequest = GroupRequest::findOrFail($id);
 
         $grouprequest->approve();
+
+        event(new GroupRequestNotification($grouprequest->user->id, $groupRequest, true));
 
         return response()->json([
             'message' => 'Request accepted successfully'

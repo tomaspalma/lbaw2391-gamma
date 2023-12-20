@@ -40,6 +40,7 @@ class GroupRequest extends Model
 
     public function approve(){
         $id = $this->id;
+        $this->is_accepted = true;
 
         DB::transaction(function () use ($id) {
             DB::table('group_request')

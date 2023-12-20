@@ -45,8 +45,6 @@
         </div>
     </div>
 </main>
-@include('partials.confirm_modal')
-
 @include('partials.snackbar')
 
 @include('partials.footer')

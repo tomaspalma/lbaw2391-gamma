@@ -15,6 +15,6 @@ memberGroupTypeSelect.addEventListener("change", function(e) {
             notificationCards.innerHTML = html;
         }
     }).catch((e) => {
-
+        console.log("error")
     });
 });

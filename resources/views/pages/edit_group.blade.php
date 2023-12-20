@@ -30,7 +30,7 @@
             @csrf
             @method('PUT')
             <img src="{{ $group->getBannerImage() }}" alt="Banner Image" id="bannerPreview" class="w-full h-32 md:h-56 object-cover max-w-full">
-            <img src="{{ $group->getGroupImage() }}" alt="Group Image" id="imagePreview" class="w-24 h-24 md:w-32 md:h-32 ml-4 object-cover rounded-full -mt-14 border-2 border-white max-w-full">
+            <img src="{{ $group->getGroupImage('medium') }}" alt="Group Image" id="imagePreview" class="w-24 h-24 md:w-32 md:h-32 ml-4 object-cover rounded-full -mt-14 border-2 border-white max-w-full">
 
             <div class="flex flex-row w-full items-center mb-2"> 
                 <input type="file" name="image" id="image" class="hidden" onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">

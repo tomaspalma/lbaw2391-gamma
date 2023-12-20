@@ -7,7 +7,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
         const groupID = window.location.pathname.substring(routePattern.length);
         const number_members = document.getElementById("n_members")
 
-        console.log(methodField.value)
 
         button.addEventListener("click", (e) => {
             e.preventDefault()
@@ -21,7 +20,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 },
             })
             .then((response) => {
-                console.log(response.status)
                 if (response.status === 200) {
                     return response.json();
                 } else {
@@ -29,8 +27,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 }
             })
             .then((data) => {
-                console.log(data)
-
                 button.classList = data['new_color']
                 button.textContent = data['new_text']
                 const new_action = data['new_action']
@@ -43,7 +39,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     form.action = `/group/${groupID}/${new_action}`
                 }
 
-                console.log(number_members)
                 number_members.attributes["data_n_members"].value = (parseInt(number_members.attributes["data_n_members"].value, 10) + parseInt(data['sum'], 10)).toString()
                 number_members.textContent = number_members.attributes["data_n_members"].value + " members"
                 e.preventDefault();

@@ -5,7 +5,7 @@ notificationTypeSelect.addEventListener("change", function(e) {
     let notificationsUrl = 'api/notifications/';
     let filter = "";
 
-    if (e.target.value === 'reactions' || e.target.value === 'comments' || e.target.value === 'friend-requests') {
+    if (e.target.value === 'reactions' || e.target.value === 'comments' || e.target.value === 'friend-requests' || e.target.value === 'group-requests') {
         filter = `${e.target.value}`;
     }
 

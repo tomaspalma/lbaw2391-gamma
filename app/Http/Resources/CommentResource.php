@@ -21,7 +21,7 @@ class CommentResource extends JsonResource
             'id' => $this->id,
             'display_name' => $user->display_name,
             'username' => $user->username,
-            'image' => $user->getProfileImage(),
+            'image' => $user->getProfileImage('small'),
             'content' => $this->content,
             'date' => $this->format_date()
         ];
