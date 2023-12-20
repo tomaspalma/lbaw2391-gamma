@@ -8,6 +8,13 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Group;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image as InterventionImage;
+
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\Encoders\AutoEncoder;
+
+require '/vendor/autoload.php';
 
 class FileController extends Controller
 {
@@ -88,7 +95,7 @@ class FileController extends Controller
     }
 
 
-    static function get(string $type, int $id)
+    static function get(string $type, int $id, string $size = 'original')
     {
 
         // Validation: upload type
@@ -99,7 +106,7 @@ class FileController extends Controller
         // Validation: file exists
         $fileName = self::getFileName($type, $id);
         if ($fileName) {
-            return asset('media/' . $type . '/' . $fileName);
+            return asset('media/' . $type . '/' . $size . '_' . $fileName);
         }
 
         // Not found: returns default asset
@@ -166,7 +173,27 @@ class FileController extends Controller
                 redirect()->back()->with('error', 'Error: Unsupported upload object');
         }
 
-        $file->storeAs($type, $fileName, self::$diskName);
+        $manager = new ImageManager(new Driver());
+
+        $originalFile = $manager->read($file);
+
+        $mediumFile = $originalFile->scaleDown(width: 500);
+        if ($type . endsWith('banner')) {
+            $mediumFile->cover(500, 200);
+        }
+
+
+        $smallFile = $originalFile->scaleDown(width: 100);
+        if ($type . endsWith('banner')) {
+            $smallFile->cover(100, 40);
+        }
+
+        $file->storeAs($type, 'original_' . $fileName, self::$diskName);
+
+        $mediumFile->encode(new AutoEncoder())->save(public_path('media/' . $type . '/medium_' . $fileName));
+
+        $smallFile->encode(new AutoEncoder)->save(public_path('media/' . $type . '/small_' . $fileName));
+
         return redirect()->back()->with('success', 'Success: upload completed!');
     }
 
