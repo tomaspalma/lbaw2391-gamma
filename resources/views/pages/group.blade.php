@@ -62,7 +62,10 @@
                 @endcan
                 @can('edit', $group)
                     <a href="{{ route('group.edit', $group) }}" class="block px-4 py-2 form-button text-center rounded hover:no-underline ml-4 h-fit">
-                            Edit
+                        Edit
+                    </a>
+                    <a href="{{ route('group.edit', $group) }}" class="block px-4 py-2 form-button-blue text-center rounded hover:no-underline ml-4 h-fit">
+                        Invitations
                     </a>
                 @endcan
             @endauth
