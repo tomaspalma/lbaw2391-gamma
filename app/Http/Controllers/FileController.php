@@ -11,10 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as InterventionImage;
 
 use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Encoders\AutoEncoder;
-
-require '/vendor/autoload.php';
 
 class FileController extends Controller
 {
@@ -75,7 +73,9 @@ class FileController extends Controller
     {
         $existingFileName = self::getFileName($type, $id);
         if ($existingFileName) {
-            Storage::disk(self::$diskName)->delete($type . '/' . $existingFileName);
+            Storage::disk(self::$diskName)->delete($type . '/' . 'original_' . $existingFileName);
+            Storage::disk(self::$diskName)->delete($type . '/' . 'medium_' . $existingFileName);
+            Storage::disk(self::$diskName)->delete($type . '/' . 'small_' . $existingFileName);
 
             switch ($type) {
                 case 'profile':
@@ -175,17 +175,21 @@ class FileController extends Controller
 
         $manager = new ImageManager(new Driver());
 
-        $originalFile = $manager->read($file);
+        $mediumFile = $manager->read($file);
 
-        $mediumFile = $originalFile->scaleDown(width: 500);
-        if ($type . endsWith('banner')) {
-            $mediumFile->cover(500, 200);
+
+        if ($type === 'group_banner') {
+            $mediumFile->cover(1900, 250);
+        } else {
+            $mediumFile->cover(250, 250);
         }
 
+        $smallFile = $manager->read($file);
 
-        $smallFile = $originalFile->scaleDown(width: 100);
-        if ($type . endsWith('banner')) {
-            $smallFile->cover(100, 40);
+        if ($type === 'group_banner') {
+            $smallFile->cover(900, 150);
+        } else {
+            $smallFile->cover(100, 100);
         }
 
         $file->storeAs($type, 'original_' . $fileName, self::$diskName);

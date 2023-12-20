@@ -1,6 +1,6 @@
 <article id="comment-{{$comment->id}}" data-entity="comment" data-entity-id="{{$comment->id}}" class="comment grid grid-cols-2 gap-y-4">
     <div class="flex flex-row flex-nowrap gap-x-4">
-        <img src="{{ $comment->owner->getProfileImage() ?? 'hello' }}" class="rounded-full self-center w-8 h-8" alt="{{ $comment->owner->username }}'s Profile Image">
+        <img src="{{ $comment->owner->getProfileImage('small') ?? 'hello' }}" class="rounded-full self-center w-8 h-8" alt="{{ $comment->owner->username }}'s Profile Image">
         <p class="text-gray-600">
                 {{ $comment->owner->username }}
             @auth

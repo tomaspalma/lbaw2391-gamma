@@ -31,7 +31,7 @@
         @foreach($friendRequests as $request)
         <div class="flex justify-between items-center bg-white p-4 m-2 rounded shadow" id="request-{{$request->sender->username}}">
             <div class="flex items-center space-x-4">
-                <img src="{{ $request->sender->getProfileImage() }}" alt="{{ $request->sender->username }}'s Profile Image" class="w-12 h-12 rounded-full">
+                <img src="{{ $request->sender->getProfileImage('small') }}" alt="{{ $request->sender->username }}'s Profile Image" class="w-12 h-12 rounded-full">
                 <div>
                     <a href="{{'/users/' . $request->sender->username}}">
                         <h2 class="text-xl font-bold">{{ $request->sender->display_name }}</h2>

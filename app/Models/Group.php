@@ -67,14 +67,14 @@ class Group extends Model
         return $this->belongsToMany(User::class, 'group_owner', 'group_id', 'user_id');
     }
 
-    public function getGroupImage()
+    public function getGroupImage(string $size = 'original')
     {
-        return FileController::get('group', $this->id);
+        return FileController::get('group', $this->id, $size);
     }
 
-    public function getBannerImage()
+    public function getBannerImage(string $size = 'original')
     {
-        return FileController::get('group_banner', $this->id);
+        return FileController::get('group_banner', $this->id, $size);
     }
 
     public function group_owners(): BelongsToMany
