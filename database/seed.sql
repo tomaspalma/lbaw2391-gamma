@@ -657,15 +657,16 @@ CREATE TRIGGER add_friend
         -- (18, 1),
         -- (19, 1);
 
-    INSERT INTO group_request(id, user_id, group_id, is_accepted, date) VALUES
-        (1, 4, 2, true, '2023-08-01 12:00:00');
+    INSERT INTO group_request(user_id, group_id, is_accepted, date) VALUES
+        (4, 2, true, '2023-08-01 12:00:00');
         -- (3, 9, 2, false, '2023-09-21 00:00:00'),
         -- (4, 10, 2, false, '2023-09-21 00:00:00'),
         -- (5, 11, 2, false, '2023-09-21 00:00:00');
 
     INSERT INTO group_owner (group_id, user_id) VALUES
         (1, 1),
-        (2, 2);
+        (2, 2),
+        (2, 1);
 
     INSERT INTO post (author, title, content, attachment, group_id, is_private, date) VALUES
         (1, 'Exciting AI Research Findings', 'Exciting new research findings in the field of artificial intelligence!', 'ai_research.pdf', 1, false, NOW() - INTERVAL '1 day'),

@@ -27,7 +27,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 }
             })
             .then((data) => {
-
                 button.classList = data['new_color']
                 button.textContent = data['new_text']
                 const new_action = data['new_action']

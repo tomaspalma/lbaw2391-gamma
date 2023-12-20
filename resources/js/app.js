@@ -112,11 +112,15 @@ channel.bind('friend-request-notification', function(data) {
 
 channel.bind('group-request-notification', function(data){
     const message = data.message;
-    const notificationsCards = document.getElementById("notification-cards");
-    notificationsCards.insertAdjacentHTML('afterbegin', message.group_request_not_view);
-    notificationCounter.classList.remove("hidden");
-    const counter = parseInt(notificationCounter.textContent, 10);
-    notificationCounter.textContent = (counter + 1);
+    if (message.user.username !== data.author) {
+        notificationCounter.classList.remove("hidden");
+        const counter = parseInt(notificationCounter.textContent, 10);
+        notificationCounter.textContent = (counter + 1);
+        if (onNotificationsPage()) {
+            const notificationsCards = document.getElementById("notification-cards");
+            notificationsCards.insertAdjacentHTML('afterbegin', message.comment_not_view);
+        }
+    }
 })
 
 channel.bind('comment-notification', function(data) {

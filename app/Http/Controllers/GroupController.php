@@ -169,18 +169,17 @@ class GroupController extends Controller
             ]);
         } else {
             
-            $last_id = DB::select('SELECT id FROM group_request ORDER BY id DESC LIMIT 1')[0]->id;
-            $new_id = $last_id + 1;
             
             DB::table('group_request')->insert([
-                'id' => $new_id,
                 'user_id' => $user->id,
                 'group_id' => $group->id,
                 'is_accepted' => false,
                 'date' => now(),
             ]);
 
-            $groupRequest = GroupRequest::findOrFail($new_id);
+            $id = DB::select('SELECT id FROM group_request ORDER BY id DESC LIMIT 1')[0]->id;
+
+            $groupRequest = GroupRequest::findOrFail($id);
 
             event(new GroupRequestNotification($user->id, $groupRequest, false));
 
@@ -196,8 +195,10 @@ class GroupController extends Controller
     public function removeToGroup(string $id)
     {
         $user = Auth::user();
+        $group = Group::findOrFail($id);
 
-        if(!$user->in_group($id)){
+        
+        if(!$user->in_group($group)){
             return response()->json([
                 'error' => [
                     'code' => 401,
@@ -205,9 +206,9 @@ class GroupController extends Controller
                 ]
             ], 401);
         }
+        
 
         try {
-            $group = Group::findOrFail($id);
 
             $user = Auth::user();
             

@@ -252,14 +252,21 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     }
 
     public function in_group($group): bool{
+        if (!$group) {
+            return false;
+        }
+    
+        $groupId = $group->id;
+        $userId = $this->id;
+    
         return DB::table('group_user')
-            ->where('user_id', $this->id)
-            ->where('group_id', $group->id)
+            ->where('user_id', $userId)
+            ->where('group_id', $groupId)
             ->exists() 
             || 
             DB::table('group_owner')
-            ->where('user_id', $this->id)
-            ->where('group_id', $group->id)
+            ->where('user_id', $userId)
+            ->where('group_id', $groupId)
             ->exists();
     }
 
