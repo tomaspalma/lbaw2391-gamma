@@ -78,6 +78,13 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): Response
     {
+        if($post->group_id !== null) {
+            $group = Group::find($post->group_id);
+            if($user->groups("owner")->get()->contains($group)) {
+                return Response::allow();
+            }
+        }
+        
         // Only the owner can delete a post (or an admin)
         return ($user->id === $post->author || $user->is_admin())
             ? Response::allow()
