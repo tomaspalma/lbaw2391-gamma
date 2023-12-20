@@ -23,6 +23,8 @@ DROP TABLE IF exists appeal CASCADE;
 DROP TABLE IF exists polls CASCADE;
 DROP TABLE IF exists poll_options CASCADE;
 DROP TABLE IF exists poll_option_votes CASCADE;
+DROP TABLE IF exists group_invitations CASCADE;
+DROP TABLE IF exists group_invitation_nots CASCADE;
 
 -----------------------------------------
 -- Types
@@ -51,6 +53,7 @@ CREATE TABLE users (
     email_verified_at TIMESTAMP WITH TIME ZONE
 );
 
+
 CREATE TABLE password_reset_tokens (
     email TEXT PRIMARY KEY,
     token TEXT,
@@ -65,6 +68,19 @@ CREATE TABLE groups (
     banner TEXT,
     is_private BOOLEAN DEFAULT true NOT NULL,
     description TEXT NOT NULL
+);
+
+CREATE TABLE group_invitations(
+    id SERIAL PRIMARY KEY,
+    owner_id INTEGER REFERENCES users(id),
+    user_id INTEGER REFERENCES users(id),
+    group_id INTEGER REFERENCES groups(id),
+    is_accepted BOOL DEFAULT FALSE
+);
+
+CREATE TABLE group_invitation_nots(
+    id SERIAL PRIMARY KEY,
+    group_invitation_id INTEGER REFERENCES group_invitations(id)
 );
 
 CREATE TABLE polls (
