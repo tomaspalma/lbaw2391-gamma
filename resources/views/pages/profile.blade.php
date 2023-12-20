@@ -40,7 +40,7 @@
         <div class="flex flex-col md:flex-row -mx-3 items-center text-center md:text-start">
             <div class="md:flex-1 px-3">
                 <div class="mb-4">
-                    <img src="{{ $user->getProfileImage() }}" class="rounded-full w-24 h-24 md:w-40 md:h-40 mx-auto object-cover" alt="{{ $user->username }}'s Profile Image">
+                    <img src="{{ $user->getProfileImage('medium') }}" class="rounded-full w-24 h-24 md:w-40 md:h-40 mx-auto object-cover" alt="{{ $user->username }}'s Profile Image">
                 </div>
                 <div class="text-center">
                     <h2 class="text-2xl font-bold text-gray-700">{{ $user->display_name }}</h2>
