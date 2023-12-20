@@ -74,6 +74,7 @@
                     <h2>Options</h2>
                     <div id="options">
                         <div class="flex flex-row space-x-1">
+                            <label for="poll_options[]" class="sr-only">Option</label>
                             <input placeholder="Option" type="text" name="poll_options[]" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
                             <button class="remove-option-btn mt-1 p-2 border border-gray-300 hover:bg-black hover:text-white transition-colors rounded-md">
                                 -
