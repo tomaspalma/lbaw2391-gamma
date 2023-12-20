@@ -5,11 +5,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
         let methodField = form.attributes["data-method"];
         const routePattern = '/group/';
         const groupID = window.location.pathname.substring(routePattern.length);
+        const number_members = document.getElementById("n_members")
 
         console.log(methodField.value)
 
         button.addEventListener("click", (e) => {
-            console.log("Button Clicked")
             e.preventDefault()
 
             fetch(form.action, {
@@ -33,13 +33,19 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
                 button.classList = data['new_color']
                 button.textContent = data['new_text']
+                const new_action = data['new_action']
+
                 if (methodField.value.toUpperCase() === "POST") {
                     methodField.value = "DELETE";
-                    form.action = `/group/${groupID}/leave`
+                    form.action = `/group/${groupID}/${new_action}`
                 } else if (methodField.value.toUpperCase() === "DELETE") {
                     methodField.value = "POST";
-                    form.action = `/group/${groupID}/enter`
+                    form.action = `/group/${groupID}/${new_action}`
                 }
+
+                console.log(number_members)
+                number_members.attributes["data_n_members"].value = (parseInt(number_members.attributes["data_n_members"].value, 10) + parseInt(data['sum'], 10)).toString()
+                number_members.textContent = number_members.attributes["data_n_members"].value + " members"
                 e.preventDefault();
             })
             .catch((error) => {

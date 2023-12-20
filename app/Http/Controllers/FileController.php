@@ -33,7 +33,7 @@ class FileController extends Controller
         return in_array(strtolower($extension), $allowedExtensions);
     }
 
-    private static function defaultAsset(string $type)
+    public static function defaultAsset(string $type)
     {
         return asset('media/' . $type . '/' . self::$default);
     }
@@ -48,6 +48,10 @@ class FileController extends Controller
             case 'post':
                 $fileName = Post::find($id)->image;
                 break;
+
+            case 'groupProfile':
+                $fileName = Group::find($id)->image;
+
             case 'group':
                 $fileName = Group::find($id)->image;
                 break;

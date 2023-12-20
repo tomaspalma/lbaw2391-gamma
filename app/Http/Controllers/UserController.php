@@ -201,7 +201,7 @@ class UserController extends Controller
 
     public function checkEmailExists(string $email)
     {
-        $user = User::where('email', $email)->get();
+        $user = User::where('email', $email)->firstOrFail();
         if ($user) {
             if (auth()->user() && auth()->user()->can('view_information', $user)) {
                 return response()->json([

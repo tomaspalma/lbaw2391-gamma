@@ -1,25 +1,15 @@
 <article data-user-image="{{ $user->getProfileImage() }}" data-username="{{ $user->username }}" class="m-2 p-4 border-b flex flex-col justify-between align-middle space-x-2 shadow rounded">
     <div class="flex flex-col md:flex-row justify-between">
         <div class="flex flex-row md:justify-between items-center space-x-4">
-            <img class="rounded-full w-12 h-12" src="{{ $user->getProfileImage() }}"  alt="{{ $user->username }}'s Profile Image">
+            <img class="rounded-full w-12 h-12" src="{{ $user->getProfileImage() }}" alt="Profile Picture">
             <div>
                 <a href="{{ '/users/' . $user->username }}" class="no-underline">
                     <h2 class="text-xl font-bold display-name">{{ $user->display_name }}
-                        @if(isset($group) && $user->is_owner($group))
+                        @if(isset($group) && $user->is_owner($group->id))
                         <span class="group-status-text">Owner</span>
                         @endif
-
-                        @auth
-                            @if(Auth::user()->username === $user->username)
-                                <span class="font-normal text-sm">
-                                    (<span class="italic">you</span>)
-                                </span>
-                            @endif
-                        @endauth
                     </h2>
-                    <p class="text-gray-500">
-                        {{ $user->username }}
-                    </p>
+                    <p class="text-gray-500">{{ $user->username }}</p>
                 </a>
             </div>
         </div>
@@ -53,8 +43,8 @@
             </div>
             @endif
 
-            @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group))
-            @if(Auth::user()->is_owner($group) && !$user->is_owner($group))
+            @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group->id))
+            @if(Auth::user()->is_owner($group->id) && !$user->is_owner($group->id))
             <div class="normal-user-actions">
                 <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
                     Promote

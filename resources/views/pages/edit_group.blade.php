@@ -1,30 +1,56 @@
 @extends('layouts.head')
 
+<head>
+    @vite(['resources/css/app.css', 'resources/js/group/edit.js'])
+
+    <title>{{ config('app.name', 'Laravel') }} | Editing Group {{ $group->name }}</title>
+    <link href="{{ url('css/post.css') }}" rel="stylesheet">
+</head>
+
 <body>
     @include('partials.navbar')
 
     <div class="container mx-auto mt-8 max-w-screen-md ounded-lg shadow-lg p-6 border md:mb-12">
         <div class="flex justify-center items-center">
-            <h2 class="text-2xl font-bold mb-4 justi">Edit Group</h1>
+            <h2 class="text-2xl font-bold mb-4 justi">Edit Group {{ $group->name }}</h1>
         </div>
         <form action="{{ route('group.update', $group->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            <div class="flex flex-col w-full items-center mb-2"> 
-                <img src="{{ $group->getBannerImage() }}" alt="Banner Image" id="bannerPreview" class="my-2 h-20 w-60 md:h-32 md:w-96 object-cover">
-                <input type="file" name="banner" id="banner" class="hidden" onchange="document.getElementById('bannerPreview').src = window.URL.createObjectURL(this.files[0])">
-                <button type="button" class=" bg-gray-600 text-white px-4 py-2 rounded" onclick="document.getElementById('banner').click()">Upload Banner</button>
-            </div>
-            <div class="flex flex-col w-full items-center mb-2"> 
-                <img src="{{ $group->getGroupImage() }}" alt="Group Image" id="imagePreview" class="my-2 rounded-full w-20 h-20 md:w-32 md:h-32 object-cover">
-                <input type="file" name="image" id="image" class="hidden" onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
-                <button type="button" class=" bg-gray-600 text-white px-4 py-2 rounded" onclick="document.getElementById('image').click()">Upload Image</button>
-            </div>
-            <label for="name" class="text-sm text-gray-600">Group Name</label>
-            <input type="text" id="name" name="name" value="{{ $group->name }}" class="w-full border p-2 mb-4">
+            <img src="{{ $group->getBannerImage() }}" alt="Banner Image" id="bannerPreview" class="w-full h-32 md:h-56 object-cover max-w-full">
+            <img src="{{ $group->getGroupImage() }}" alt="Group Image" id="imagePreview" class="w-24 h-24 md:w-32 md:h-32 ml-4 object-cover rounded-full -mt-14 border-2 border-white max-w-full">
 
-            <label for="description" class="text-sm text-gray-600">Group Description</label>
-            <textarea id="description" name="description" class="w-full border p-2 mb-4">{{ $group->description }}</textarea>
+            <div class="flex flex-row w-full items-center mb-2"> 
+                <input type="file" name="image" id="image" class="hidden" onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
+                <button type="button" class=" bg-black hover:bg-gray-600 text-white m-2 px-4 py-2 rounded" onclick="document.getElementById('image').click()">Upload Image</button>
+                <input type="file" name="banner" id="banner" class="hidden" onchange="document.getElementById('bannerPreview').src = window.URL.createObjectURL(this.files[0])">
+                <button type="button" class=" bg-black hover:bg-gray-600 text-white m-2 px-4 py-2 rounded" onclick="document.getElementById('banner').click()">Upload Banner</button>
+            </div>
+
+            @error('image')
+                <p class="text-red-500 text-sm">{{ $message }}. Max size is 2mb.</p>
+            @enderror
+            @error('banner')
+                <p class="text-red-500 text-sm">{{ $message }}. Max size is 2mb.</p>
+            @enderror
+
+            <div class="mb-4">
+                <input type="hidden" id="old_name" name="old_name" value="{{ $group->name }}">
+                <label for="name" class="text-sm text-gray-600">Group Name</label>
+                <input type="text" id="name" name="name" value="{{ $group->name }}" class="w-full border p-2">
+                @error('name')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+                <p id="name_error" class="text-red-500 text-sm hidden">Group name already taken.</p>
+            </div>
+
+            <div class="mb-4">
+                <label for="description" class="text-sm text-gray-600">Group Description</label>
+                <textarea id="description" name="description" class="w-full border p-2">{{ $group->description }}</textarea>
+                @error('description')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+            </div>
 
             <label for="privacy" class="text-sm text-gray-600">Privacy</label>
             <select id="privacy" name="privacy" class="w-full border p-2 mb-4">
@@ -32,11 +58,12 @@
                 <option value="private" {{ $group->is_private ? 'selected' : '' }}>Private</option>
             </select>
 
-            <button type="submit" class="bg-gray-800 hover:bg-black text-white font-bold py-2 px-4 rounded">
+
+            <button type="submit" id="submit" class="bg-black hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
                 Submit
             </button>
             <a href="{{ route('groupPosts', $group->id) }}">
-                <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                <button type="button" class="bg-white hover:bg-gray-100 text-black hover:no-underline font-bold py-2 px-4 rounded">
                     Cancel
                 </button>
             </a>
