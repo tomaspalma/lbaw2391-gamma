@@ -278,6 +278,9 @@ class UserController extends Controller
     public function delete_user(string $username)
     {
         $user = User::where('username', $username)->get();
+        
+        $this->authorize('delete', $user[0]);
+
         $user_id = $user[0]->id;
 
         if ($user === null) {
