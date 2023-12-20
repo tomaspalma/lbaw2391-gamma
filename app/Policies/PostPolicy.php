@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Post;
 use App\Models\Reaction;
 use App\Models\User;
+use App\Models\Group;
 use Illuminate\Auth\Access\Response;
 
 class PostPolicy
@@ -12,19 +13,41 @@ class PostPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(?User $user, Post $post): Response
-    {
-        // If post is private, only the owner and friends can see it (or an admin)
-        if ($post->is_private) {
+    private function canViewPrivatePost($user, $post) {
+        if ($user === null) {
+            return Response::deny('This post is private.');
+        }
+        return ($user->id === $post->author || $user->friend($post->author) || $user->is_admin()) 
+            ? Response::allow()
+            : Response::deny('This post is private.');
+    }
+    
+    private function isMemberOrOwnerOfGroup($user, $group) {
+        $groupsMember = $user->groups("member")->get();
+        $groupsOwner = $user->groups("owner")->get();
+        return $groupsMember->contains($group) || $groupsOwner->contains($group);
+    }
+    
+    public function view(?User $user, Post $post) {
+        if($post->group_id === null) {
+            if ($post->is_private) {
+                return $this->canViewPrivatePost($user, $post);
+            }
+            return Response::allow();
+        }
+    
+        $group = Group::find($post->group_id);
+        if($group->is_private) {
             if ($user === null) {
                 return Response::deny('This post is private.');
             }
-
-            return ($user->id === $post->author || $user->friends->contains($post->author) || $user->is_admin()) 
-                ? Response::allow()
-                : Response::deny('This post is private.');
+            if($this->isMemberOrOwnerOfGroup($user, $group) || $user->is_admin()) {
+                return Response::allow();
+            } else {
+                return Response::deny('You are not a member of this group.');
+            }
         }
-
+    
         return Response::allow();
     }
 
