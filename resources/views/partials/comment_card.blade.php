@@ -28,6 +28,7 @@
     </div>
     <button class="save-comment hidden justify-self-end text-black font-bold py-2 px-4 rounded" comment-id="{{ $comment->id }}">Save</button>
     <p class="comment-content col-span-2 break-words">{{ $comment->content }}</p>
+    <label for="content" class="sr-only">Content</label>
     <textarea class="edit-comment col-span-2 break-words hidden border border-black rounded-md p-2" name="content" rows="3"></textarea>
     @php
     $f = function($user, $comment) {
