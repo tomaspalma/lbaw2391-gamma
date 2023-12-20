@@ -2,6 +2,19 @@
 
 <head>
     @vite(['resources/js/friends/requests.js', 'resources/js/friends/scroll.js'])
+
+    <title>{{ config('app.name', 'Laravel') }} | Friends</title>
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Gamma | Friends",
+    'url' => $url,
+    'image' => $logo
+    ])
 </head>
 
 @include('partials.navbar')

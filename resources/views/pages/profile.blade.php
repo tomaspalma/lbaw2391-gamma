@@ -4,6 +4,19 @@
     @vite(['resources/css/app.css', 'resources/js/components/dropdown_dots.js', 'resources/js/profile/delete.js', 'resources/js/profile/scroll.js', 'resources/js/profile/friends.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | {{$user->username}} profile</title>
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+        $title = "Gamma | " . $user->username . " profile";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => $title,
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 @include('partials.navbar')
