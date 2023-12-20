@@ -8,6 +8,11 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Group;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image as InterventionImage;
+
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\AutoEncoder;
 
 class FileController extends Controller
 {
@@ -68,7 +73,9 @@ class FileController extends Controller
     {
         $existingFileName = self::getFileName($type, $id);
         if ($existingFileName) {
-            Storage::disk(self::$diskName)->delete($type . '/' . $existingFileName);
+            Storage::disk(self::$diskName)->delete($type . '/' . 'original_' . $existingFileName);
+            Storage::disk(self::$diskName)->delete($type . '/' . 'medium_' . $existingFileName);
+            Storage::disk(self::$diskName)->delete($type . '/' . 'small_' . $existingFileName);
 
             switch ($type) {
                 case 'profile':
@@ -88,7 +95,7 @@ class FileController extends Controller
     }
 
 
-    static function get(string $type, int $id)
+    static function get(string $type, int $id, string $size = 'original')
     {
 
         // Validation: upload type
@@ -99,7 +106,7 @@ class FileController extends Controller
         // Validation: file exists
         $fileName = self::getFileName($type, $id);
         if ($fileName) {
-            return asset('media/' . $type . '/' . $fileName);
+            return asset('media/' . $type . '/' . $size . '_' . $fileName);
         }
 
         // Not found: returns default asset
@@ -166,7 +173,31 @@ class FileController extends Controller
                 redirect()->back()->with('error', 'Error: Unsupported upload object');
         }
 
-        $file->storeAs($type, $fileName, self::$diskName);
+        $manager = new ImageManager(new Driver());
+
+        $mediumFile = $manager->read($file);
+
+
+        if ($type === 'group_banner') {
+            $mediumFile->cover(1900, 250);
+        } else {
+            $mediumFile->cover(250, 250);
+        }
+
+        $smallFile = $manager->read($file);
+
+        if ($type === 'group_banner') {
+            $smallFile->cover(900, 150);
+        } else {
+            $smallFile->cover(100, 100);
+        }
+
+        $file->storeAs($type, 'original_' . $fileName, self::$diskName);
+
+        $mediumFile->encode(new AutoEncoder())->save(public_path('media/' . $type . '/medium_' . $fileName));
+
+        $smallFile->encode(new AutoEncoder)->save(public_path('media/' . $type . '/small_' . $fileName));
+
         return redirect()->back()->with('success', 'Success: upload completed!');
     }
 

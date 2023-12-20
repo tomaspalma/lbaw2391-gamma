@@ -71,8 +71,9 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 
 
     public function groups(string $type): BelongsToMany
-    {   
-        if ($type == 'owner') return $this->belongsToMany(Group::class, 'group_owner', 'user_id', 'group_id');
+    {
+        if ($type == 'owner')
+            return $this->belongsToMany(Group::class, 'group_owner', 'user_id', 'group_id');
         else
             return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
     }
@@ -80,14 +81,14 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     public function groupRequests()
     {
         $groupsOwner = $this->groups('owner')->get();
-    
+
         $allRequests = [];
-    
+
         foreach ($groupsOwner as $group) {
             $requests = $group->requests()->get();
             $allRequests = array_merge($allRequests, $requests->all());
         }
-    
+
         return $allRequests;
     }
 
@@ -123,11 +124,13 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 
     public function comment_notifications()
     {
-        return CommentNot::with('comment')
-            ->whereHas('comment', function ($query) {
-                $query->where('author', '<>', Auth::user()->id);
-            })->orderBy('date', 'desc')
-            ->paginate(15);
+        return CommentNot::with('comment.post')
+        ->whereHas('comment.post', function ($query) {
+            $query->where('author', Auth::user()->id)
+            ->where('comment.author', '<>', $this->id);
+        })
+        ->orderBy('date', 'desc')
+        ->paginate(15);
     }
 
     public function vote_on_post_poll(Post $post)
@@ -140,7 +143,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->where('users.id', $this->id)->get();
     }
 
-    public function poll_option_on_post(Post $post) {
+    public function poll_option_on_post(Post $post)
+    {
 
     }
 
@@ -251,7 +255,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->exists();
     }
 
-    public function in_group($group): bool{
+
+    public function in_group(Group $group): bool{
         if (!$group) {
             return false;
         }
@@ -270,7 +275,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->exists();
     }
 
-    public function is_owner(int $group_id): bool{
+    public function is_owner(int $group_id): bool
+    {
         return DB::table('group_owner')
             ->where('user_id', $this->id)
             ->where('group_id', $group_id)
@@ -278,7 +284,8 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     }
     
 
-    public function belongs_group(string $group_id): bool{
+    public function belongs_group(string $group_id): bool
+    {
         return DB::table('group_user')
             ->where('user_id', $this->id)
             ->where('group_id', $group_id)
@@ -325,9 +332,9 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         return count($groupOwner);
     }
 
-    public function getProfileImage()
+    public function getProfileImage(string $size = 'original')
     {
-        return FileController::get('profile', $this->id);
+        return FileController::get('profile', $this->id, $size);
     }
 
     public function sent_pending_friend_requests()
