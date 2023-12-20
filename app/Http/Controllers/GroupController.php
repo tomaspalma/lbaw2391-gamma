@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GroupRequestNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -195,6 +196,10 @@ class GroupController extends Controller
                 'is_accepted' => false,
                 'date' => now(),
             ]);
+
+            $groupRequest = GroupRequest::findOrFail($new_id);
+
+            event(new GroupRequestNotification($user->id, $groupRequest, false));
 
             return response()->json([
                 'message' => 'User asked to enter the group successfully', 'new_color' => 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded',
@@ -405,6 +410,8 @@ class GroupController extends Controller
         $grouprequest = GroupRequest::findOrFail($id);
 
         $grouprequest->approve();
+
+        event(new GroupRequestNotification($grouprequest->user->id, $groupRequest, true));
 
         return response()->json([
             'message' => 'Request accepted successfully'
