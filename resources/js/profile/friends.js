@@ -21,6 +21,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         // Update the button text based on the action
                         if (methodField.value.toUpperCase() === "POST") {
                             button.textContent = "Cancel Friend Request";
+                            button.classList.remove("form-button-blue");
+                            button.classList.add("form-button-red");
                             methodField.value = "DELETE";
                         } else if (
                             methodField.value.toUpperCase() === "DELETE"
@@ -31,6 +33,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                                 friendsLink.remove();
                             }
                             button.textContent = "Send Friend Request";
+                            button.classList.remove("form-button-red");
+                            button.classList.add("form-button-blue");
                             methodField.value = "POST";
                             form.action = `/api/users/${username}/friends/requests`;
                         }

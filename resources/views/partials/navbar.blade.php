@@ -23,6 +23,7 @@
         <div class="flex flex-col items-center md:w-1/3 w-full justify-center">
             @if(Auth::user() === null || !Auth::user()->is_app_banned())
             <form id="mobile-search-form" class="relative md:hidden">
+                <label for="search" class="sr-only">Search</label>
                 <input name="search" type="text" id="mobile-search-trigger" class="mt-4 md:hidden block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
             </form>
             <form id="search-form" class="relative hidden md:block w-full mb-0">
@@ -30,6 +31,7 @@
                     
                     <span class="sr-only">Search icon</span>
                 </div>
+                <label for="search" class="sr-only">Search</label>
                 <input name="search" type="text" id="search-navbar" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
             </form>
 
@@ -76,7 +78,7 @@
                 @endguest
                 @auth
                 <li>
-                    <form method="POST" action="{{ route('logout') }}" class="block py-2 pl-3 pr-4 mb-0">
+                    <form id="logout-action" method="POST" action="{{ route('logout') }}" class="block py-2 pl-3 pr-4 mb-0">
                         @csrf
                         <button type="submit" class="hover:underline">Logout</button>
                     </form>
@@ -133,3 +135,5 @@
         </div>
     </div>
 </nav>
+
+@include('partials.confirm_modal')

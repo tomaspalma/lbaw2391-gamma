@@ -38,7 +38,7 @@
                     <form id="groupForm" action="{{ route('groups.leave', $group) }}" method="post" data-method="delete">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" id="leaveGroupButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        <button type="submit" id="leaveGroupButton" class="form-button-red font-bold py-2 px-4 rounded">
                             Leave Group
                         </button>
                     </form>
@@ -47,7 +47,7 @@
                         <form id="groupForm" action="{{ route('groups.remove_request', $group) }}" method="post" data-method="delete">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            <button type="submit" class="form-button-red font-bold py-2 px-4 rounded">
                                 Remove Request
                             </button>
                         </form>
@@ -61,7 +61,7 @@
                     @endcan
                 @endcan
                 @can('edit', $group)
-                    <a href="{{ route('group.edit', $group) }}" class="bg-gray-800 hover:bg-black text-white font-bold py-2 px-4 ml-4 rounded h-fit">
+                    <a href="{{ route('group.edit', $group) }}" class="block px-4 py-2 form-button text-center rounded hover:no-underline ml-4 h-fit">
                             Edit
                     </a>
                 @endcan
@@ -73,7 +73,7 @@
     <div class="md:grid md:grid-cols-12 md:gap-4 flex flex-col-reverse">
         <main class="col-span-12 md:col-span-8 justify mx-auto w-full">
             @can('alreadyIn', $group)
-                <a href="{{ route('post.createFormGroup', ['id' => $group->id]) }}" class="my-4 block mx-auto px-4 py-2 bg-black text-white text-center rounded">Create Post</a>
+                <a href="{{ route('post.createFormGroup', ['id' => $group->id]) }}" class="my-4 block mx-auto px-4 py-2 form-button text-center rounded hover:no-underline">Create Post</a> 
             @endcan
             <ul class="tab-container center justify-center flex border border-black rounded shadow my-4">
                 <li class="flex w-1/2 {{ $feed === 'posts' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
@@ -143,8 +143,6 @@
         </aside>
     </div>
 </div>
-
-@include('partials.confirm_modal')
 
 @include('partials.snackbar')
 

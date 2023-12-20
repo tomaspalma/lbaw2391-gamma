@@ -54,8 +54,8 @@
             </div>
             <form id="friendRequestForm" data-username="{{ $request->sender->username }}" class="flex items-center space-x-4 my-auto" method="post">
                 @csrf
-                <button type="submit" name="action" value="accept" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Accept</button>
-                <button type="submit" name="action" value="decline" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Decline</button>
+                <button type="submit" name="action" value="accept" class="form-button-blue font-bold py-2 px-4 rounded">Accept</button>
+                <button type="submit" name="action" value="decline" class="form-button-red font-bold py-2 px-4 rounded">Decline</button>
             </form>
         </div>
         @endforeach
