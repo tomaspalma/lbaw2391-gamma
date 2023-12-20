@@ -44,9 +44,25 @@ class FriendController extends Controller
 
         $this->authorize('view_friend_requests', $user);
 
-        $friendRequests = $user->received_pending_friend_requests()->get();
+        $friendRequests = $user->received_pending_friend_requests()->paginate(12);
 
         return view('pages.friends', ['user' => $user, 'friendRequests' => $friendRequests, 'tab' => 'requests']);
+    }
+
+    public function show_friend_request_cards(string $username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+
+        $this->authorize('view_friend_requests', $user);
+
+        $friendRequests = $user->received_pending_friend_requests()->paginate(12);
+        
+        $cards = [];
+        foreach ($friendRequests as $friendRequest) {
+            $cards[] = view('partials.friend_requests_card', ['request' => $friendRequest])->render();
+        }
+
+        return response()->json($cards);
     }
 
     public function send_friend_request(Request $request, string $username)
