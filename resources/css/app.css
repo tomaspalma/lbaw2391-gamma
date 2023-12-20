@@ -130,3 +130,7 @@ input {
 .selected-poll-option {
     @apply bg-black text-white hover:bg-white hover:text-black;
 }
+
+.notification-card {
+    @apply w-full md:w-1/2;
+}

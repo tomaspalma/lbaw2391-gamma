@@ -546,13 +546,6 @@ paths:
           description: 'Get the view of the edit post form'
         '403':
           description: 'Forbidden. User doesnt own this profile.'
-      
-      parameters:
-        - in: path
-          name: username
-          schema:
-            type: string
-          required: true
 
     put:
       operationId: R504
@@ -1243,11 +1236,6 @@ paths:
       responses:
         '200':
           description: 'HTML with the notification cards'
-<<<<<<< HEAD
-          
-  /users/{username}/appban/appeal:
-=======
->>>>>>> main
 
   /comment/{id}/reaction:
     get: 

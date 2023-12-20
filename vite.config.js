@@ -51,6 +51,8 @@ export default defineConfig({
                 "resources/js/admin/user/scroll.js",
                 "resources/js/post/copy_link.js",
                 "resources/js/faq.js",
+                "resources/js/group/create.js",
+                "resources/js/group/edit.js",
             ],
             refresh: true,
         }),

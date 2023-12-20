@@ -4,6 +4,19 @@
     @vite(['resources/css/app.css','resources/js/edit_profile/edit_profile.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Edit profile</title>
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+        $title = "Gamma | Edit " . $user->username . "'s Profile";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => $title,
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 @include('partials.navbar')

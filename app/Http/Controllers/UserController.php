@@ -201,21 +201,53 @@ class UserController extends Controller
 
     public function checkEmailExists(string $email)
     {
-        $user = User::where('email', $email)->get();
+        $user = User::where('email', $email)->firstOrFail();
         if ($user) {
-            return response()->json($user);
+            if (auth()->user() && auth()->user()->can('view_information', $user)) {
+                return response()->json([
+                    'username' => $user->username,
+                    'display_name' => $user->display_name,
+                    'description' => $user->description,
+                    'university' => $user->university,
+                    'academic_status' => $user->academic_status
+                ]);
+            } else {
+                return response()->json([
+                    'username' => $user->username,
+                    'display_name' => $user->display_name,
+                    'description' => $user->description
+                ]);
+            }
         } else {
-            return null;
+            return response()->json([
+                'error' => 'User does not exist'
+            ], 404);
         }
     }
 
     public function checkUsernameExists(string $username)
     {
-        $user = User::where('username', $username)->get();
+        $user = User::where('username', $username)->firstOrFail();
         if ($user) {
-            return response()->json($user);
+            if (auth()->user() && auth()->user()->can('view_information', $user)) {
+                return response()->json([
+                    'username' => $user->username,
+                    'display_name' => $user->display_name,
+                    'description' => $user->description,
+                    'university' => $user->university,
+                    'academic_status' => $user->academic_status
+                ]);
+            } else {
+                return response()->json([
+                    'username' => $user->username,
+                    'display_name' => $user->display_name,
+                    'description' => $user->description
+                ]);
+            }
         } else {
-            return null;
+            return response()->json([
+                'error' => 'User does not exist'
+            ], 404);
         }
     }
 

@@ -4,6 +4,20 @@
     @vite(['resources/css/app.css', 'resources/js/search/feed/scroll.js', 'resources/js/components/snackbar.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | {{ucfirst($feed)}} feed</title>
+    
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+        $title = "Gamma | " . ucfirst($feed) . " feed";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => $title,
+    'url' => $url,
+    'image' => $logo
+    ])
+
+
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
 
