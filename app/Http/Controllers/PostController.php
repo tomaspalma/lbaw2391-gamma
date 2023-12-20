@@ -204,7 +204,10 @@ class PostController extends Controller
 
         $this->authorize('update', $post);
 
-        $groups = Auth::user()->groups;
+        $groupsOwner = Auth::user()->groups('owner')->get();
+        $groupsNormal = Auth::user()->groups('normal')->get();
+
+        $groups = $groupsOwner->merge($groupsNormal);
 
         return view('pages.edit_post', [
             'post' => $post,
