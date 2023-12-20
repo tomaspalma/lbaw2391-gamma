@@ -34,9 +34,9 @@
             <img src="{{ $groupImage }}" alt="Group Image" id="imagePreview" class="w-24 h-24 md:w-32 md:h-32 ml-4 object-cover rounded-full -mt-14 border-2 border-white max-w-full">
             <div class="flex flex-row w-full items-center mb-2"> 
                 <input type="file" name="image" id="image" class="hidden" onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
-                <button type="button" class=" bg-black hover:bg-gray-600 text-white m-2 px-4 py-2 rounded" onclick="document.getElementById('image').click()">Upload Image</button>
+                <button type="button" class="form-button py-2 px-4 rounded-md m-2" onclick="document.getElementById('image').click()">Upload Image</button>
                 <input type="file" name="banner" id="banner" class="hidden" onchange="document.getElementById('bannerPreview').src = window.URL.createObjectURL(this.files[0])">
-                <button type="button" class=" bg-black hover:bg-gray-600 text-white m-2 px-4 py-2 rounded" onclick="document.getElementById('banner').click()">Upload Banner</button>
+                <button type="button" class="form-button py-2 px-4 rounded-md m-2" onclick="document.getElementById('banner').click()">Upload Banner</button>
             </div>
 
             @error('image')
@@ -69,10 +69,10 @@
                 <option value=1>Private</option>
             </select>
 
-            <button type="submit" id="submit" class="bg-black hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+            <button type="submit" id="submit" class="form-button py-2 px-4 rounded-md">
                 Submit
             </button>
-            <a href="{{ route('feed') }}" class="bg-white hover:bg-gray-100 text-black hover:no-underline font-bold py-2 px-4 rounded">Cancel</a>
+            <a href="{{ route('feed') }}" class="form-button-red py-2 px-4 rounded-md hover:no-underline font-bold">Cancel</a>
         </form>
     </div>
     @include('partials.footer')

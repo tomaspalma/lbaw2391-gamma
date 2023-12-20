@@ -80,7 +80,7 @@
                     @can('send_friend_request', $user)
                     <form class="m-0" action="{{ route('send_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="post">
                         @csrf
-                        <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                        <button type="submit" class="form-button-blue font-bold py-2 px-4 rounded">
                             Send Friend Request
                         </button>
                     </form>
@@ -88,7 +88,7 @@
                     @can('cancel_friend_request', $user)
                     <form class="m-0" action="{{ route('cancel_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                         @csrf
-                        <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                        <button type="submit" class="form-button-red font-bold py-2 px-4 rounded">
                             Cancel Friend Request
                         </button>
                     </form>
@@ -96,7 +96,7 @@
                     @can('remove_friend', $user)
                     <form class="m-0" action="{{ route('remove_friend', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                         @csrf
-                        <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                        <button type="submit" class="form-button-red font-bold py-2 px-4 rounded">
                             Remove Friend
                         </button>
                     </form>
