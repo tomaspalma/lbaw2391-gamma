@@ -7,7 +7,7 @@ const addPollOptionBtn = document.getElementById("add-poll-option-btn");
 
 const options = document.getElementById("options");
 
-const optionInput = '<input placeholder="Option" type="text" name="poll_options[]" class="mt-1 p-2 border border-gray-300 rounded-md w-full" required><button class="remove-option-btn mt-1 p-2 border border-gray-300 hover:bg-black hover:text-white transition-colors rounded-md">-</button>';
+const optionInput = '<label for="poll_options[]" class="sr-only">Option</label><input placeholder="Option" type="text" name="poll_options[]" class="mt-1 p-2 border border-gray-300 rounded-md w-full" required><button class="remove-option-btn mt-1 p-2 border border-gray-300 hover:bg-black hover:text-white transition-colors rounded-md">-</button>';
 
 const postArticle = document.getElementById("post-article");
 
