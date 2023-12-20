@@ -5,6 +5,18 @@
 
     <title>{{ config('app.name', 'Laravel') }} | Create Group</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Gamma | Create Group",
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 

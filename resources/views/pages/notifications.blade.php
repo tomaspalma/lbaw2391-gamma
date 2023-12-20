@@ -4,6 +4,18 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/notifications/filter.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Notifications</title>
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Gamma | Notifications",
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 @include('partials.navbar')

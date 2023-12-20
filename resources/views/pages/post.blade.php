@@ -4,6 +4,20 @@
     @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js', 'resources/js/comment/add.js' , 'resources/js/comment/delete.js', 'resources/js/post/scroll.js', 'resources/js/post/copy_link.js', 'resources/js/post/poll.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Post {{$post->title}}</title>
+    
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+        $title = "Gamma | Post " . $post->title;
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => $title,
+    'url' => $url,
+    'image' => $logo
+    ])
+
+
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
 
