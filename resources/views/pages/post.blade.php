@@ -105,7 +105,6 @@
         </div>
 
     </section>
-    @include('partials.confirm_modal')
 </main>
 
 @include('partials.snackbar')
