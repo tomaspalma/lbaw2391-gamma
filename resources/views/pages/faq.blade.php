@@ -3,6 +3,18 @@
 <head>
     @vite(['resources/css/app.css', 'resources/js/faq.js'])
     <title>{{ config('app.name', 'Laravel') }} | FAQ</title>
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Gamma | Faq",
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 @include('partials.navbar')

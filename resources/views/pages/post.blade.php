@@ -4,6 +4,20 @@
     @vite(['resources/css/app.css', 'resources/js/app.js' , 'resources/js/post/delete.js', 'resources/js/comment/add.js' , 'resources/js/comment/delete.js', 'resources/js/post/scroll.js', 'resources/js/post/copy_link.js', 'resources/js/post/poll.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Post {{$post->title}}</title>
+    
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+        $title = "Gamma | Post " . $post->title;
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => $title,
+    'url' => $url,
+    'image' => $logo
+    ])
+
+
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 </head>
 
@@ -13,17 +27,17 @@
     <article id="post-article" data-selected-option="{{ Auth::user() ? (Auth::user()->vote_on_post_poll($post)[0]->name ?? '') : '' }}" 
         data-entity="post" data-entity-id="{{$post->id}}" post-id="{{$post->id}}" 
         class="border border-black rounded-md p-8 my-8 max-w-3xl mx-auto shadow-md">
-        <div class="flex justify-between items-center">
-            <h2 class="text-4xl font-bold">
+        <header class="flex flex-col space-y-2 md:space-y-0 md:flex-row justify-between items-center">
+            <h1 class="md:text-left text-center text-2xl md:text-4xl font-bold w-full break-words">
                 {{ $post->title }}
                 <button data-entity-id="{{$post->id}}" class="mb-1 p-2 text-base rounded-md hover:bg-black hover:text-white transition-colors post-copy-link-btn">
                     <i class="copy-link-icon"></i>
                 </button>
-            </h2>
+            </h1>
             <span class="text-gray-600">
                 <time>{{ $post->format_date() }}</time>
             </span>
-        </div>
+        </header>
 
         <div class="flex space-x-4 mt-4">
             <img src="{{ $post->owner->getProfileImage('small') ?? 'hello' }}" class="rounded-full w-10 h-10" alt="{{ $post->owner->username }}'s Profile Image">
@@ -37,15 +51,13 @@
                 @endauth
             </a>
             @if($post->group)
-            <a class="text-lg text-gray-600 hover:underline" href="{{route('groupPosts', ['id' => $post->group_id])}}">@ {{ $post->group->name }}</a>
+            <a class="text-lg text-gray-600 hover:underline w-full break-words" href="{{route('groupPosts', ['id' => $post->group_id])}}">@ {{ $post->group->name }}</a>
             @endif
         </div>
 
-        <div class="mt-6 prose max-w-full">
+        <p class="mt-6 prose max-w-full break-words">
             {{ $post->content }}
-        </div>
-
-        <hr>
+        </p>
 
         @if($post->poll !== null)
             @include('partials.post_poll', ['pollOptions' => $pollOptions])
@@ -57,19 +69,17 @@
             return $user->post_reaction($post);
             }
             @endphp
-            @auth
             @include('partials.reactions', ['entity' => $post, 'entity_function' => $f, 'entity_name' => 'post'])
-            @endauth
         </div>
 
         @can('update', $post)
         <div class="flex justify-between items-center mt-4">
-            <a href="{{ route('post.update', $post->id) }}" class="bg-black text-white py-2 px-4 rounded-md">Edit Post</a>
-            <button type="submit" class="delete-post-button bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
+            <a href="{{ route('post.update', $post->id) }}" class="form-button hover:no-underline py-2 px-4 rounded-md">Edit Post</a>
+            <button type="submit" class="delete-post-button form-button-red py-2 px-4 rounded-md">Delete Post</button>
         </div>
         @elsecan('delete', $post)
         <div class="flex justify-end items-center">
-            <button type="submit" class="delete-post-button bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
+            <button type="submit" class="delete-post-button form-button-red py-2 px-4 rounded-md">Delete Post</button>
         </div>
         @endcan
     </article>
@@ -81,8 +91,8 @@
         <form id="comment-form" class="flex flex-col space-y-4">
             @csrf
             <input type="hidden" name="post_id" value="{{ $post->id }}">
-            <textarea name="content" class="border border-gray-300 rounded-md p-2" placeholder="Write a comment..."></textarea>
-            <button type="button" id="comment-button" class="bg-black text-white py-2 px-4 rounded-md">Comment</button>
+            <textarea name="content" class="border border-gray-300 rounded-md p-2 resize-y" placeholder="Write a comment..."></textarea>
+            <button type="button" id="comment-button" class="form-button py-2 px-4 rounded-md">Comment</button>
         </form>
         @endcan
 
@@ -95,7 +105,6 @@
         </div>
 
     </section>
-    @include('partials.confirm_modal')
 </main>
 
 @include('partials.snackbar')

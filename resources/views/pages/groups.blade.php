@@ -3,10 +3,22 @@
 <head>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/scroll.js', 'resources/js/group/group_requests.js'])
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Laravel') }} | Your groups</title>
 
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
     <link href="{{url('css/group.css')}}" rel="stylesheet">
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Your groups",
+    'url' => $url,
+    'image' => $logo
+    ])
+
 
     <script src="https://kit.fontawesome.com/38229b6c34.js" crossorigin="anonymous"></script>
 </head>
@@ -15,7 +27,7 @@
 
 <main class="center">
 @can('create', App\Models\Group::class)
-    <a href="{{ route('group.createForm') }}" class="my-4 block mx-auto px-4 py-2 bg-black text-white text-center rounded">Create Group</a>
+    <a href="{{ route('group.createForm') }}" class="my-4 block mx-auto px-4 py-2 form-button text-center rounded hover:no-underline">Create Group</a>
 @endcan
 <ul class="tab-container center justify-center flex border border-black rounded shadow my-4">
         <li class="flex w-1/2 {{ $feed === 'groups' ? 'border-t-4 border-black' : '' }} p-2 justify-center">

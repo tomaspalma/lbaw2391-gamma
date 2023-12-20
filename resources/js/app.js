@@ -7,6 +7,31 @@ import { toggleDeleteUserAppealButtons } from './admin/user/remove_appeal';
 import { toggleDropdownArrow } from './components/dropdown';
 import { toggleAppbanAppealReasonDropdown } from './admin/user/show_appeal_reason';
 import { toggleBlockTriggerButtons } from './admin/user/block';
+import { configureConfirmationForm, populateModalText } from './components/confirmation_modal';
+
+function toggleLogoutMisclickConfirmation() {
+    const logoutAction = document.getElementById("logout-action");
+    const confirmationModal = document.getElementById("confirmation-modal");
+
+    if (!logoutAction || !confirmationModal) {
+        return;
+    }
+
+    logoutAction.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        populateModalText(`
+            <div class="flex flex-col align-middle">
+                <p>Are you sure you want logout?</p> 
+            </div>
+        `);
+
+        configureConfirmationForm("/logout", "POST", "logout", "bg-red-500", "text-red-500");
+        confirmationModal.classList.remove("hidden");
+    });
+}
+
+toggleLogoutMisclickConfirmation();
 
 const pusherAppKey = "42e95b477c2a2640c461";
 const cluster = "eu";
@@ -117,7 +142,7 @@ channel.bind('comment-notification', function(data) {
         const counter = parseInt(notificationCounter.textContent, 10);
         notificationCounter.textContent = (counter + 1);
 
-        if (onNotificationsPage()) {
+        if (onPage("notifications")) {
             const notificationsCards = document.getElementById("notification-cards");
             notificationsCards.insertAdjacentHTML('afterbegin', message.comment_not_view);
         }

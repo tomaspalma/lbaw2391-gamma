@@ -19,7 +19,7 @@
             <form data-method="put" class="accept_form ml-auto" action="{{ route('groups.approve_request', $request->id) }}" method="post">
                 @csrf
                 @method('PUT')
-                <button data-type="approve" type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded accept">
+                <button data-type="approve" type="submit" class="form-button-blue font-bold py-2 px-4 rounded accept">
                     Accept
                 </button>
             </form>
@@ -27,7 +27,7 @@
             <form data-method="delete" class="remove_form ml-4" action="{{ route('groups.decline_request', $request->id) }}" method="post">
                 @csrf
                 @method('DELETE')
-                <button data-type="remove" type="submit" id="leaveGroupButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded remove">
+                <button data-type="remove" type="submit" id="leaveGroupButton" class="form-button-red font-bold py-2 px-4 rounded remove">
                     Decline Request
                 </button>
             </form>

@@ -1,7 +1,19 @@
 @extends('layouts.head')
 
 <head>
-<title>{{ config('app.name', 'Laravel') }} | Appban appeal user form</title>
+    <title>{{ config('app.name', 'Laravel') }} | Appban appeal user form</title>
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Gamma | Appban Appeal",
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 @include('partials.navbar')

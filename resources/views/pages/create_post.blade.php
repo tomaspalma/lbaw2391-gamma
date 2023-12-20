@@ -5,6 +5,18 @@
 
     <title>{{ config('app.name', 'Laravel') }} | Create post</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Gamma | Create Post",
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 @include('partials.navbar')
@@ -62,6 +74,7 @@
                     <h2>Options</h2>
                     <div id="options">
                         <div class="flex flex-row space-x-1">
+                            <label for="poll_options[]" class="sr-only">Option</label>
                             <input placeholder="Option" type="text" name="poll_options[]" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
                             <button class="remove-option-btn mt-1 p-2 border border-gray-300 hover:bg-black hover:text-white transition-colors rounded-md">
                                 -
@@ -75,7 +88,7 @@
             </div>
 
             <div class="col-span-2">
-                <button type="submit" class="bg-black text-white py-2 px-4 rounded-md">Create Post</button>
+                <button type="submit" class="form-button py-2 px-4 rounded-md">Create Post</button>
             </div>
         </form>
     </div>

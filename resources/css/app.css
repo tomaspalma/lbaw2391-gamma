@@ -1,4 +1,4 @@
-@import '/node_modules/@fortawesome/fontawesome-free/css/all.min.css';
+@import "/node_modules/@fortawesome/fontawesome-free/css/all.min.css";
 
 @tailwind base;
 @tailwind components;
@@ -60,7 +60,7 @@ input {
 }
 
 .dislike-nonhighlighted {
-    @apply bg-white text-red-500
+    @apply bg-white text-red-500;
 }
 
 .heart-highlighted {
@@ -71,11 +71,15 @@ input {
     @apply bg-white text-purple-700;
 }
 
-.star-highlighted, .handshake-highlighted, .handpointup-highlighted {
+.star-highlighted,
+.handshake-highlighted,
+.handpointup-highlighted {
     @apply bg-yellow-400 text-white;
 }
 
-.star-nonhighlighted, .handshake-nonhighlighted, .handpointup-nonhighlighted {
+.star-nonhighlighted,
+.handshake-nonhighlighted,
+.handpointup-nonhighlighted {
     @apply bg-white text-yellow-700;
 }
 
@@ -99,12 +103,13 @@ input {
     @apply fa-solid fa-x;
 }
 
-.delete-confirmation-trigger, .ban-confirmation-trigger {
-    @apply bg-red-500 p-2 text-white rounded-md;
+.delete-confirmation-trigger,
+.ban-confirmation-trigger {
+    @apply border border-transparent bg-red-500 hover:border-red-500 text-white hover:text-red-500 hover:bg-white transition-colors p-2 rounded-md;
 }
 
 .promote-group-member-confirmation-trigger-btn {
-    @apply bg-blue-400 p-2 text-white rounded-md;
+    @apply border border-transparent bg-blue-500 hover:border-blue-500 text-white hover:text-blue-500 hover:bg-white transition-colors p-2 rounded-md;
 }
 
 .group-status-text {
@@ -123,10 +128,22 @@ input {
     @apply border border-transparent bg-black hover:border-black text-white hover:text-black hover:bg-white transition-colors;
 }
 
+.form-button-red {
+    @apply border border-transparent bg-red-500 hover:border-red-500 text-white hover:text-red-500 hover:bg-white transition-colors;
+}
+
+.form-button-blue {
+    @apply border border-transparent bg-blue-500 hover:border-blue-500 text-white hover:text-blue-500 hover:bg-white transition-colors;
+}
+
 .unselected-poll-option {
     @apply border border-black hover:bg-black hover:text-white transition-colors;
 }
 
 .selected-poll-option {
     @apply bg-black text-white hover:bg-white hover:text-black;
+}
+
+.notification-card {
+    @apply w-full md:w-1/2;
 }

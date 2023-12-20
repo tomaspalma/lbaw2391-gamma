@@ -3,6 +3,18 @@
 <head>
     <title>{{ config('app.name', 'Laravel') }} | Admin dashboard</title>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/search/admin_user_search.js', 'resources/js/admin/user/block.js', 'resources/js/admin/user/scroll.js'])
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Gamma | Admin Dashboard",
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 @include('partials.navbar')
@@ -30,6 +42,5 @@
             @endfor
     </div>    
 </main>
-@include('partials.confirm_modal')
 @include('partials.snackbar')
 @include('partials.footer')

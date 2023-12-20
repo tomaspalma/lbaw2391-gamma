@@ -201,21 +201,53 @@ class UserController extends Controller
 
     public function checkEmailExists(string $email)
     {
-        $user = User::where('email', $email)->get();
+        $user = User::where('email', $email)->firstOrFail();
         if ($user) {
-            return response()->json($user);
+            if (auth()->user() && auth()->user()->can('view_information', $user)) {
+                return response()->json([
+                    'username' => $user->username,
+                    'display_name' => $user->display_name,
+                    'description' => $user->description,
+                    'university' => $user->university,
+                    'academic_status' => $user->academic_status
+                ]);
+            } else {
+                return response()->json([
+                    'username' => $user->username,
+                    'display_name' => $user->display_name,
+                    'description' => $user->description
+                ]);
+            }
         } else {
-            return null;
+            return response()->json([
+                'error' => 'User does not exist'
+            ], 404);
         }
     }
 
     public function checkUsernameExists(string $username)
     {
-        $user = User::where('username', $username)->get();
+        $user = User::where('username', $username)->firstOrFail();
         if ($user) {
-            return response()->json($user);
+            if (auth()->user() && auth()->user()->can('view_information', $user)) {
+                return response()->json([
+                    'username' => $user->username,
+                    'display_name' => $user->display_name,
+                    'description' => $user->description,
+                    'university' => $user->university,
+                    'academic_status' => $user->academic_status
+                ]);
+            } else {
+                return response()->json([
+                    'username' => $user->username,
+                    'display_name' => $user->display_name,
+                    'description' => $user->description
+                ]);
+            }
         } else {
-            return null;
+            return response()->json([
+                'error' => 'User does not exist'
+            ], 404);
         }
     }
 
@@ -313,6 +345,23 @@ class UserController extends Controller
         DB::table('friends')
             ->where('friend1', '=', $user_id)
             ->orWhere('friend2', '=', $user_id)
+            ->delete();
+
+        DB::table('group_request_not')
+            ->join('group_request', 'group_request_not.group_request_id', '=', 'group_request.id')
+            ->where('group_request.user_id', '=', $user_id)
+            ->delete();
+
+        DB::table('group_request')
+            ->where('user_id', '=', $user_id)
+            ->delete();
+
+        DB::table('group_owner')
+            ->where('user_id', '=', $user_id)
+            ->delete();
+
+        DB::table('group_user')
+            ->where('user_id', '=', $user_id)
             ->delete();
 
         AppBan::where('banned_user_id', $user_id)->delete();

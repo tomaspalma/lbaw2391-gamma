@@ -4,11 +4,22 @@
     @vite(['resources/css/app.css', 'resources/js/components/dropdown_dots.js', 'resources/js/profile/delete.js', 'resources/js/profile/scroll.js', 'resources/js/profile/friends.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | {{$user->username}} profile</title>
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+        $title = "Gamma | " . $user->username . " profile";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => $title,
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 @include('partials.navbar')
-
-@include('partials.confirm_modal')
 
 <div class="max-w-screen-md mx-auto pb-4 md:mb-4">
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6 border border-black flex flex-col">
@@ -67,7 +78,7 @@
                     @can('send_friend_request', $user)
                     <form class="m-0" action="{{ route('send_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="post">
                         @csrf
-                        <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                        <button type="submit" class="form-button-blue font-bold py-2 px-4 rounded">
                             Send Friend Request
                         </button>
                     </form>
@@ -75,7 +86,7 @@
                     @can('cancel_friend_request', $user)
                     <form class="m-0" action="{{ route('cancel_friend_request', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                         @csrf
-                        <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                        <button type="submit" class="form-button-red font-bold py-2 px-4 rounded">
                             Cancel Friend Request
                         </button>
                     </form>
@@ -83,7 +94,7 @@
                     @can('remove_friend', $user)
                     <form class="m-0" action="{{ route('remove_friend', ['username' => $user->username]) }}" id="friendForm" method="post" data-method="delete">
                         @csrf
-                        <button type="submit" class="text-white bg-gray-800 font-bold py-2 px-4 rounded">
+                        <button type="submit" class="form-button-red font-bold py-2 px-4 rounded">
                             Remove Friend
                         </button>
                     </form>

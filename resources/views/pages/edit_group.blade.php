@@ -5,6 +5,18 @@
 
     <title>{{ config('app.name', 'Laravel') }} | Editing Group {{ $group->name }}</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Gamma | Edit Group",
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 <body>
@@ -22,9 +34,9 @@
 
             <div class="flex flex-row w-full items-center mb-2"> 
                 <input type="file" name="image" id="image" class="hidden" onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
-                <button type="button" class=" bg-black hover:bg-gray-600 text-white m-2 px-4 py-2 rounded" onclick="document.getElementById('image').click()">Upload Image</button>
+                <button type="button" class="form-button py-2 px-4 rounded-md m-2" onclick="document.getElementById('image').click()">Upload Image</button>
                 <input type="file" name="banner" id="banner" class="hidden" onchange="document.getElementById('bannerPreview').src = window.URL.createObjectURL(this.files[0])">
-                <button type="button" class=" bg-black hover:bg-gray-600 text-white m-2 px-4 py-2 rounded" onclick="document.getElementById('banner').click()">Upload Banner</button>
+                <button type="button" class="form-button py-2 px-4 rounded-md m-2" onclick="document.getElementById('banner').click()">Upload Banner</button>
             </div>
 
             @error('image')
@@ -59,11 +71,11 @@
             </select>
 
 
-            <button type="submit" id="submit" class="bg-black hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+            <button type="submit" id="submit" class="form-button py-2 px-4 rounded-md">
                 Submit
             </button>
             <a href="{{ route('groupPosts', $group->id) }}">
-                <button type="button" class="bg-white hover:bg-gray-100 text-black hover:no-underline font-bold py-2 px-4 rounded">
+                <button type="button" class="form-button-red py-2 px-4 rounded-md hover:no-underline font-bold">
                     Cancel
                 </button>
             </a>
