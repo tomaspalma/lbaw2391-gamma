@@ -434,4 +434,11 @@ class GroupController extends Controller
             return response()->json(['exists' => false]);
         }
     }
+
+    public function showInviteForm(Request $request, string $id)
+    {
+        $group = Group::findOrFail($id);
+
+        return view('pages.invite_users', ['group' => $group, 'feed' => 'teste']);
+    }
 }

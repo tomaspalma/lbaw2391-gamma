@@ -139,6 +139,8 @@ Route::controller(GroupController::class)->middleware(EnsureUserIsNotAppBanned::
         Route::put('/group/{id}', 'update')->name('group.update');
     });
 
+    Route::get('group/{id}/invite', 'showInviteForm')->name('group.inviteform');
+
 });
 
 Route::controller(SearchController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
