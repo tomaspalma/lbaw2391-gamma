@@ -3,6 +3,18 @@
 <head>
     <title>{{ config('app.name', 'Laravel') }} | User appban appeals</title>
     @vite(['resources/js/search/admin_user_search.js', 'resources/js/admin/user/remove_appeal.js', 'resources/js/admin/user/scroll.js'])
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Gamma | Admin Appeals",
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 @include('partials.navbar')

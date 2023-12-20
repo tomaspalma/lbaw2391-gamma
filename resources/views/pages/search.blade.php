@@ -5,6 +5,18 @@
 
     <title>{{ config('app.name', 'Laravel') }} | Main search page</title>
 
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Main search page",
+    'url' => $url,
+    'image' => $logo
+    ])
+
+
     <meta name="search" content="{{ $query ? $query : '' }}">
 </head>
 

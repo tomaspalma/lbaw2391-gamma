@@ -5,6 +5,19 @@
 
     <title>{{ config('app.name', 'Laravel') }} | Group {{ $group->name }}</title>
 
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+        $title = "Gamma | Group " . $group->name;
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => $title,
+    'url' => $url,
+    'image' => $logo
+    ])
+
+
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
 
     <script src="https://kit.fontawesome.com/38229b6c34.js" crossorigin="anonymous"></script>

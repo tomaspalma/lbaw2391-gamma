@@ -5,6 +5,18 @@
 
     <title>{{ config('app.name', 'Laravel') }} | Edit post</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
+
+    @php
+        $url = Request::url();
+        $logo = config('app.url', $url) . "/public/logo.png";
+    @endphp
+
+    @include('partials.head.ogtags', [
+    'title' => "Gamma | Edit Post",
+    'url' => $url,
+    'image' => $logo
+    ])
+
 </head>
 
 @include('partials.navbar')

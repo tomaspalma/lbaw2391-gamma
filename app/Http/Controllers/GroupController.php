@@ -12,13 +12,14 @@ use App\Models\GroupOwner;
 use App\Models\GroupUser;
 use App\Models\User;
 use App\Models\GroupBan;
+use Doctrine\DBAL\Schema\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
 {
-    public function showGroupForm(Request $request, string $id)
+    public function showGroup(Request $request, string $id)
     {
         $group = Group::findOrFail($id);
         $posts = $group->posts()->paginate(10);
@@ -50,10 +51,6 @@ class GroupController extends Controller
     public function showGroupsForm(Request $request){
         $user = Auth::user();
 
-        if (!Auth::check()) {
-            abort(401, 'Unauthorized: Authentication required.');
-        }
-
         $groupsNormal = $user->groups('normal');
         $groupsOwner = $user->groups('owner');
         $requests = $user->groupRequests();
@@ -64,16 +61,11 @@ class GroupController extends Controller
     public function showGroupRequests(Request $request){
         $user = Auth::user();
 
-        if (!Auth::check()) {
-            abort(401, 'Unauthorized: Authentication required.');
-        }
+        $groupsNormal = $user->groups('normal');
+        $groupsOwner = $user->groups('owner');
+        $requests = $user->groupRequests();
+        return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
 
-        else{
-            $groupsNormal = $user->groups('normal');
-            $groupsOwner = $user->groups('owner');
-            $requests = $user->groupRequests();
-            return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
-        }
     }
 
     public function banGroupMember(Request $request, int $id, string $username)
@@ -167,15 +159,6 @@ class GroupController extends Controller
 
         $user = Auth::user();
 
-        if (!Auth::check()){
-            return response()->json([
-                'error' => [
-                    'code' => 401,
-                    'message' => 'Unauthorized: Authentication required.'
-                ]
-            ], 401);
-        }
-
         if (!$group->is_private) {
             $group->users()->attach($user->id);
             return response()->json([
@@ -213,14 +196,6 @@ class GroupController extends Controller
     public function removeToGroup(string $id)
     {
         $user = Auth::user();
-        if (!Auth::check()){
-            return response()->json([
-                'error' => [
-                    'code' => 401,
-                    'message' => 'Unauthorized: Authentication required.'
-                ]
-            ], 401);
-        }
 
         if(!$user->in_group($id)){
             return response()->json([
@@ -270,14 +245,6 @@ class GroupController extends Controller
         $user = Auth::user();
 
         $group = Group::findOrFail($id);
-        if (!Auth::check()){
-            return response()->json([
-                'error' => [
-                    'code' => 401,
-                    'message' => 'Unauthorized: Authentication required.'
-                ]
-            ], 401);
-        }
 
         if(!$user->is_pending($id)){
             return response()->json([
@@ -358,14 +325,6 @@ class GroupController extends Controller
 
 
         $user = Auth::user();
-        if (!Auth::check()){
-            return response()->json([
-                'error' => [
-                    'code' => 401,
-                    'message' => 'Unauthorized: Authentication required.'
-                ]
-            ], 401);
-        }
 
         if(!$user->is_owner($groupRequest->group->id)){
             return response()->json([
@@ -389,14 +348,6 @@ class GroupController extends Controller
         $groupRequest = GroupRequest::findOrFail($id);
         
         $user = Auth::user();
-        if (!Auth::check()){
-            return response()->json([
-                'error' => [
-                    'code' => 401,
-                    'message' => 'Unauthorized: Authentication required.'
-                ]
-            ], 401);
-        }
 
         if(!$user->is_owner($groupRequest->group->id)){
             return response()->json([
@@ -418,4 +369,68 @@ class GroupController extends Controller
         ]);
     }
 
+
+    public function showCreateForm()
+    {
+        $this->authorize('create', Group::class);
+
+        return view('pages.create_group', [
+            'bannerImage' => FileController::defaultAsset('group_banner'),
+            'groupImage' => FileController::defaultAsset('group')
+        ]);
+    }
+
+    public function create(Request $request)
+    {
+        $this->authorize('create', Group::class);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'privacy' => 'required|boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $sameName = Group::where('name', $request->input('name'))->get();
+
+        if (count($sameName) > 0) {
+            return redirect()->back()->withErrors(['name' => 'This name is already taken.']);
+        }
+
+        $group = null;
+        DB::transaction(function () use ($request, &$group) {
+            $group = Group::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'is_private' => $request->privacy
+            ]);
+    
+            GroupOwner::create([
+                'group_id' => $group->id,
+                'user_id' => Auth::user()->id
+            ]);
+        });
+
+        if ($request->hasFile('image')) {
+            FileController::upload($request->file('image'), 'group', $group->id);
+        }
+
+        if ($request->hasFile('banner')) {
+            FileController::upload($request->file('banner'), 'group_banner', $group->id);
+        }
+
+        return redirect()->route('groupPosts', $group->id);
+    }
+
+    public function checkGroupNameExists(string $group_name)
+    {
+        $group = Group::where('name', $group_name)->get();
+
+        if(count($group) > 0) {
+            return response()->json(['exists' => true]);
+        } else {
+            return response()->json(['exists' => false]);
+        }
+    }
 }
