@@ -30,7 +30,7 @@ class PostPolicy
     
     public function view(?User $user, Post $post) {
         if($post->group_id === null) {
-            if ($post->is_private) {
+            if ($post->is_private || $user->is_private) {
                 return $this->canViewPrivatePost($user, $post);
             }
             return Response::allow();
@@ -84,7 +84,7 @@ class PostPolicy
                 return Response::allow();
             }
         }
-        
+
         // Only the owner can delete a post (or an admin)
         return ($user->id === $post->author || $user->is_admin())
             ? Response::allow()
