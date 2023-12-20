@@ -87,7 +87,7 @@
             </div>
 
             <div class="col-span-2">
-                <button type="submit" class="bg-black text-white py-2 px-4 rounded-md">Create Post</button>
+                <button type="submit" class="form-button py-2 px-4 rounded-md">Create Post</button>
             </div>
         </form>
     </div>

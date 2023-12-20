@@ -74,12 +74,12 @@
 
         @can('update', $post)
         <div class="flex justify-between items-center mt-4">
-            <a href="{{ route('post.update', $post->id) }}" class="bg-black text-white py-2 px-4 rounded-md">Edit Post</a>
-            <button type="submit" class="delete-post-button bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
+            <a href="{{ route('post.update', $post->id) }}" class="form-button hover:no-underline py-2 px-4 rounded-md">Edit Post</a>
+            <button type="submit" class="delete-post-button form-button-red py-2 px-4 rounded-md">Delete Post</button>
         </div>
         @elsecan('delete', $post)
         <div class="flex justify-end items-center">
-            <button type="submit" class="delete-post-button bg-red-500 text-white py-2 px-4 rounded-md">Delete Post</button>
+            <button type="submit" class="delete-post-button form-button-red py-2 px-4 rounded-md">Delete Post</button>
         </div>
         @endcan
     </article>
@@ -91,8 +91,8 @@
         <form id="comment-form" class="flex flex-col space-y-4">
             @csrf
             <input type="hidden" name="post_id" value="{{ $post->id }}">
-            <textarea name="content" class="border border-gray-300 rounded-md p-2" placeholder="Write a comment..."></textarea>
-            <button type="button" id="comment-button" class="bg-black text-white py-2 px-4 rounded-md">Comment</button>
+            <textarea name="content" class="border border-gray-300 rounded-md p-2 resize-y" placeholder="Write a comment..."></textarea>
+            <button type="button" id="comment-button" class="form-button py-2 px-4 rounded-md">Comment</button>
         </form>
         @endcan
 
