@@ -437,6 +437,22 @@ CREATE TRIGGER update_group_request_not_trigger
     FOR EACH ROW
     EXECUTE FUNCTION update_group_request_not();
 
+-- (TRIGGER05) When a user receives a group request, a notification is created
+CREATE OR REPLACE FUNCTION update_group_acceptance_request_not() RETURNS TRIGGER AS
+$BODY$
+BEGIN 
+    INSERT INTO group_request_not (group_request_id, date, is_acceptance) 
+    VALUES (NEW.id, now(), true);
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_group_request_acceptance_not_trigger
+    AFTER UPDATE ON group_request
+    FOR EACH ROW
+    EXECUTE FUNCTION update_group_acceptance_request_not();
+
 -----------------------------------------
 
 -- (TRIGGER06) When a friend request is added, accepted or declined, a notification will be inserted
@@ -454,6 +470,8 @@ CREATE TRIGGER update_friend_request_not_trigger
     AFTER INSERT OR UPDATE ON friend_request
     FOR EACH ROW
     EXECUTE FUNCTION update_friend_request_not();
+
+
 
 -----------------------------------------
 

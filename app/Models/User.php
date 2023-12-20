@@ -185,11 +185,18 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->join('group_request', 'group_request.id', '=', 'group_request_not.group_request_id')
             ->join('groups', 'groups.id', '=', 'group_request.group_id')
             ->join('group_owner', 'group_owner.group_id', '=', 'groups.id')
-            ->where('group_owner.user_id', Auth::user()->id)
-            ->where('group_request_not.is_acceptance', '=', false)
+            ->where(function ($query) {
+                $query->where('group_owner.user_id', Auth::user()->id)
+                      ->where('group_request_not.is_acceptance', '=', false);
+            })
+            ->orWhere(function ($query) {
+                 $query->where('group_request.user_id', Auth::user()->id)
+                      ->where('group_request_not.is_acceptance', '=', true);
+            })
             ->orderBy('group_request_not.date', 'desc')
             ->paginate(15);
     }
+    
     
     public function post_reaction(Post $post)
     {
