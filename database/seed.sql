@@ -50,7 +50,7 @@ CREATE TABLE users (
     display_name TEXT NOT NULL,
     is_private BOOLEAN DEFAULT true NOT NULL,
     role INTEGER NOT NULL,
-    email_verified_at TIMESTAMP WITH TIME ZONE
+    email_verified_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
 
