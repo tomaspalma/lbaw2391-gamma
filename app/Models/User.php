@@ -122,11 +122,13 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
 
     public function comment_notifications()
     {
-        return CommentNot::with('comment')
-            ->whereHas('comment', function ($query) {
-                $query->where('author', '<>', Auth::user()->id);
-            })->orderBy('date', 'desc')
-            ->paginate(15);
+        return CommentNot::with('comment.post')
+        ->whereHas('comment.post', function ($query) {
+            $query->where('author', Auth::user()->id)
+            ->where('comment.author', '<>', $this->id);
+        })
+        ->orderBy('date', 'desc')
+        ->paginate(15);
     }
 
     public function vote_on_post_poll(Post $post)
