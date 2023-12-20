@@ -8,6 +8,11 @@ a {
     @apply hover:underline cursor-pointer;
 }
 
+.tagify__tag {
+    vertical-align: top;
+    @apply h-6 py-4;
+}
+
 .title {
     @apply text-2xl;
 }

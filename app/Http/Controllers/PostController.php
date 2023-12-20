@@ -15,7 +15,10 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
+use App\Models\PostTag;
+use App\Models\PostTagNot;
 use App\Models\Reaction;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
@@ -127,6 +130,20 @@ class PostController extends Controller
         $last_id = DB::select('SELECT id FROM post ORDER BY id DESC LIMIT 1')[0]->id;
         $new_id = $last_id + 1;
 
+        $pattern = '/\[\[(.*?)\]\]/';
+        $parts = preg_split($pattern, $request->content, -1, PREG_SPLIT_DELIM_CAPTURE);
+        
+        $tags = []; 
+        foreach ($parts as $part) {
+            if (!empty($part) && $part[0] === "{") {
+                $json = json_decode($part, true);
+                
+                if(isset($json["username"])) {
+                    $tags[] = $json["username"];
+                }
+            }
+        }
+        
         $post = Post::create([
             'id' => $new_id,
             'author' => Auth::user()->id,
@@ -136,6 +153,23 @@ class PostController extends Controller
             'group_id' => $request->group,
             'is_private' => $request->is_private
         ]);
+
+        foreach ($tags as $tag) {
+            $user = User::where('username', $tag)->get();
+
+            if (count($user) === 0) {
+                continue;
+            }
+
+            $post_tag = PostTag::create([
+                'user_id' => $user[0]->id,
+                'post_id' => $post->id
+            ]);
+
+            PostTagNot::create([
+                'post_tag_id' => 1
+            ]);
+        }
 
         if (isset($request->poll_options) && $request->poll_options[0] !== null) {
             $poll = Poll::create([]);

@@ -1,10 +1,12 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/post/poll.js'])
+    @vite(['resources/css/app.css', 'resources/js/post/poll.js', 'resources/js/post/tag.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Create post</title>
     <link href="{{ url('css/post.css') }}" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
 
     @php
         $url = Request::url();
@@ -61,10 +63,10 @@
 
             <div class="mb-4 col-span-2">
                 <label for="content" class="block text-sm font-medium text-gray-600">Content:</label>
-                <textarea name="content" id="content" rows="5" class="mt-1 p-2 border border-gray-300 rounded-md w-full resize-none" required></textarea>
+                <textarea name="content" id="content" rows="5" class="mt-1 mb-2 p-2 border border-gray-300 rounded-md w-full resize-none" required></textarea>
             </div>
 
-            <div class="mb-4 col-span-2">
+            <div class="mb-4 mt-4 col-span-2">
                 <button id="add-poll-btn" name="content" class="mt-1 p-2 border border-gray-300 hover:bg-black hover:text-white transition-colors rounded-md w-full resize-none">
                     Add poll +
                 </button>
