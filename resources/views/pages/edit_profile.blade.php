@@ -36,6 +36,9 @@
                     <input type="file" name="image" id="image" class="hidden" onchange="document.getElementById('imagePreview').src = window.URL.createObjectURL(this.files[0])">
                     <button type="button" class=" form-button px-4 py-2 rounded" onclick="document.getElementById('image').click()">Upload</button>
                 </div>
+                @error('image')
+                    <p class="text-red-500 text-sm">{{ $message }}. Max size is 2mb.</p>
+                @enderror
                 <div class="mb-4">
                     <label for="display_name" class="text-sm text-gray-600">Display Name</label>
                     <input type="text" name="display_name" id="display_name" value="{{ $user->display_name }}"
