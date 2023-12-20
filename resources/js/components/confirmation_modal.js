@@ -22,6 +22,9 @@ if (leaveModalButtons) {
 }
 
 const callbackTypesAction = {
+    logout: () => {
+        window.location.href = "/";
+    },
     ban_group_member: (form) => {
         console.log("Blocked!");
         const username = form.action.split("/")[6];
