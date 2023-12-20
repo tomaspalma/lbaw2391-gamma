@@ -347,6 +347,23 @@ class UserController extends Controller
             ->orWhere('friend2', '=', $user_id)
             ->delete();
 
+        DB::table('group_request_not')
+            ->join('group_request', 'group_request_not.group_request_id', '=', 'group_request.id')
+            ->where('group_request.user_id', '=', $user_id)
+            ->delete();
+
+        DB::table('group_request')
+            ->where('user_id', '=', $user_id)
+            ->delete();
+
+        DB::table('group_owner')
+            ->where('user_id', '=', $user_id)
+            ->delete();
+
+        DB::table('group_user')
+            ->where('user_id', '=', $user_id)
+            ->delete();
+
         AppBan::where('banned_user_id', $user_id)->delete();
 
         DB::table('users')
