@@ -56,15 +56,22 @@
 
             @endif
 
-            @if(isset($invite) && $invite)
-            <form action="{{ route('group.inviteuser', $group->id) }}" method="post">
+            @if(!isset($pending_invite) && isset($invite) && $invite)
+            <form data-group-id="{{$group->id}}" data-username="{{$user->username}}" class="invite-form" action="{{ route('group.inviteuser', ['id' => $group->id, 'username' => $user->username]) }}" method="post">
                 @csrf
                 @method('POST')
                 <input class="hidden" value="{{$user->id}}" name="user_id">
-                <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
+                <button type="submit" data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
                     Invite User
                 </button>
             </form>
+            @endif
+
+            @if(isset($pending_invite) && $pending_invite)
+                <div class="flex flex-col items-center space-y-2">
+                    <p>Pending</p>
+                    <i class="text-blue-400 text-2xl fa-solid fa-circle-info"></i>
+                </div>
             @endif
 
             @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group->id))

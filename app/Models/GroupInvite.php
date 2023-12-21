@@ -11,12 +11,15 @@ use Illuminate\Support\Facades\DB;
 
 
 use App\Models\GroupRequest;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GroupInvite extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
+
+    protected $table = 'group_invitations';
 
     protected $fillable = [
         'id',
@@ -25,6 +28,9 @@ class GroupInvite extends Model
         'group_id',
         'is_accepted'
     ];
-
-    protected $table = 'group_invitations';
+    
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

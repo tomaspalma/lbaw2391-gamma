@@ -445,20 +445,52 @@ class GroupController extends Controller
         return view('pages.invite_users', ['group' => $group, 'feed' => 'invite', 'users' => $users]);
     }
 
-    public function showSentPendingInvites(string $id){
-        $group = Group::findOrFail($id);
-        $users = $group->not_users();
+    public function searchUsersCanBeInvited(int $id, string $query = null) {
+        $group = Group::find($id);
 
-        $invites = $group->pending_invites();
+        $groupUserIds = $group->users()->pluck('users.id');
+        $groupOwnerIds = $group->owners()->pluck('users.id');
+        $groupInviteIds = $group->group_invites()->pluck('user_id');
+        
+        $users = null;
 
-        return view('pages.invite_users', ['group' => $group, 'feed' => 'invited', 'invites' => $invites]);
+        if($query === null) {
+            $users = User::whereNotIn('users.id', $groupUserIds)
+                ->whereNotIn('users.id', $groupOwnerIds)
+                ->whereNotIn('users.id', $groupInviteIds)
+                ->where('users.id', '<>', '0')
+                ->paginate(15);
+        } else {
+            $users = User::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
+                ->whereNotIn('users.id', $groupUserIds)
+                ->whereNotIn('users.id', $groupOwnerIds)
+                ->whereNotIn('users.id', $groupInviteIds)
+                ->where('users.id', '<>', '0')
+                ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate(15);
+        }
+        
+        $userCards = [];
 
+        foreach ($users as $user) {
+            $userCards[] = view('partials.user_card', ['user' => $user, 'adminView' => false, 'is_group' => false, 'group' => $group, 'invite' => true])->render();
+        }
+
+        return response()->json($userCards);
     }
 
-    public function inviteUser(Request $request, $id)
+    public function showSentPendingInvites(string $id){
+        $group = Group::findOrFail($id);
+
+        $invites = $group->pending_invites()->paginate(10);
+
+        return view('pages.invite_users', ['group' => $group, 'feed' => 'invited', 'invites' => $invites]);
+    }
+
+    public function inviteUser(Request $request, int $id, string $username)
     {
         $group = Group::find($id);
-        $user = User::findOrFail($request->user_id);
+        $user = User::where('username', $username)->firstOrFail();
 
         GroupInvite::create([
             'owner_id' => Auth::user()->id,
@@ -466,8 +498,5 @@ class GroupController extends Controller
             'group_id' => $id,
             'is_accepted' => false
         ]);
-
-    
-        return redirect("/group/{$group->id}/invite");
     }
 }

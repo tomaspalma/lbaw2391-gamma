@@ -141,7 +141,7 @@ Route::controller(GroupController::class)->middleware(EnsureUserIsNotAppBanned::
 
     Route::get('group/{id}/invite', 'showInviteForm')->name('group.inviteform');
     Route::get('group/{id}/invites', 'showSentPendingInvites')->name('group.invites');
-    Route::post('group/{id}/inviteUser', 'inviteUser')->name('group.inviteuser');
+    Route::post('group/{id}/invite/{username}', 'inviteUser')->name('group.inviteuser');
 
 });
 
@@ -211,6 +211,7 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::get('/group/{group_id}/posts', 'showGroup')->name('api.group.show_posts');
         Route::get('/group/{group_id}/members/{filter?}', 'showGroupMembers')->name('api.groupMembers');
         Route::get('/group/group_name/{group_name}', 'checkGroupNameExists');
+        Route::get('/group/{id}/invite/{query?}', 'searchUsersCanBeInvited');
     });
 
     Route::controller(UserController::class)->group(function () {

@@ -52,12 +52,12 @@ class Group extends Model
         $groupUserIds = $this->users()->pluck('users.id');
         $groupOwnerIds = $this->owners()->pluck('users.id');
         $groupInviteIds = $this->group_invites()->pluck('user_id');
+
         return User::whereNotIn('users.id', $groupUserIds)
                ->whereNotIn('users.id', $groupOwnerIds)
                ->whereNotIn('users.id', $groupInviteIds)
                ->where('users.id', '<>', '0')
                ->paginate(10);
-
     }
 
     public function remove_request($user_id)
@@ -75,7 +75,7 @@ class Group extends Model
 
     public function pending_invites(): HasMany
     {
-        return $this->hasMany(GroupInvite::class, 'group_invitations','group_id', 'id')
+        return $this->hasMany(GroupInvite::class)
             ->where('is_accepted', '=', false);
     }
     
