@@ -93,6 +93,19 @@ class GroupController extends Controller
 
     }
 
+    public function showGroupRequestCards() {
+        $user = Auth::user();
+
+        $requests = $user->groupRequests();
+        
+        $cards = [];
+        foreach($requests as $request) {
+            $cards[] = view('partials.group_requests_card', ['request'=> $request])->render();
+        }
+
+        return response()->json($cards);
+    }
+
     public function banGroupMember(Request $request, int $id, string $username)
 
     {

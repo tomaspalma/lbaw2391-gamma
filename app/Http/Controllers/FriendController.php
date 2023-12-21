@@ -59,7 +59,7 @@ class FriendController extends Controller
         
         $cards = [];
         foreach ($friendRequests as $friendRequest) {
-            $cards[] = view('partials.friend_requests_card', ['request' => $friendRequest])->render();
+            $cards[] = view('partials.user_card', ['user' =>$request->sender, 'friendRequest' => true, 'adminView' => false])->render();
         }
 
         return response()->json($cards);
