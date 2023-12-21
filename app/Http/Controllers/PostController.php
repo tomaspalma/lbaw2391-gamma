@@ -117,7 +117,7 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'attachment' => 'nullable|file',
+            'attachment' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
             'group' => 'nullable|integer',
             'is_private' => 'required|boolean',
             'poll_options' => 'nullable|array'
@@ -149,7 +149,6 @@ class PostController extends Controller
             'author' => Auth::user()->id,
             'title' => $request->title,
             'content' => $request->content,
-            'attachment' => $request->attachment,
             'group_id' => $request->group,
             'is_private' => $request->is_private
         ]);
@@ -169,6 +168,10 @@ class PostController extends Controller
             PostTagNot::create([
                 'post_tag_id' => $post_tag->id
             ]);
+        }
+
+        if ($request->hasFile('attachment')) {
+            FileController::upload($request->file('attachment'), 'post', $post->id);
         }
 
         if (isset($request->poll_options) && $request->poll_options[0] !== null) {
@@ -243,9 +246,12 @@ class PostController extends Controller
 
         $groups = $groupsOwner->merge($groupsNormal);
 
+        $attach = $post->attachment == null ? null : FileController::get('post', $post->id);
+
         return view('pages.edit_post', [
             'post' => $post,
-            'groups' => $groups
+            'groups' => $groups,
+            'attachment' => $attach
         ]);
     }
 
@@ -261,7 +267,7 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'attachment' => 'nullable|file',
+            'attachment' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
             'group' => 'nullable|integer',
             'is_private' => 'required|boolean'
         ]);
@@ -277,10 +283,20 @@ class PostController extends Controller
         $post->update([
             'title' => $request->title,
             'content' => $request->content,
-            'attachment' => $request->attachment,
             'group_id' => $request->group,
             'is_private' => $request->is_private
         ]);
+
+        if($request->remove_attachment === "1") {
+            FileController::delete('post', $post->id);
+            $post->update([
+                'attachment' => null
+            ]);
+        }
+
+        if ($request->hasFile('attachment')) {
+            FileController::upload($request->file('attachment'), 'post', $post->id);
+        }
 
         return redirect('/post/' . $id);
     }
@@ -345,6 +361,9 @@ class PostController extends Controller
         foreach ($post_comments as $comment) {
             $this->delete_comment($comment->id);
         }
+
+        FileController::delete('post', $post_id);
+        
         DB::table('post_tag_not')->where('post_id', $post_id)->delete();
         DB::table('post_tag')->where('post_id', $post_id)->delete();
         DB::table('post')->where('id', $post_id)->delete();

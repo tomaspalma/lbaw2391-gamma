@@ -55,7 +55,7 @@
             @endif
         </div>
 
-        <div class="mt-6 prose max-w-full">
+        <div class="mt-6 break-words max-w-full">
             @php
                 $pattern = '/\[\[(.*?)\]\]/';
                 $parts = preg_split($pattern, $post->content, -1, PREG_SPLIT_DELIM_CAPTURE)
@@ -76,6 +76,12 @@
 
         @if($post->poll !== null)
             @include('partials.post_poll', ['pollOptions' => $pollOptions])
+        @endif
+
+        @if($post->attachment)
+        <div>
+            <img src="{{ $post->getAttachment() }}" alt="Attachment" class="center my-8 w-2/3 rounded-md shadow-md">
+        </div>
         @endif
 
         <div class="post-action-bar mt-4 flex justify-between items-center">
