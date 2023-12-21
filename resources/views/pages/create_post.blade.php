@@ -25,7 +25,7 @@
     <div class="border border-black p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
         <h2 class="text-2xl font-semibold mb-4">Create a New Post</h2>
 
-        <form action="{{ route('post.create') }}" method="post" class="grid grid-cols-2 gap-4">
+        <form action="{{ route('post.create') }}" method="post" class="grid grid-cols-2 gap-4" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-4 col-span-2">
@@ -85,6 +85,18 @@
                         Add option +
                     </button>
                 </article>
+            </div>
+
+            <div class="mb-4 col-span-2">
+                <label for="attachment" class="block text-sm font-medium text-gray-600">Image:</label>
+                <img id="image-preview" src="#" class="my-2 mx-auto w-1/2" alt="Image preview"/>
+                <input type="file" name="attachment" id="attachment" class="hidden" onchange="document.getElementById('image-preview').src = window.URL.createObjectURL(this.files[0]); document.getElementById('remove-img').classList.remove('hidden'); document.getElementById('image-btn').classList.add('hidden');">
+                <button type="button" id="image-btn" class="form-button py-2 px-4 rounded-md" onclick="document.getElementById('attachment').click()">
+                    Upload
+                </button>
+                <button type="button" id="remove-img" class="form-button py-2 px-4 rounded-md hidden" onclick="document.getElementById('attachment').value = ''; document.getElementById('image-preview').src = '#'; document.getElementById('remove-img').classList.add('hidden'); document.getElementById('image-btn').classList.remove('hidden');">
+                    Remove
+                </button>
             </div>
 
             <div class="col-span-2">

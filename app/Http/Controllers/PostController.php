@@ -114,7 +114,7 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'attachment' => 'nullable|file',
+            'attachment' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
             'group' => 'nullable|integer',
             'is_private' => 'required|boolean',
             'poll_options' => 'nullable|array'
@@ -132,10 +132,13 @@ class PostController extends Controller
             'author' => Auth::user()->id,
             'title' => $request->title,
             'content' => $request->content,
-            'attachment' => $request->attachment,
             'group_id' => $request->group,
             'is_private' => $request->is_private
         ]);
+
+        if ($request->hasFile('attachment')) {
+            FileController::upload($request->file('attachment'), 'post', $post->id);
+        }
 
         if (isset($request->poll_options) && $request->poll_options[0] !== null) {
             $poll = Poll::create([]);
@@ -311,6 +314,9 @@ class PostController extends Controller
         foreach ($post_comments as $comment) {
             $this->delete_comment($comment->id);
         }
+
+        FileController::delete('post', $post_id);
+        
         DB::table('post_tag_not')->where('post_id', $post_id)->delete();
         DB::table('post_tag')->where('post_id', $post_id)->delete();
         DB::table('post')->where('id', $post_id)->delete();
