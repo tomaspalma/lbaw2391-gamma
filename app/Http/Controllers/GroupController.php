@@ -51,11 +51,30 @@ class GroupController extends Controller
     public function showGroupsForm(Request $request){
         $user = Auth::user();
 
-        $groupsNormal = $user->groups('normal');
-        $groupsOwner = $user->groups('owner');
+        $groupsNormal = $user->groups('normal')->paginate(10);
+        $groupsOwner = $user->groups('owner')->paginate(10);
         $requests = $user->groupRequests();
 
         return view('pages.groups', ['feed' => 'groups', 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'requests' => $requests]);
+    }
+
+    public function showUserGroupsCards(Request $request) {
+        $user = Auth::user();
+
+        $groupsNormal = $user->groups('normal')->paginate(10);
+        $groupsOwner = $user->groups('owner')->paginate(10);
+        
+        $cards = [];
+
+        foreach ($groupsOwner as $group) {
+            $cards[] = view('partials.group_card', ['group'=> $group, 'owner' => true])->render();
+        }
+
+        foreach ($groupsNormal as $group) {
+            $cards[] = view('partials.group_card', ['group'=> $group, 'owner' => false])->render();
+        }
+
+        return response()->json($cards);
     }
 
     public function showGroupRequests(Request $request){

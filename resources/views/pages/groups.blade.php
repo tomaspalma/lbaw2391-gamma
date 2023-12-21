@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/scroll.js', 'resources/js/group/group_requests.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group_management/scroll.js', 'resources/js/group/group_requests.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Your groups</title>
 
@@ -31,7 +31,7 @@
 @endcan
 <ul class="tab-container center justify-center flex border border-black rounded shadow my-4">
         <li class="flex w-1/2 {{ $feed === 'groups' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
-            <a href="/groups" class="hover:underline text-lg font-bold">Groups ({{$groupsNormal->count() + $groupsOwner->count()}})</a>
+            <a href="/groups" class="hover:underline text-lg font-bold">Groups (<span id="group-counter">{{$groupsNormal->count() + $groupsOwner->count()}}</span>)</a>
         </li>
 
         @if(Auth::user()->groups('owner')->count() > 0)
@@ -41,24 +41,26 @@
         @endif
 </ul>
 
+<div id="content">
 @if($feed === 'groups')
-
     @if($groupsNormal->count() == 0 && $groupsOwner->count() == 0)
         <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No groups found.</p>
 
     @else
+        <div id="groups">
         @if($groupsOwner->count() > 0)
             @for($i = 0; $i < $groupsOwner->count(); $i++)
-                @include('partials.group_card', ['group'=> $groupsOwner->get()[$i], 'owner' => true])
+                @include('partials.group_card', ['group'=> $groupsOwner[$i], 'owner' => true])
             @endfor
         @endif
 
         @if($groupsNormal->count() > 0)
 
             @for($i = 0; $i < $groupsNormal->count(); $i++)
-                @include('partials.group_card', ['group'=> $groupsNormal->get()[$i], 'owner' => false])
+                @include('partials.group_card', ['group'=> $groupsNormal[$i], 'owner' => false])
             @endfor
         @endif
+        </div>
     @endif
 
 @else
@@ -70,5 +72,6 @@
     <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No requests found.</p>
     @endif
 @endif
+</div>
 
 </main>
