@@ -61,7 +61,7 @@
                 </a>
             @else
                 @if(!$readFirstTime && ($currentContentRead + strlen($part)) > 400)
-                    {{substr($part, ($currentContentRead - 400))}}
+                    {{substr($part, 0, (400 - $currentContentRead))}}
                     @php
                         $readFirstTime = true;
                     @endphp
