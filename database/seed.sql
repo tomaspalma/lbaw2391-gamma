@@ -167,16 +167,17 @@ CREATE TABLE reaction (
     CONSTRAINT valid_post_and_comment_ck CHECK((post_id IS NULL and comment_id IS NOT NULL) or (post_id IS NOT NULL and comment_id IS NULL))
 );
 
-CREATE TABLE post_tag_not(
-    id SERIAL PRIMARY KEY, 
-    post_id INTEGER REFERENCES post(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
-);
 
 CREATE TABLE post_tag(
     id SERIAL PRIMARY KEY,
     post_id INTEGER REFERENCES post(id) ON UPDATE CASCADE,
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE
+);
+
+CREATE TABLE post_tag_not(
+    id SERIAL PRIMARY KEY, 
+    post_tag_id INTEGER REFERENCES post_tag(id),
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
 
 CREATE TABLE group_request_not(
