@@ -82,7 +82,7 @@ class FileController extends Controller
                     User::find($id)->image = null;
                     break;
                 case 'post':
-                    Post::find($id)->image = null;
+                    Post::find($id)->attachment = null;
                     break;
                 case 'group':
                     Group::find($id)->image = null;

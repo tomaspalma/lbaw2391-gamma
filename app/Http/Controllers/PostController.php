@@ -248,7 +248,8 @@ class PostController extends Controller
 
         return view('pages.edit_post', [
             'post' => $post,
-            'groups' => $groups
+            'groups' => $groups,
+            'attachment' => FileController::get('post', $post->id)
         ]);
     }
 
@@ -264,7 +265,7 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'attachment' => 'nullable|file',
+            'attachment' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
             'group' => 'nullable|integer',
             'is_private' => 'required|boolean'
         ]);
@@ -280,10 +281,20 @@ class PostController extends Controller
         $post->update([
             'title' => $request->title,
             'content' => $request->content,
-            'attachment' => $request->attachment,
             'group_id' => $request->group,
             'is_private' => $request->is_private
         ]);
+
+        if($request->remove_attachment === 1) {
+            FileController::delete('post', $post->id);
+            $post->update([
+                'attachment' => null
+            ]);
+        }
+
+        if ($request->hasFile('attachment')) {
+            FileController::upload($request->file('attachment'), 'post', $post->id);
+        }
 
         return redirect('/post/' . $id);
     }
