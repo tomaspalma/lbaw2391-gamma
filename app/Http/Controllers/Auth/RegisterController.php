@@ -71,9 +71,6 @@ class RegisterController extends Controller
         }
 
 
-        // So that the user received an verification email to their emails
-        event(new Registered($user));
-
         Auth::attempt($credentials);
         $request->session()->regenerate();
 
