@@ -8,6 +8,8 @@ import { toggleDropdownArrow } from './components/dropdown';
 import { toggleAppbanAppealReasonDropdown } from './admin/user/show_appeal_reason';
 import { toggleBlockTriggerButtons } from './admin/user/block';
 import { configureConfirmationForm, populateModalText } from './components/confirmation_modal';
+import { toggleFriendRequestButtons } from './friends/requests';
+
 
 function toggleLogoutMisclickConfirmation() {
     const logoutAction = document.getElementById("logout-action");
@@ -121,6 +123,34 @@ channel.bind('friend-request-notification', function(data) {
             friendRequestCounter.classList.remove("hidden");
             const counter = parseInt(friendRequestCounter.textContent, 10);
             friendRequestCounter.textContent = (counter + 1);
+            if (onPage("friends")) {
+                const requestsTitle = document.getElementById("friend-requests-title");
+                let requestsCount = requestsTitle.textContent
+                .replace("Pending (", "")
+                .replace(")", "");
+                requestsCount = parseInt(requestsCount, 10);
+                requestsTitle.textContent = `Pending (${requestsCount + 1})`;
+            }
+            const friendRequests = document.getElementById("friend-requests");
+                if(friendRequests) {
+                    console.log(friendRequests)
+                    const friendRequestDiv = document.createElement('div');
+                    // <div id="request-{{$request->sender->username}}">
+
+                    friendRequestDiv.id = `request-${message.user.username}`;
+                    friendRequestDiv.innerHTML = message.friend_request_card;
+                    friendRequests.insertAdjacentHTML('afterbegin', friendRequestDiv.outerHTML);
+                    const requestsTitle = document.getElementById("friend-requests-title");
+                    let requestsCount = requestsTitle.textContent
+                    .replace("Pending (", "")
+                    .replace(")", "");
+                    requestsCount = parseInt(requestsCount, 10);
+                    requestsTitle.textContent = `Pending (${requestsCount + 1})`;
+                    const requestsContainer = document.getElementById("friend-requests");
+
+                    toggleFriendRequestButtons(friendRequests.querySelectorAll(".friendRequestForm"));   
+                }
+
         }
         else {
             notificationCounter.classList.remove("hidden");

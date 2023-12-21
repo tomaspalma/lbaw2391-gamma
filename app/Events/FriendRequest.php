@@ -46,11 +46,17 @@ class FriendRequest implements ShouldBroadcast
             'notification' => $friend_request_not[0],
             'date' => DateController::format_date($friend_request_not[0]->date)
         ])->render();
+        $friend_request = view('partials.user_card', [
+            'user' => $user,
+            'friendRequest' => true,
+            'adminView' => false,
+        ])->render();
 
         $this->message = [
             'user' => $user,
             'friend_request_not_view' => $friend_request_not_view,
-            'is_accepted' => $is_accepted
+            'is_accepted' => $is_accepted,
+            'friend_request_card' => $friend_request,
         ];
     }
 
