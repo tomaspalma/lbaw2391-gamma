@@ -28,7 +28,7 @@
     <div class="border border-black p-8 my-8 max-w-3xl mx-auto rounded-md shadow-md">
         <h2 class="text-2xl font-semibold mb-4">Edit Post</h2>
 
-        <form action="{{ route('post.update', $post->id) }}" method="post" class="grid grid-cols-2 gap-4">
+        <form action="{{ route('post.update', $post->id) }}" method="post" class="grid grid-cols-2 gap-4" enctype="multipart/form-data">
             @method('PUT')    
             @csrf
 
@@ -67,7 +67,7 @@
             <div class="mb-4 col-span-2">
             <input type="hidden" name="remove_attachment" id="remove_attachment" value="0"> 
             @if($attachment !== null)
-                <label for="attachment" class="block text-sm font-medium text-gray-600">Image:</label>
+                <label for="attachment" class="block text-sm font-medium mt-4 text-gray-600">Image:</label>
                 <img id="image-preview" src="{{ $attachment }}" class="my-2 mx-auto w-1/2" alt="Image preview"/>
                 <input type="file" name="attachment" id="attachment" class="hidden" onchange="document.getElementById('image-preview').src = window.URL.createObjectURL(this.files[0]); document.getElementById('remove-img').classList.remove('hidden'); document.getElementById('image-btn').classList.add('hidden'); document.getElementById('image-preview').classList.remove('hidden');">
                 <button type="button" id="image-btn" class="form-button py-2 px-4 rounded-md hidden" onclick="document.getElementById('attachment').click()">

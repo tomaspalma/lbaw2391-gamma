@@ -246,10 +246,12 @@ class PostController extends Controller
 
         $groups = $groupsOwner->merge($groupsNormal);
 
+        $attach = $post->attachment == null ? null : FileController::get('post', $post->id);
+
         return view('pages.edit_post', [
             'post' => $post,
             'groups' => $groups,
-            'attachment' => FileController::get('post', $post->id)
+            'attachment' => $attach
         ]);
     }
 
@@ -285,7 +287,7 @@ class PostController extends Controller
             'is_private' => $request->is_private
         ]);
 
-        if($request->remove_attachment === 1) {
+        if($request->remove_attachment === "1") {
             FileController::delete('post', $post->id);
             $post->update([
                 'attachment' => null
