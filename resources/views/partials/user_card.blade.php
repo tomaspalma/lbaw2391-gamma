@@ -32,17 +32,6 @@
                 Delete
             </button>
             @endif
-            <button class="block-reason-trigger" {{ $user->is_app_banned() ? 'hidden' : '' }}>
-                Block
-            </button>
-            <button class="unblock-confirmation-trigger" {{ !$user->is_app_banned() ? 'hidden' : '' }}>
-                Unblock
-            </button>
-            @if(!isset($appealView) || !$appealView)
-            <button class="delete-confirmation-trigger">
-                Delete
-            </button>
-            @endif
             @if(isset($appealView) && $appealView)
             <button class="remove-confirmation-trigger">
                 Remove
