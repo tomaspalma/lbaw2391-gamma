@@ -86,6 +86,9 @@
 @endif
 </div>
 
+    <br>
+
 </main>
 
 @include('partials.snackbar')
+@include('partials.footer')

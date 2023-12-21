@@ -11,6 +11,16 @@ use Illuminate\Http\Request;
 
 class FriendController extends Controller
 {
+    public function show_friends_json(string $username) {
+        $user = User::where('username', $username)->firstOrFail();
+
+        $this->authorize('view_friends', $user);
+
+        $friends = $user->friends()->get();
+        
+        return response()->json($friends);
+    }
+
     public function show_friends(Request $request, string $username)
     {
         $user = User::where('username', $username)->firstOrFail();
