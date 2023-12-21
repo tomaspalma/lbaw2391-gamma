@@ -33,6 +33,9 @@
             <div class="mb-4 col-span-2">
                 <label for="title" class="block text-sm font-medium text-gray-600">Title: <span class="required-input">*</span></label>
                 <input type="text" name="title" id="title" class="mt-1 p-2 border border-gray-300 rounded-md w-full" required>
+                @error('title')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
             </div>  
 
                 <div class="mb-4">
@@ -64,6 +67,9 @@
             <div class="mb-4 col-span-2">
                 <label for="content" class="block text-sm font-medium text-gray-600">Content: <span class="required-input">*</span></label>
                 <textarea name="content" id="content" rows="5" class="mt-1 p-2 border border-gray-300 rounded-md w-full resize-none" required></textarea>
+                @error('content')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="mb-4 mt-4 col-span-2">
@@ -91,14 +97,17 @@
 
             <div class="mb-4 col-span-2">
                 <label for="attachment" class="block text-sm font-medium text-gray-600">Image:</label>
-                <img id="image-preview" src="#" class="my-2 mx-auto w-1/2" alt="Image preview"/>
-                <input type="file" name="attachment" id="attachment" class="hidden" onchange="document.getElementById('image-preview').src = window.URL.createObjectURL(this.files[0]); document.getElementById('remove-img').classList.remove('hidden'); document.getElementById('image-btn').classList.add('hidden');">
+                <img id="image-preview" src="#" class="my-2 mx-auto w-1/2 hidden" alt="Image preview"/>
+                <input type="file" name="attachment" id="attachment" class="hidden" onchange="document.getElementById('image-preview').src = window.URL.createObjectURL(this.files[0]); document.getElementById('remove-img').classList.remove('hidden'); document.getElementById('image-btn').classList.add('hidden'); document.getElementById('image-preview').classList.remove('hidden');">
                 <button type="button" id="image-btn" class="form-button py-2 px-4 rounded-md" onclick="document.getElementById('attachment').click()">
                     Upload
                 </button>
-                <button type="button" id="remove-img" class="form-button py-2 px-4 rounded-md hidden" onclick="document.getElementById('attachment').value = ''; document.getElementById('image-preview').src = '#'; document.getElementById('remove-img').classList.add('hidden'); document.getElementById('image-btn').classList.remove('hidden');">
+                <button type="button" id="remove-img" class="form-button py-2 px-4 rounded-md hidden" onclick="document.getElementById('attachment').value = ''; document.getElementById('image-preview').src = '#'; document.getElementById('remove-img').classList.add('hidden'); document.getElementById('image-btn').classList.remove('hidden'); document.getElementById('image-preview').classList.add('hidden');">
                     Remove
                 </button>
+                @error('attachment')
+                    <p class="text-red-500 text-sm">{{ $message }}. Max size is 2mb.</p>
+                @enderror
             </div>
 
             <div class="col-span-2">
