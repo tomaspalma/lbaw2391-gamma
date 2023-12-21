@@ -64,6 +64,12 @@ class GroupController extends Controller
         $groupsNormal = $user->groups('normal');
         $groupsOwner = $user->groups('owner');
         $requests = $user->groupRequests();
+
+        if(count($user->groups('owner')->get()) <= 0) {
+            return view('pages.groups', ['feed' => 'groups', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
+        }
+
+        
         return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
 
     }
