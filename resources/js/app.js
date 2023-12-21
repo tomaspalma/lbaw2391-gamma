@@ -141,9 +141,9 @@ channel.bind('group-request-notification', function(data){
         notificationCounter.classList.remove("hidden");
         const counter = parseInt(notificationCounter.textContent, 10);
         notificationCounter.textContent = (counter + 1);
-        if (onNotificationsPage()) {
+        if (onPage("notifications")) {
             const notificationsCards = document.getElementById("notification-cards");
-            notificationsCards.insertAdjacentHTML('afterbegin', message.comment_not_view);
+            notificationsCards.insertAdjacentHTML('afterbegin', message.group_request_not_view);
         }
     }
 })
