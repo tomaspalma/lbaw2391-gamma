@@ -61,7 +61,7 @@
 
             <div class="mb-4 col-span-2">
                 <label for="content" class="block text-sm font-medium text-gray-600">Content: <span class="required-input">*</span></label>
-                <textarea name="content" id="content" rows="5" class="mt-1 p-2 border border-gray-300 rounded-md w-full resize-none" required>{{ old('content', $post->content) }}</textarea>
+                <textarea name="content" id="content" rows="5" class="mt-1 p-2 border border-gray-300 rounded-md w-full break-words resize-none" required>{{ old('content', $post->content) }}</textarea>
             </div>
 
             <div class="mb-4 col-span-2">
