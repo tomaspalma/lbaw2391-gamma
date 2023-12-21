@@ -2,12 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Group;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureGroupExists
+class EnsureUserIsNotDeletedUser
 {
     /**
      * Handle an incoming request.
@@ -16,12 +15,10 @@ class EnsureGroupExists
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $id = $request->route('id');
+        $username = $request->route('username');
 
-        $group = Group::find($id);
-
-        if ($group === null) {
-            abort(422, "Group does not exist.");
+        if($username === 'deleted_user') {
+            return redirect("/");
         }
 
         return $next($request);

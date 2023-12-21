@@ -60,7 +60,7 @@
                         </form>
                     @endcan
                 @endcan
-                @can('edit', $group)
+                @can('can_modify', $group)
                     <a href="{{ route('group.edit', $group) }}" class="block px-4 py-2 form-button text-center rounded hover:no-underline ml-4 h-fit">
                         Edit
                     </a>

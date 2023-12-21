@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Group;
+use App\Models\Comment;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureGroupExists
+class EnsureCommentExists
 {
     /**
      * Handle an incoming request.
@@ -17,11 +17,11 @@ class EnsureGroupExists
     public function handle(Request $request, Closure $next): Response
     {
         $id = $request->route('id');
+        
+        $comment = Comment::find($id);
 
-        $group = Group::find($id);
-
-        if ($group === null) {
-            abort(422, "Group does not exist.");
+        if($comment === null) {
+            abort(422, "Comment does not exist.");
         }
 
         return $next($request);

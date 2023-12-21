@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/js/friends/requests.js', 'resources/js/friends/scroll.js'])
+    @vite(['resources/js/friends/scroll.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Friends</title>
 
@@ -40,14 +40,14 @@
     </div>
     @endif
     @if($tab=='requests')
-    <div id="requests" class="mb-10">
+    <div id="friend-requests" class="mb-10">
         @foreach($friendRequests as $request)
         <div id="request-{{$request->sender->username}}">
             @include('partials.user_card', ['user' =>$request->sender, 'friendRequest' => true, 'adminView' => false])
         </div>
         @endforeach
-    </div>
     <p id="noRequestsMessage" class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700 {{ count($friendRequests) ? 'hidden' : '' }} ">No friend requests found.</p>
+    </div>
     @endif
 </main>
 
