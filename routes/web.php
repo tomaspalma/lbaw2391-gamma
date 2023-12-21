@@ -127,10 +127,10 @@ Route::controller(GroupController::class)->middleware(EnsureUserIsNotAppBanned::
     Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
     Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
     Route::get('/groups', 'showGroupsForm');
+    Route::get('/groups/invites', 'showGroupOwnerGroupInvites');
     Route::get('/groups/requests', 'showGroupRequests');
     Route::put('/groups/{id}/approve', 'approveRequest')->name('groups.approve_request');
     Route::delete('/groups/{id}/decline', 'declineRequest')->name('groups.decline_request');
-
 
     Route::get('/group', 'showCreateForm')->name('group.createForm');
     Route::post('/group', 'create')->name('group.create');
@@ -139,6 +139,13 @@ Route::controller(GroupController::class)->middleware(EnsureUserIsNotAppBanned::
         Route::put('/group/{id}', 'update')->name('group.update');
     });
 
+    Route::get('group/{id}/invite', 'showInviteForm')->name('group.inviteform');
+
+    Route::get('group/{id}/invites', 'showSentPendingInvites')->name('group.invites');
+
+    Route::post('group/{id}/invite/{username}', 'inviteUser')->name('group.inviteuser');
+    Route::put('group/{id}/invite/{username}', 'acceptInvite')->name('group.acceptinvite');
+    Route::delete('group/{id}/invite/{username}', 'rejectInvite')->name('group.rejectinvite');
 });
 
 Route::controller(SearchController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {
@@ -208,6 +215,7 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::get('/group/{group_id}/posts', 'showGroup')->name('api.group.show_posts');
         Route::get('/group/{group_id}/members/{filter?}', 'showGroupMembers')->name('api.groupMembers');
         Route::get('/group/group_name/{group_name}', 'checkGroupNameExists');
+        Route::get('/group/{id}/invite/{query?}', 'searchUsersCanBeInvited');
         Route::get('/groups_cards', 'showUserGroupsCards');
         Route::get('/groups/requestscards', 'showGroupRequestCards');
     });

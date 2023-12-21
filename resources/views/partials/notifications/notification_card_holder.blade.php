@@ -38,6 +38,13 @@
         ])
     @endif
 
+    @if(isset($notification->group_invitation_id))
+        @include('partials.notifications.group_invite_notification', [
+        'notification' => $notification,
+        'date' => $date
+        ])
+    @endif
+
     @if(!$notification->read)
         @php
             $notification->read = true;

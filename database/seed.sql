@@ -80,7 +80,9 @@ CREATE TABLE group_invitations(
 
 CREATE TABLE group_invitation_nots(
     id SERIAL PRIMARY KEY,
-    group_invitation_id INTEGER REFERENCES group_invitations(id)
+    group_invitation_id INTEGER REFERENCES group_invitations(id),
+    read BOOLean DEFAULT false,
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
 
 CREATE TABLE polls (
@@ -468,6 +470,23 @@ CREATE TRIGGER update_group_request_acceptance_not_trigger
     AFTER UPDATE ON group_request
     FOR EACH ROW
     EXECUTE FUNCTION update_group_acceptance_request_not();
+
+-- (TRIGGERXX) WHen a user receives a group invitation, a notification is created
+
+CREATE OR REPLACE FUNCTION create_group_not() RETURNS TRIGGER AS
+$BODY$
+BEGIN 
+    INSERT INTO group_invitation_nots (group_invitation_id, date) 
+    VALUES (NEW.id, now());
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER create_group_invite_notification
+    AFTER INSERT ON group_invitations
+    FOR EACH ROW
+    EXECUTE FUNCTION create_group_not();
 
 -----------------------------------------
 
