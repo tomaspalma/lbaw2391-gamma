@@ -155,6 +155,9 @@ Route::controller(GroupController::class)->middleware([EnsureUserIsNotAppBanned:
         Route::get('/groups/invites', 'showGroupOwnerGroupInvites');
         Route::get('/groups/requests', 'showGroupRequests');
 
+        Route::put('/groups/{id}/approve', 'approveRequest')->name('groups.approve_request');
+        Route::delete('/groups/{id}/decline', 'declineRequest')->name('groups.decline_request');
+
         Route::middleware(EnsureGroupExists::class)->group(function() {
             Route::get('/group/{id}/members/', 'showGroupMembers')->name('groupMembers');
             Route::post('/group/{id}/members/{username}/block', 'banGroupMember')->name('ban.groupMember');
@@ -162,8 +165,6 @@ Route::controller(GroupController::class)->middleware([EnsureUserIsNotAppBanned:
             Route::post('/group/{id}/enter', 'addToGroup')->name('groups.enter');
             Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
             Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
-            Route::put('/groups/{id}/approve', 'approveRequest')->name('groups.approve_request');
-            Route::delete('/groups/{id}/decline', 'declineRequest')->name('groups.decline_request');
             Route::get('/group/{id}/edit', 'edit')->name('group.edit');
             Route::put('/group/{id}', 'update')->name('group.update');
 
