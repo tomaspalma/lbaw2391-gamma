@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\GroupInviteNot;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -68,7 +69,10 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
+    
+    public function groupInvites() {
+        return GroupInvite::where('user_id', $this->id)->where('is_accepted', false)->paginate(15);
+    }
 
     public function groups(string $type): BelongsToMany
     {
@@ -98,6 +102,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->concat($this->reaction_notifications())
             ->concat($this->friend_request_notifications())
             ->concat($this->group_request_notifications())
+            ->concat($this->group_invite_notifications())
             ->sortByDesc('date');
 
         return $result;
@@ -204,6 +209,15 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
             ->paginate(15);
         
         return $result;
+    }
+
+    public function group_invite_notifications(){
+        return GroupInviteNot::with('groupInvite')
+            ->whereHas('groupInvite', function ($query) {
+                $query->where('user_id', $this->id);
+            })
+            ->orderBy('date', 'desc')
+            ->paginate(15);
     }
     
     

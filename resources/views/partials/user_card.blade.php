@@ -41,6 +41,44 @@
             </button>
             @endif
             </div>
+
+
+            @endif
+
+            @if(!isset($received_invite) && !isset($pending_invite) && isset($invite) && $invite)
+            <form data-group-id="{{$group->id}}" data-username="{{$user->username}}" class="invite-form" action="{{ route('group.inviteuser', ['id' => $group->id, 'username' => $user->username]) }}" method="post">
+                @csrf
+                @method('POST')
+                <input class="hidden" value="{{$user->id}}" name="user_id">
+                <button type="submit" data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
+                    Invite User
+                </button>
+            </form>
+            @endif
+
+            @if(isset($pending_invite) && $pending_invite)
+                <div class="flex flex-col items-center space-y-2">
+                    <p>Pending</p>
+                    <i class="text-blue-400 text-2xl fa-solid fa-circle-info"></i>
+                </div>
+            @endif
+
+            @if(isset($received_invite) && $received_invite)
+            <div>
+                <div class="flex flex-row space-x-2">
+                    <form data-group-id="{{$received_invite->group->id}}" data-username="{{$received_invite->user->username}}" class="accept-invite-form">
+                        <button type="submit" class="form-button-blue rounded-md p-2">
+                            Accept
+                        </button>
+                    </form>
+                    <form data-group-id="{{$received_invite->group->id}}" data-username="{{$received_invite->user->username}}" class="reject-invite-form">
+                        <button type="submit" class="form-button-red rounded-md p-2">
+                            Reject
+                        </button>
+                    </form>
+                </div>
+                <p class="success-invite-text hidden text-green-500">You accepted the group invite.</p>
+            </div>
             @endif
 
             @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group->id))

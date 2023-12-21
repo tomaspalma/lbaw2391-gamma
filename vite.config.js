@@ -34,6 +34,7 @@ export default defineConfig({
                 "resources/js/post/reactions.js",
                 "resources/js/post/scroll.js",
                 "resources/js/utils.js",
+                "resources/js/group/invites.js",
                 "resources/js/notifications/filter.js",
                 "resources/js/group/enter_leave.js",
                 "resources/js/group/group_requests.js",

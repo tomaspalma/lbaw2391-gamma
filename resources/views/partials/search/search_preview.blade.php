@@ -30,11 +30,11 @@
 
         @foreach ($entities as $entity)
         @if($toggled === 'users')
-        @include('partials.user_card', ['user'=> $entity, 'adminView' => false])
+            @include('partials.user_card', ['user'=> $entity, 'adminView' => false])
         @elseif($toggled === 'posts')
-        @include('partials.post_card', ['post'=> $entity, 'preview' => false])
+            @include('partials.post_card', ['post'=> $entity, 'preview' => false])
         @elseif($toggled === 'groups')
-
+            @include('partials.group_card', ['group'=> $entity, 'owner' => Auth::user()->is_owner($entity->id)])
         @endif
         @endforeach
     </div>

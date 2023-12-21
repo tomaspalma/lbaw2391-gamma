@@ -19,7 +19,10 @@ class NotificationController extends Controller
             $notifications = $request->user()->group_request_notifications();
         } elseif ($filter == 'group-requests-acceptance'){
             $notifications = $request->user()->group_request_accept_notifications();
-        } else {
+        } elseif($filter == 'group-invites'){
+            $notifications = $request->user()->group_invite_notifications();
+        }
+        else {
             $notifications = $request->user()->normal_notifications();
         }
 

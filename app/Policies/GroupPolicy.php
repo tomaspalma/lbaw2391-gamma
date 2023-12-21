@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Group;
+use App\Models\GroupInvite;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -13,6 +14,18 @@ class GroupPolicy
         return $user->is_owner($group->id)
             ? Response::allow()
             : Response::deny("You are not an owner of this group.");
+    }
+
+    public function invite(User $user, Group $group, User $user_model)
+    {
+        $invites = GroupInvite::where('user_id', $user_model->id)
+            ->where('group_id', $group->id)
+            ->where('is_accepted', false)
+            ->get();
+
+        return $user->is_owner($group->id) && count($invites) === 0
+            ? Response::allow()
+            : Response::deny("You cannot invite this user.");
     }
 
     public function viewPostsAndMembers(?User $user, Group $group): Response
