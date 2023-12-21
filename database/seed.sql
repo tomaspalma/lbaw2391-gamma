@@ -607,10 +607,10 @@ CREATE TRIGGER add_friend
     EXECUTE FUNCTION add_friend();
 
     INSERT INTO users (id, username, email, password, academic_status, display_name, is_private, role, image, email_verified_at, description, university) VALUES 
-        (0, 'deleted_user', 'deleted_user', 'password1', 'Undergraduate', 'John Doe', true, 2, null, '2023-11-23 14:18:29+00', 'A deleted user', 'University of Porto'),
+        (0, 'deleted_user', 'deleted_user', 'password1', 'Undergraduate', 'Deleted User', true, 2, null, '2023-11-23 14:18:29+00', 'A deleted user', 'University of Porto'),
         (1, 'johndoe', 'johndoe@example.com', '$2y$10$oI17OO.VH15Kn0i6S840ce6BB.9AH6iAjTfUeCDgz1zVzQbNJ4iiG', 'Undergraduate', 'John Doe', true, 2, 'tHMLkLWZFQhuzM3hSzpOtKsuIMG4X2FcUKrikcGA.png', '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Lisboa'),
-        (2, 'alanturing', 'alanturing@example.com', 'password2', 'Professor', 'Alan Turing', false, 2, null, '2023-11-23 14:18:29+00', 'A professor in Computer Science', 'University of Porto'),
-        (3, 'adalovelace', 'adalovelace@example.com', 'password3', 'Graduate', 'Ada Lovelace', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Coimbra'),
+        (2, 'alanturing', 'alanturing@example.com', '$2y$10$7POXBblYbJue.OPpsNkuyunXqb9QTNabWTp2oEmXIKwO3fPPe4JNq', 'Professor', 'Alan Turing', false, 2, null, '2023-11-23 14:18:29+00', 'A professor in Computer Science', 'University of Cambridge'),
+        (3, 'adalovelace', 'adalovelace@example.com', '$2y$10$rOchMCeiruf0E9Z8lPTNme4iraEsKLYeaQnlaPvYqYyJTdjOtFNDC', 'Graduate', 'Ada Lovelace', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Coimbra'),
         (4, 'admin', 'admin@example.com', '$2y$10$ehcHOK3hnZA7L4h5PvpQge3VfdFbaSxryczs9GzK9lUDNxMcKoWua', 'Undergraduate', 'Admin User', false, 1, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Porto');
         -- (5, 'newuser1', 'newuser1@example.com', '$2y$10$3M0VIGcqNMTJ9.PZ8mW3f.9qDokvlX/j64fcsOLtkI8.XyegXzSxC', 'Undergraduate', 'New User 1', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Minho'),
         -- (6, 'newuser2', 'newuser2@example.com', '$2y$10$ZoykCj4aGdzqibHBzqsWUuhu3uVKq.TwRasA5h5HX5OZ/4fA2iJF.', 'Graduate', 'New User 2', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Porto'),
