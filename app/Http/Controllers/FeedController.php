@@ -30,21 +30,37 @@ class FeedController extends Controller
         $user = auth()->user();
 
 
-        $raw_posts = Post::whereIn('author', function ($query) use ($user) {
-            $query->select('friend2')
-                ->from('friends')
-                ->where('friend1', $user->id)
-                ->unionAll(function ($query) use ($user) {
-                    $query->select('friend1')
+        $personal_posts = Post::where(function ($query) use ($user) {
+            $query->whereNull('group_id')
+                ->whereIn('author', function ($query) use ($user) {
+                    $query->select('friend2')
                         ->from('friends')
-                        ->where('friend2', $user->id);
+                        ->where('friend1', $user->id)
+                        ->unionAll(function ($query) use ($user) {
+                            $query->select('friend1')
+                                ->from('friends')
+                                ->where('friend2', $user->id);
+                        });
+                })
+                ->orWhereIn('group_id', function ($query) use ($user) {
+                    $query->select('group_id')
+                        ->from('group_user')
+                        ->where('user_id', $user->id)
+                        ->unionAll(function ($query) use ($user) {
+                            $query->select('group_id')
+                                ->from('group_owner')
+                                ->where('user_id', $user->id);
+                        });
                 });
         })
-        ->paginate(10);
+            ->where('author', '<>', $user->id)
+            ->orderBy('date', 'desc')
+            ->paginate(10);
+
 
         if ($request->is("api*")) {
             $post_cards = [];
-            foreach ($raw_posts as $post) {
+            foreach ($personal_posts as $post) {
                 $post_cards[] = view('partials.post_card', ['post' => $post, 'preview' => false])->render();
             }
 
@@ -52,7 +68,7 @@ class FeedController extends Controller
         } else {
             return view('pages.homepage', [
                 'feed' => 'personal',
-                'posts' => $raw_posts,
+                'posts' => $personal_posts,
                 'email_verified' => true
             ]);
         }
@@ -65,10 +81,10 @@ class FeedController extends Controller
         $user = auth()->user();
 
         $raw_posts = Post::withCount('reactions')
-        ->where('is_private', '=', false)
-        ->orderBy('reactions_count', 'desc')
-        ->paginate(10);
-        
+            ->where('is_private', '=', false)
+            ->orderBy('reactions_count', 'desc')
+            ->paginate(10);
+
 
 
         if ($request->is("api*")) {
