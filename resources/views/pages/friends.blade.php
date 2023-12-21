@@ -31,7 +31,7 @@
         @endif
     </div>
     @if($tab=='friends')
-    <div id="friends">
+    <div id="friends" class="mb-10">
         @forelse($friends as $friend)
         @include('partials.user_card', ['user'=> $friend, 'adminView' => false])
         @empty
@@ -40,10 +40,10 @@
     </div>
     @endif
     @if($tab=='requests')
-    <div>
+    <div id="requests" class="mb-10">
         @foreach($friendRequests as $request)
         <div id="request-{{$request->sender->username}}">
-        @include('partials.user_card', ['user' =>$request->sender, 'friendRequest' => true, 'adminView' => false])
+            @include('partials.user_card', ['user' =>$request->sender, 'friendRequest' => true, 'adminView' => false])
         </div>
         @endforeach
     </div>
