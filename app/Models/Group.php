@@ -51,7 +51,7 @@ class Group extends Model
     public function not_users(){
         $groupUserIds = $this->users()->pluck('users.id');
         $groupOwnerIds = $this->owners()->pluck('users.id');
-        $groupInviteIds = $this->group_invites()->pluck('user_id');
+        $groupInviteIds = $this->group_invites()->where('is_accepted', false)->pluck('user_id');
 
         return User::whereNotIn('users.id', $groupUserIds)
                ->whereNotIn('users.id', $groupOwnerIds)

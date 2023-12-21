@@ -75,14 +75,21 @@
             @endif
 
             @if(isset($received_invite) && $received_invite)
+            <div>
                 <div class="flex flex-row space-x-2">
-                        <button class="form-button-blue rounded-md p-2">
+                    <form data-group-id="{{$received_invite->group->id}}" data-username="{{$received_invite->user->username}}" class="accept-invite-form">
+                        <button type="submit" class="form-button-blue rounded-md p-2">
                             Accept
                         </button>
-                        <button class="form-button-red rounded-md p-2">
+                    </form>
+                    <form data-group-id="{{$received_invite->group->id}}" data-username="{{$received_invite->user->username}}" class="reject-invite-form">
+                        <button type="submit" class="form-button-red rounded-md p-2">
                             Reject
                         </button>
+                    </form>
                 </div>
+                <p class="success-invite-text hidden text-green-500">You accepted the group invite.</p>
+            </div>
             @endif
 
             @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group->id))

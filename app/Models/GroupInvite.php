@@ -33,4 +33,9 @@ class GroupInvite extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
+    }
 }

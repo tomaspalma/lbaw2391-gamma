@@ -34,6 +34,10 @@ const inviteForms = document.querySelectorAll(".invite-form");
 const invitees = document.getElementById("invitees");
 
 export function toggleInviteButton(inviteForms) {
+    if(!inviteForms) {
+        return;
+    }
+
     for (const inviteForm of inviteForms) {
         inviteForm.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -50,7 +54,7 @@ export function toggleInviteButton(inviteForms) {
                 if (res.ok) {
                     document.querySelector(`[data-username="${username}"]`).remove();
 
-                    if (invitees.children.length <= 1) {
+                    if (invitees.children.length === 0) {
                         invitees.innerHTML = `<p class="text-center">No users found.</p>`
                     }
 
@@ -64,3 +68,64 @@ export function toggleInviteButton(inviteForms) {
 }
 
 toggleInviteButton(inviteForms);
+
+const acceptInvite = document.querySelectorAll(".accept-invite-form");
+const rejectInvite = document.querySelectorAll(".reject-invite-form");
+
+export function toggleAcceptInviteForms(forms) {
+    if(!forms) {
+        return;
+    }
+
+    for (const form of forms) {
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const username = form.getAttribute("data-username");
+            const id = form.getAttribute("data-group-id");
+
+            fetch(`/group/${id}/invite/${username}`, {
+                method: "PUT",
+                headers: {
+                    "X-CSRF-Token": `${getCsrfToken()}`
+                }
+            }).then((res) => {
+                form.parentElement.parentElement.querySelector(".success-invite-text").classList.remove("hidden");
+                form.parentElement.classList.add("hidden");
+
+                addSnackbar("You accepted the invite to the group", 2000);
+            }).catch((e) => console.error(e));
+        });
+    }
+}
+
+export function toggleRejectInviteForms(forms) {
+    if(!forms) {
+        return;
+    }
+
+    for (const form of forms) {
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const username = form.getAttribute("data-username");
+            const id = form.getAttribute("data-group-id");
+
+            fetch(`/group/${id}/invite/${username}`, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-Token": `${getCsrfToken()}`
+                }
+            }).then((res) => {
+                if(res.ok) {
+                    form.parentElement.parentElement.parentElement.remove();
+
+                    addSnackbar("You rejected the invite to the group", 2000);
+                }
+            }).catch((e) => console.error(e));
+        });
+    }
+}
+
+toggleAcceptInviteForms(acceptInvite);
+toggleRejectInviteForms(rejectInvite);

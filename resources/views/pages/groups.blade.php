@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/scroll.js', 'resources/js/group/group_requests.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/group_requests.js', 'resources/js/group/invites.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Your groups</title>
 
@@ -35,7 +35,7 @@
         </li>
 
         <li class="flex w-1/3 {{ $feed === 'invites' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
-            <a href="/groups/invites" class="hover:underline text-lg font-bold">Invites</a>
+            <a href="/groups/invites" class="hover:underline text-lg font-bold">Invites ({{sizeof($invites)}})</a>
         </li>
 
         <li class="flex w-1/3 {{ $feed === 'requests' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
@@ -82,3 +82,5 @@
 @endif
 
 </main>
+
+@include('partials.snackbar')

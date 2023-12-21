@@ -29,7 +29,6 @@ class GroupController extends Controller
 
         $invites = $user->groupInvites();
 
-
         return view('pages.groups', ['feed' => 'invites', 'invites' => $invites, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'requests' => $requests]);
     }
 
@@ -37,12 +36,19 @@ class GroupController extends Controller
         $user = User::where('username', $username)->firstOrFail();
         $group = Group::findOrFail($id);
 
-        $group_invite = GroupInvite::where('user_id', $user->id)
-            ->where('group_id', $group->id)
-            ->where('is_accepted', false)->firstOrFail();
+        DB::transaction(function () use ($user, $group) {
+            $group_invite = GroupInvite::where('user_id', $user->id)
+                ->where('group_id', $group->id)
+                ->where('is_accepted', false)->firstOrFail();
 
-        $group_invite->is_accepted = true;
-        $group_invite->save();
+            $group_invite->is_accepted = true;
+            $group_invite->save();
+
+            GroupUser::create([
+                'group_id' => $group->id,
+                'user_id' => $user->id
+            ]);
+        });
     }
 
     public function rejectInvite(int $id, string $username) {
@@ -90,7 +96,9 @@ class GroupController extends Controller
         $groupsOwner = $user->groups('owner');
         $requests = $user->groupRequests();
 
-        return view('pages.groups', ['feed' => 'groups', 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'requests' => $requests]);
+        $invites = $user->groupInvites();
+
+        return view('pages.groups', ['feed' => 'groups', 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'requests' => $requests, 'invites' => $invites]);
     }
 
     public function showGroupRequests(Request $request){
@@ -99,12 +107,14 @@ class GroupController extends Controller
         $groupsNormal = $user->groups('normal');
         $groupsOwner = $user->groups('owner');
         $requests = $user->groupRequests();
-        return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
+
+        $invites = $user->groupInvites();
+
+        return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'invites' => $invites]);
 
     }
 
     public function banGroupMember(Request $request, int $id, string $username)
-
     {
         $owner = Auth::user();
 
@@ -122,9 +132,9 @@ class GroupController extends Controller
 
         DB::transaction(function () use ($request, $user, $group) {
             if ($user->is_owner($group->id)) {
-                GroupOwner::where('user_id', $user->id)->delete();
+                GroupOwner::where('user_id', $user->id)->where('group_id', $group->id)->delete();
             } else {
-                GroupUser::where('user_id', $user->id)->delete();
+                GroupUser::where('user_id', $user->id)->where('group_id', $group->id)->delete();
             }
 
             GroupBan::create([
