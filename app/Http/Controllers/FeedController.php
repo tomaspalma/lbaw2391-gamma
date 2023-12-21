@@ -82,9 +82,11 @@ class FeedController extends Controller
 
         $raw_posts = Post::withCount('reactions')
             ->where('is_private', '=', false)
+            ->whereHas('owner', function ($query) {
+                $query->where('is_private', '=', false);
+            })
             ->orderBy('reactions_count', 'desc')
             ->paginate(10);
-
 
 
         if ($request->is("api*")) {
