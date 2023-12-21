@@ -29,6 +29,7 @@
         <option value="comments">Comments</option>
         <option value="friend-requests">Friend Requests</option>
         <option value="group-requests">Group Requests</option>
+        <option value="group-invites">Group Invites</option>
     </select>
     @include('partials.notifications.notification_card_holder', ['notification' => $notifications])
 </div>

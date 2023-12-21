@@ -14,7 +14,10 @@
         {{ csrf_field() }}
 
         <div class="mb-4">
-            <label for="identifier" class="block text-sm font-medium text-gray-600">E-mail / Username</label>
+            <label for="identifier" class="block text-sm font-medium text-gray-600">
+                E-mail / Username
+                <span class="required-input">*</span>
+            </label>
             <input placeholder="Email / username" class="rounded-md mt-1 p-2 w-full border focus:ring-2" id="identifier" name="identifier" value="{{ old('identifier') }}" required autofocus>
             @if ($errors->has('identifier'))
             <span class="text-red-500 text-sm">
@@ -24,9 +27,10 @@
         </div>
 
         <div class="mb-4">
-            <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
-
-
+            <label for="password" class="block text-sm font-medium text-gray-600">
+                Password
+                <span class="required-input">*</span>
+            </label>
             <div class="relative">
                 <input placeholder="Password" class="mt-1 p-2 pr-10 w-full border rounded-md focus:ring-2" id="password" type="password" name="password" required>
                 <div class="absolute inset-y-0 right-0 flex items-center pr-3">

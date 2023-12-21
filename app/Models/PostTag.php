@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GroupUser extends Model
+class PostTag extends Model
 {
     use HasFactory;
 
-    protected $table = 'group_user';
+    protected $table = 'post_tag';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id',
-        'group_id'
+        'post_id',
+        'user_id'
     ];
 }

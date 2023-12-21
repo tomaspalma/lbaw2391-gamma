@@ -47,7 +47,7 @@
             @enderror
 
             <div class="mb-4">
-                <label for="name" class="text-sm text-gray-600">Group Name *</label>
+                <label for="name" class="text-sm text-gray-600">Group Name <span class="required-input">*</span></label>
                 <input type="text" id="name" name="name" value="{{ old('name') }}" class="w-full border p-2">
                 @error('name')
                     <p class="text-red-500 text-sm">{{ $message }}</p> 
@@ -56,14 +56,14 @@
             </div>
 
             <div class="mb-4">
-                <label for="description" class="text-sm text-gray-600">Group Description *</label>
+                <label for="description" class="text-sm text-gray-600">Group Description <span class="required-input">*</span></label>
                 <textarea id="description" name="description" value="{{ old('description') }}" class="w-full border p-2"></textarea>
                 @error('description')
                     <p class="text-red-500 text-sm">{{ $message }}</p>
                 @enderror
             </div>
 
-            <label for="privacy" class="text-sm mt-2 text-gray-600">Privacy *</label>
+            <label for="privacy" class="text-sm mt-2 text-gray-600">Privacy</label>
             <select id="privacy" name="privacy" class="w-full border p-2 mb-2">
                 <option value=0 selected>Public</option>
                 <option value=1>Private</option>

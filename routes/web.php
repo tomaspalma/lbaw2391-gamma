@@ -145,12 +145,15 @@ Route::controller(CommentController::class)->middleware([EnsureUserIsNotAppBanne
 });
 
 Route::controller(GroupController::class)->middleware([EnsureUserIsNotAppBanned::class])->group(function () {
-    Route::get('/group/{id}', 'showGroup')->name('groupPosts');
+    Route::get('/group/{id}', 'showGroup')->name('groupPosts')->middleware(EnsureGroupExists::class);
+    
     Route::middleware("auth")->group(function() {
         Route::get('/groups', 'showGroupsForm');
         Route::get('/groups/requests', 'showGroupRequests');
         Route::get('/group', 'showCreateForm')->name('group.createForm')->middleware('verified');
         Route::post('/group', 'create')->name('group.create')->middleware('verified');
+        Route::get('/groups/invites', 'showGroupOwnerGroupInvites');
+        Route::get('/groups/requests', 'showGroupRequests');
 
         Route::middleware(EnsureGroupExists::class)->group(function() {
             Route::get('/group/{id}/members/', 'showGroupMembers')->name('groupMembers');
@@ -163,6 +166,14 @@ Route::controller(GroupController::class)->middleware([EnsureUserIsNotAppBanned:
             Route::delete('/groups/{id}/decline', 'declineRequest')->name('groups.decline_request');
             Route::get('/group/{id}/edit', 'edit')->name('group.edit');
             Route::put('/group/{id}', 'update')->name('group.update');
+
+            Route::get('group/{id}/invite', 'showInviteForm')->name('group.inviteform');
+
+            Route::get('group/{id}/invites', 'showSentPendingInvites')->name('group.invites');
+
+            Route::post('group/{id}/invite/{username}', 'inviteUser')->name('group.inviteuser');
+            Route::put('group/{id}/invite/{username}', 'acceptInvite')->name('group.acceptinvite');
+            Route::delete('group/{id}/invite/{username}', 'rejectInvite')->name('group.rejectinvite');
         });
     });
 });
@@ -213,6 +224,7 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
 
     Route::controller(FriendController::class)->middleware("auth")->group(function () {
         Route::get('/users/{username}/friends', 'show_friends')->name('show.friends');
+        Route::get('/users/{username}/friends/requestcards', 'show_friend_request_cards')->name('api.show.friend_request_cards');
     });
 
     Route::controller(FeedController::class)->group(function () {
@@ -235,6 +247,9 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::get('/group/{group_id}/posts', 'showGroup')->name('api.group.show_posts');
         Route::get('/group/{group_id}/members/{filter?}', 'showGroupMembers')->name('api.groupMembers');
         Route::get('/group/group_name/{group_name}', 'checkGroupNameExists');
+        Route::get('/group/{id}/invite/{query?}', 'searchUsersCanBeInvited');
+        Route::get('/groups_cards', 'showUserGroupsCards');
+        Route::get('/groups/requestscards', 'showGroupRequestCards');
     });
 
     Route::controller(UserController::class)->middleware([EnsureUserExists::class, EnsureUserIsNotDeletedUser::class])->group(function () {

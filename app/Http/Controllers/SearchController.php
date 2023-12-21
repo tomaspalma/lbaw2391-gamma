@@ -57,6 +57,8 @@ class SearchController extends Controller
     {
         $groups = [];
 
+        $user = ($request->user() !== null) ? $request->user() : null;
+
         if ($query === null) {
             $groups = Group::where('is_private', false)->paginate(10);
         } else {
@@ -66,7 +68,13 @@ class SearchController extends Controller
         }
 
         if ($request->is("api*")) {
-            return response()->json($groups);
+            $groupCards = [];
+
+            foreach ($groups as $group) {
+                $groupCards[] = view('partials.group_card', ['group'=> $group, 'owner' => $user === null ? false : $user->is_owner($group->id)])->render();
+            }
+
+            return response()->json($groupCards);
         } else {
             return $groups;
         }

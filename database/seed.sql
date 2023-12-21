@@ -80,7 +80,9 @@ CREATE TABLE group_invitations(
 
 CREATE TABLE group_invitation_nots(
     id SERIAL PRIMARY KEY,
-    group_invitation_id INTEGER REFERENCES group_invitations(id)
+    group_invitation_id INTEGER REFERENCES group_invitations(id),
+    read BOOLean DEFAULT false,
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
 
 CREATE TABLE polls (
@@ -165,16 +167,17 @@ CREATE TABLE reaction (
     CONSTRAINT valid_post_and_comment_ck CHECK((post_id IS NULL and comment_id IS NOT NULL) or (post_id IS NOT NULL and comment_id IS NULL))
 );
 
-CREATE TABLE post_tag_not(
-    id SERIAL PRIMARY KEY, 
-    post_id INTEGER REFERENCES post(id) ON UPDATE CASCADE,
-    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
-);
 
 CREATE TABLE post_tag(
     id SERIAL PRIMARY KEY,
     post_id INTEGER REFERENCES post(id) ON UPDATE CASCADE,
     user_id INTEGER REFERENCES users(id) ON UPDATE CASCADE
+);
+
+CREATE TABLE post_tag_not(
+    id SERIAL PRIMARY KEY, 
+    post_tag_id INTEGER REFERENCES post_tag(id),
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL CHECK (date <= now())
 );
 
 CREATE TABLE group_request_not(
@@ -469,6 +472,23 @@ CREATE TRIGGER update_group_request_acceptance_not_trigger
     FOR EACH ROW
     EXECUTE FUNCTION update_group_acceptance_request_not();
 
+-- (TRIGGERXX) WHen a user receives a group invitation, a notification is created
+
+CREATE OR REPLACE FUNCTION create_group_not() RETURNS TRIGGER AS
+$BODY$
+BEGIN 
+    INSERT INTO group_invitation_nots (group_invitation_id, date) 
+    VALUES (NEW.id, now());
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER create_group_invite_notification
+    AFTER INSERT ON group_invitations
+    FOR EACH ROW
+    EXECUTE FUNCTION create_group_not();
+
 -----------------------------------------
 
 -- (TRIGGER06) When a friend request is added, accepted or declined, a notification will be inserted
@@ -607,10 +627,10 @@ CREATE TRIGGER add_friend
     EXECUTE FUNCTION add_friend();
 
     INSERT INTO users (id, username, email, password, academic_status, display_name, is_private, role, image, email_verified_at, description, university) VALUES 
-        (0, 'deleted_user', 'deleted_user', 'password1', 'Undergraduate', 'John Doe', true, 2, null, '2023-11-23 14:18:29+00', 'A deleted user', 'University of Porto'),
+        (0, 'deleted_user', 'deleted_user', 'password1', 'Undergraduate', 'Deleted User', true, 2, null, '2023-11-23 14:18:29+00', 'A deleted user', 'University of Porto'),
         (1, 'johndoe', 'johndoe@example.com', '$2y$10$oI17OO.VH15Kn0i6S840ce6BB.9AH6iAjTfUeCDgz1zVzQbNJ4iiG', 'Undergraduate', 'John Doe', true, 2, 'tHMLkLWZFQhuzM3hSzpOtKsuIMG4X2FcUKrikcGA.png', '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Lisboa'),
-        (2, 'alanturing', 'alanturing@example.com', 'password2', 'Professor', 'Alan Turing', false, 2, null, '2023-11-23 14:18:29+00', 'A professor in Computer Science', 'University of Porto'),
-        (3, 'adalovelace', 'adalovelace@example.com', 'password3', 'Graduate', 'Ada Lovelace', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Coimbra'),
+        (2, 'alanturing', 'alanturing@example.com', '$2y$10$7POXBblYbJue.OPpsNkuyunXqb9QTNabWTp2oEmXIKwO3fPPe4JNq', 'Professor', 'Alan Turing', false, 2, null, '2023-11-23 14:18:29+00', 'A professor in Computer Science', 'University of Cambridge'),
+        (3, 'adalovelace', 'adalovelace@example.com', '$2y$10$rOchMCeiruf0E9Z8lPTNme4iraEsKLYeaQnlaPvYqYyJTdjOtFNDC', 'Graduate', 'Ada Lovelace', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Coimbra'),
         (4, 'admin', 'admin@example.com', '$2y$10$ehcHOK3hnZA7L4h5PvpQge3VfdFbaSxryczs9GzK9lUDNxMcKoWua', 'Undergraduate', 'Admin User', false, 1, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Porto');
         -- (5, 'newuser1', 'newuser1@example.com', '$2y$10$3M0VIGcqNMTJ9.PZ8mW3f.9qDokvlX/j64fcsOLtkI8.XyegXzSxC', 'Undergraduate', 'New User 1', false, 2, null, '2023-11-23 14:18:29+00', 'An undergraduate student', 'University of Minho'),
         -- (6, 'newuser2', 'newuser2@example.com', '$2y$10$ZoykCj4aGdzqibHBzqsWUuhu3uVKq.TwRasA5h5HX5OZ/4fA2iJF.', 'Graduate', 'New User 2', true, 2, null, '2023-11-23 14:18:29+00', 'A graduate student', 'University of Porto'),
@@ -651,13 +671,50 @@ CREATE TRIGGER add_friend
     
     UPDATE friend_request SET is_accepted = true WHERE user_id = 2 OR user_id = 1;
 
-    INSERT INTO groups(name, description, is_private) VALUES 
-        ('Prolog Enthusiasts', 'A community for discussing Prolog programming language and related topics', false),
-        ('Tech Enthusiasts', 'A group dedicated to discussing the latest technology trends and innovations', true);
 
+    INSERT INTO groups(name, description, is_private) VALUES
+    ('Prolog Enthusiasts', 'A community for discussing Prolog programming language and related topics', false),
+    ('Tech Enthusiasts', 'A group dedicated to discussing the latest technology trends and innovations', true);
+    -- ('Data Science Club', 'Exploring data science techniques and applications', false),
+    -- ('Fitness Fanatics', 'For those passionate about fitness and healthy living', true),
+    -- ('Book Lovers', 'A group for avid readers and book enthusiasts', false),
+    -- ('Photography Enthusiasts', 'Discussing photography techniques and sharing beautiful shots', false),
+    -- ('Creative Writers', 'A space for writers to share and critique their work', true),
+    -- ('Outdoor Adventure Club', 'Planning and organizing outdoor adventures', false),
+    -- ('Gaming Community', 'Connecting gamers and discussing the latest games', true),
+    -- ('Artists Collective', 'Supporting and showcasing various forms of art', false),
+    -- ('Movie Buffs', 'Discussing favorite movies and upcoming releases', true),
+    -- ('Music Lovers', 'Sharing and exploring diverse musical tastes', false),
+    -- ('Science Explorers', 'Exploring scientific discoveries and innovations', false),
+    -- ('Travel Enthusiasts', 'Sharing travel experiences and tips', true),
+    -- ('Foodies Club', 'For those who love trying and discussing different cuisines', false),
+    -- ('Environmental Activists', 'Advocating for environmental conservation and sustainability', true),
+    -- ('Programming Beginners', 'Supporting beginners in learning programming', false),
+    -- ('Fashionistas', 'Discussing fashion trends and personal styles', true),
+    -- ('DIY Crafters', 'Sharing creative do-it-yourself projects and ideas', false),
+    -- ('Pet Lovers', 'For those who adore and care for pets of all kinds', false),
+    -- ('Language Learners', 'Learning and practicing different languages together', true);
+    --
     INSERT INTO group_user (user_id, group_id) VALUES
         -- (2, 2);
         (3, 1),
+        -- (1, 5),
+        -- (1, 6),
+        -- (1, 7),
+        -- (1, 8),
+        -- (1, 9),
+        -- (1, 10),
+        -- (1, 11),
+        -- (1, 12),
+        -- (1, 13),
+        -- (1, 14),
+        -- (1, 15),
+        -- (1, 16),
+        -- (1, 17),
+        -- (1, 18),
+        -- (1, 19),
+        -- (1, 20),
+        -- (1, 21),
         -- (6, 1),
         -- (7, 1),
         -- (8, 1),
@@ -675,9 +732,25 @@ CREATE TRIGGER add_friend
 
     INSERT INTO group_request(user_id, group_id, is_accepted, date) VALUES
         (4, 2, true, '2023-08-01 12:00:00');
-        -- (3, 9, 2, false, '2023-09-21 00:00:00'),
-        -- (4, 10, 2, false, '2023-09-21 00:00:00'),
-        -- (5, 11, 2, false, '2023-09-21 00:00:00');
+        -- (4, 1, false, '2023-08-01 12:00:00'),
+        -- (5, 1, false, '2023-08-01 12:00:00'),
+        -- (6, 1, false, '2023-08-01 12:00:00'),
+        -- (7, 1, false, '2023-08-01 12:00:00'),
+        -- (8, 1, false, '2023-08-01 12:00:00'),
+        -- (9, 1, false, '2023-08-01 12:00:00'),
+        -- (10, 1, false, '2023-08-01 12:00:00'),
+        -- (11, 1, false, '2023-08-01 12:00:00'),
+        -- (12, 1, false, '2023-08-01 12:00:00'),
+        -- (13, 1, false, '2023-08-01 12:00:00'),
+        -- (14, 1, false, '2023-08-01 12:00:00'),
+        -- (15, 1, false, '2023-08-01 12:00:00'),
+        -- (16, 1, false, '2023-08-01 12:00:00'),
+        -- (17, 1, false, '2023-08-01 12:00:00'),
+        -- (18, 1, false, '2023-08-01 12:00:00'),
+        -- (19, 1, false, '2023-08-01 12:00:00');
+        -- (3, 9, false, false, '2023-09-21 00:00:00'),
+        -- (4, 10, false, false, '2023-09-21 00:00:00'),
+        -- (5, 11, false, false, '2023-09-21 00:00:00');
 
     INSERT INTO group_owner (group_id, user_id) VALUES
         (1, 1),
@@ -693,6 +766,36 @@ CREATE TRIGGER add_friend
         (1, 'History of Computer Science Lecture', 'Attended a fascinating lecture on the history of computer science today.', null, 1, false, NOW() - INTERVAL '6 days'),
         (3, 'Challenges in Quantum Computing', 'Exploring the challenges and opportunities in the field of quantum computing.', null, 2, false, NOW() - INTERVAL '7 days'),
         (4, 'Future of AI and Society', 'A sneak peek into the future of AI and its implications for society.', null, null, true, NOW() - INTERVAL '8 days');
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days'),
+        -- (3, 'Quantum Computing Paper Published', 'Just published my new research paper on quantum computing!', 'quantum_paper.pdf', null, false, NOW() - INTERVAL '3 days');
 
 
     INSERT INTO comment (id, post_id, author, content, date) VALUES

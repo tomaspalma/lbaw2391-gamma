@@ -98,20 +98,13 @@ export async function searchGroups(query, searchPreviewContent) {
     }).then(async (res) => {
         if (res.ok) {
             const json = await res.json();
-            const groups = json.data;
 
-            if (groups.length == 0) {
+            if (json.length == 0) {
                 searchPreviewContent.innerHTML = getNoneFoundText("groups");
             } else {
                 searchPreviewContent.innerHTML = "";
-                for (const group of groups) {
-                    searchPreviewContent.innerHTML += `
-        <article class="my-4 p-2 border-b">
-            <h1>
-                <a href="/group/${group.name}" class="underline">${group.name}</a>
-            </h1>
-                </article>
-        `;
+                for (const group of json) {
+                    searchPreviewContent.innerHTML += group;
                 }
             }
         }

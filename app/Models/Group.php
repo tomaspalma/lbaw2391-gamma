@@ -44,6 +44,22 @@ class Group extends Model
         return $this->group_owners()->paginate(10)->merge($this->users()->paginate(10));
     }
 
+    public function group_invites(){
+        return $this->hasMany(GroupInvite::class, 'group_id');
+    }
+
+    public function not_users(){
+        $groupUserIds = $this->users()->pluck('users.id');
+        $groupOwnerIds = $this->owners()->pluck('users.id');
+        $groupInviteIds = $this->group_invites()->where('is_accepted', false)->pluck('user_id');
+
+        return User::whereNotIn('users.id', $groupUserIds)
+               ->whereNotIn('users.id', $groupOwnerIds)
+               ->whereNotIn('users.id', $groupInviteIds)
+               ->where('users.id', '<>', '0')
+               ->paginate(10);
+    }
+
     public function remove_request($user_id)
     {
 
@@ -56,6 +72,13 @@ class Group extends Model
                 ->delete();
         });
     }
+
+    public function pending_invites(): HasMany
+    {
+        return $this->hasMany(GroupInvite::class)
+            ->where('is_accepted', '=', false);
+    }
+    
 
     public function users(): BelongsToMany
     {

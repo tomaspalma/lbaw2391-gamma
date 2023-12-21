@@ -22,12 +22,13 @@ class FriendController extends Controller
         $friendRequests = $user->received_pending_friend_requests()->get();
 
         if ($request->is("api*")) {
-            $friendCards = [];
-            foreach ($friends as $friend) {
-                $friendCards[] = view('partials.user_card', ['user' => $friend, 'adminView' => false])->render();
-            }
-
-            return response()->json($friendCards);
+            // $friendCards = [];
+            // foreach ($friends as $friend) {
+            //     $friendCards[] = view('partials.user_card', ['user' => $friend, 'adminView' => false])->render();
+            // }
+            //
+            // return response()->json($friendCards);
+            return response()->json($user->friends()->get());
         } else {
             return view('pages.friends', [
                 'user' => $user,
@@ -44,9 +45,25 @@ class FriendController extends Controller
 
         $this->authorize('view_friend_requests', $user);
 
-        $friendRequests = $user->received_pending_friend_requests()->get();
+        $friendRequests = $user->received_pending_friend_requests()->paginate(12);
 
         return view('pages.friends', ['user' => $user, 'friendRequests' => $friendRequests, 'tab' => 'requests']);
+    }
+
+    public function show_friend_request_cards(string $username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+
+        $this->authorize('view_friend_requests', $user);
+
+        $friendRequests = $user->received_pending_friend_requests()->paginate(12);
+        
+        $cards = [];
+        foreach ($friendRequests as $friendRequest) {
+            $cards[] = view('partials.user_card', ['user' =>$request->sender, 'friendRequest' => true, 'adminView' => false])->render();
+        }
+
+        return response()->json($cards);
     }
 
     public function send_friend_request(Request $request, string $username)

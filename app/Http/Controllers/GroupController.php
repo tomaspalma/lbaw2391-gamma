@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\GroupRequestNotification;
+use App\Events\GroupInviteNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use App\Models\Group;
 use App\Models\GroupRequest;
 use App\Models\GroupOwner;
 use App\Models\GroupUser;
+use App\Models\GroupInvite;
 use App\Models\User;
 use App\Models\GroupBan;
 use Doctrine\DBAL\Schema\View;
@@ -19,6 +21,46 @@ use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
 {
+    public function showGroupOwnerGroupInvites() {
+        $user = Auth::user();
+
+        $groupsNormal = $user->groups('normal');
+        $groupsOwner = $user->groups('owner');
+        $requests = $user->groupRequests();
+
+        $invites = $user->groupInvites();
+
+        return view('pages.groups', ['feed' => 'invites', 'invites' => $invites, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'requests' => $requests]);
+    }
+
+    public function acceptInvite(int $id, string $username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $group = Group::findOrFail($id);
+
+        DB::transaction(function () use ($user, $group) {
+            $group_invite = GroupInvite::where('user_id', $user->id)
+                ->where('group_id', $group->id)
+                ->where('is_accepted', false)->firstOrFail();
+
+            $group_invite->is_accepted = true;
+            $group_invite->save();
+
+            GroupUser::create([
+                'group_id' => $group->id,
+                'user_id' => $user->id
+            ]);
+        });
+    }
+
+    public function rejectInvite(int $id, string $username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $group = Group::findOrFail($id);
+        
+        GroupInvite::where('user_id', $user->id)
+            ->where('group_id', $group->id)
+            ->where('is_accepted', false)->delete();
+    }
+
     public function showGroup(Request $request, string $id)
     {
         $group = Group::findOrFail($id);
@@ -51,11 +93,32 @@ class GroupController extends Controller
     public function showGroupsForm(Request $request){
         $user = Auth::user();
 
-        $groupsNormal = $user->groups('normal');
-        $groupsOwner = $user->groups('owner');
+        $groupsNormal = $user->groups('normal')->paginate(10);
+        $groupsOwner = $user->groups('owner')->paginate(10);
         $requests = $user->groupRequests();
 
-        return view('pages.groups', ['feed' => 'groups', 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'requests' => $requests]);
+        $invites = $user->groupInvites();
+
+        return view('pages.groups', ['feed' => 'groups', 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'requests' => $requests, 'invites' => $invites]);
+    }
+
+    public function showUserGroupsCards(Request $request) {
+        $user = Auth::user();
+
+        $groupsNormal = $user->groups('normal')->paginate(10);
+        $groupsOwner = $user->groups('owner')->paginate(10);
+        
+        $cards = [];
+
+        foreach ($groupsOwner as $group) {
+            $cards[] = view('partials.group_card', ['group'=> $group, 'owner' => true])->render();
+        }
+
+        foreach ($groupsNormal as $group) {
+            $cards[] = view('partials.group_card', ['group'=> $group, 'owner' => false])->render();
+        }
+
+        return response()->json($cards);
     }
 
     public function showGroupRequests(Request $request){
@@ -64,12 +127,30 @@ class GroupController extends Controller
         $groupsNormal = $user->groups('normal');
         $groupsOwner = $user->groups('owner');
         $requests = $user->groupRequests();
-        return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner]);
 
+        $invites = $user->groupInvites();
+
+        if(count($user->groups('owner')->get()) <= 0) {
+            return view('pages.groups', ['feed' => 'groups', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'invites' => $invites]);
+        }
+
+        return view('pages.groups', ['feed' => 'requests', 'requests' => $requests, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'invites' => $invites]);
+    }
+
+    public function showGroupRequestCards() {
+        $user = Auth::user();
+
+        $requests = $user->groupRequests();
+        
+        $cards = [];
+        foreach($requests as $request) {
+            $cards[] = view('partials.group_requests_card', ['request'=> $request])->render();
+        }
+
+        return response()->json($cards);
     }
 
     public function banGroupMember(Request $request, int $id, string $username)
-
     {
         $owner = Auth::user();
 
@@ -87,9 +168,9 @@ class GroupController extends Controller
 
         DB::transaction(function () use ($request, $user, $group) {
             if ($user->is_owner($group->id)) {
-                GroupOwner::where('user_id', $user->id)->delete();
+                GroupOwner::where('user_id', $user->id)->where('group_id', $group->id)->delete();
             } else {
-                GroupUser::where('user_id', $user->id)->delete();
+                GroupUser::where('user_id', $user->id)->where('group_id', $group->id)->delete();
             }
 
             GroupBan::create([
@@ -433,5 +514,73 @@ class GroupController extends Controller
         } else {
             return response()->json(['exists' => false]);
         }
+    }
+
+    public function showInviteForm(Request $request, string $id)
+    {
+        $group = Group::findOrFail($id);
+
+        $users = $group->not_users();
+
+        return view('pages.invite_users', ['group' => $group, 'feed' => 'invite', 'users' => $users]);
+    }
+
+    public function searchUsersCanBeInvited(int $id, string $query = null) {
+        $group = Group::find($id);
+
+        $groupUserIds = $group->users()->pluck('users.id');
+        $groupOwnerIds = $group->owners()->pluck('users.id');
+        $groupInviteIds = $group->group_invites()->pluck('user_id');
+        
+        $users = null;
+
+        if($query === null) {
+            $users = User::whereNotIn('users.id', $groupUserIds)
+                ->whereNotIn('users.id', $groupOwnerIds)
+                ->whereNotIn('users.id', $groupInviteIds)
+                ->where('users.id', '<>', '0')
+                ->paginate(15);
+        } else {
+            $users = User::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
+                ->whereNotIn('users.id', $groupUserIds)
+                ->whereNotIn('users.id', $groupOwnerIds)
+                ->whereNotIn('users.id', $groupInviteIds)
+                ->where('users.id', '<>', '0')
+                ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate(15);
+        }
+        
+        $userCards = [];
+
+        foreach ($users as $user) {
+            $userCards[] = view('partials.user_card', ['user' => $user, 'adminView' => false, 'is_group' => false, 'group' => $group, 'invite' => true])->render();
+        }
+
+        return response()->json($userCards);
+    }
+
+    public function showSentPendingInvites(string $id){
+        $group = Group::findOrFail($id);
+
+        $invites = $group->pending_invites()->paginate(10);
+
+        return view('pages.invite_users', ['group' => $group, 'feed' => 'invited', 'invites' => $invites]);
+    }
+
+    public function inviteUser(Request $request, int $id, string $username)
+    {
+        $group = Group::find($id);
+        $user = User::where('username', $username)->firstOrFail();
+        
+        $this->authorize('invite', [$group, $user]);
+
+        $groupInvite = GroupInvite::create([
+            'owner_id' => Auth::user()->id,
+            'user_id' => $user->id,
+            'group_id' => $id,
+            'is_accepted' => false
+        ]);
+
+        event(new GroupInviteNotification($user->id, $groupInvite));
     }
 }

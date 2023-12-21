@@ -8,6 +8,11 @@ a {
     @apply hover:underline cursor-pointer;
 }
 
+.tagify__tag {
+    vertical-align: top;
+    @apply h-6 py-4;
+}
+
 .title {
     @apply text-2xl;
 }
@@ -146,4 +151,8 @@ input {
 
 .notification-card {
     @apply w-full md:w-1/2;
+}
+
+.required-input {
+    @apply text-red-500;
 }
