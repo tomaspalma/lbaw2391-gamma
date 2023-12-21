@@ -140,6 +140,8 @@ Route::controller(GroupController::class)->middleware(EnsureUserIsNotAppBanned::
     });
 
     Route::get('group/{id}/invite', 'showInviteForm')->name('group.inviteform');
+    Route::get('group/{id}/invites', 'showSentPendingInvites')->name('group.invites');
+    Route::post('group/{id}/inviteUser', 'inviteUser')->name('group.inviteuser');
 
 });
 

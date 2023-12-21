@@ -52,6 +52,19 @@
             </button>
             @endif
             </div>
+
+
+            @endif
+
+            @if(isset($invite) && $invite)
+            <form action="{{ route('group.inviteuser', $group->id) }}" method="post">
+                @csrf
+                @method('POST')
+                <input class="hidden" value="{{$user->id}}" name="user_id">
+                <button data-username="{{$user->username}}" data-group-id="{{$group->id}}" class="promote-group-member-confirmation-trigger-btn">
+                    Invite User
+                </button>
+            </form>
             @endif
 
             @if(isset($is_group) && $is_group && Auth::user() != null && Auth::user()->is_owner($group->id))

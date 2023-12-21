@@ -10,6 +10,7 @@ use App\Models\Group;
 use App\Models\GroupRequest;
 use App\Models\GroupOwner;
 use App\Models\GroupUser;
+use App\Models\GroupInvite;
 use App\Models\User;
 use App\Models\GroupBan;
 use Doctrine\DBAL\Schema\View;
@@ -439,6 +440,34 @@ class GroupController extends Controller
     {
         $group = Group::findOrFail($id);
 
-        return view('pages.invite_users', ['group' => $group, 'feed' => 'teste']);
+        $users = $group->not_users();
+
+        return view('pages.invite_users', ['group' => $group, 'feed' => 'invite', 'users' => $users]);
+    }
+
+    public function showSentPendingInvites(string $id){
+        $group = Group::findOrFail($id);
+        $users = $group->not_users();
+
+        $invites = $group->pending_invites();
+
+        return view('pages.invite_users', ['group' => $group, 'feed' => 'invited', 'invites' => $invites]);
+
+    }
+
+    public function inviteUser(Request $request, $id)
+    {
+        $group = Group::find($id);
+        $user = User::findOrFail($request->user_id);
+
+        GroupInvite::create([
+            'owner_id' => Auth::user()->id,
+            'user_id' => $user->id,
+            'group_id' => $id,
+            'is_accepted' => false
+        ]);
+
+    
+        return redirect("/group/{$group->id}/invite");
     }
 }
