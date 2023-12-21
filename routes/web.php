@@ -127,10 +127,10 @@ Route::controller(GroupController::class)->middleware(EnsureUserIsNotAppBanned::
     Route::delete('/group/{id}/leave', 'removeToGroup')->name('groups.leave');
     Route::delete('/group/{id}/removeRequest', 'removeRequest')->name('groups.remove_request');
     Route::get('/groups', 'showGroupsForm');
+    Route::get('/groups/invites', 'showGroupOwnerGroupInvites');
     Route::get('/groups/requests', 'showGroupRequests');
     Route::put('/groups/{id}/approve', 'approveRequest')->name('groups.approve_request');
     Route::delete('/groups/{id}/decline', 'declineRequest')->name('groups.decline_request');
-
 
     Route::get('/group', 'showCreateForm')->name('group.createForm')->middleware('verified');
     Route::post('/group', 'create')->name('group.create')->middleware('verified');
@@ -140,9 +140,12 @@ Route::controller(GroupController::class)->middleware(EnsureUserIsNotAppBanned::
     });
 
     Route::get('group/{id}/invite', 'showInviteForm')->name('group.inviteform');
-    Route::get('group/{id}/invites', 'showSentPendingInvites')->name('group.invites');
-    Route::post('group/{id}/invite/{username}', 'inviteUser')->name('group.inviteuser');
 
+    Route::get('group/{id}/invites', 'showSentPendingInvites')->name('group.invites');
+
+    Route::post('group/{id}/invite/{username}', 'inviteUser')->name('group.inviteuser');
+    Route::put('group/{id}/invite/{username}', 'acceptInvite')->name('group.acceptinvite');
+    Route::delete('group/{id}/invite/{username}', 'rejectInvite')->name('group.rejectinvite');
 });
 
 Route::controller(SearchController::class)->middleware(EnsureUserIsNotAppBanned::class)->group(function () {

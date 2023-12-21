@@ -68,7 +68,10 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
+    
+    public function groupInvites() {
+        return GroupInvite::where('user_id', $this->id)->paginate(15);
+    }
 
     public function groups(string $type): BelongsToMany
     {

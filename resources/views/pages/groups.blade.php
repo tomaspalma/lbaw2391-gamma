@@ -30,11 +30,15 @@
     <a href="{{ route('group.createForm') }}" class="my-4 block mx-auto px-4 py-2 form-button text-center rounded hover:no-underline">Create Group</a>
 @endcan
 <ul class="tab-container center justify-center flex border border-black rounded shadow my-4">
-        <li class="flex w-1/2 {{ $feed === 'groups' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
+        <li class="flex w-1/3 {{ $feed === 'groups' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
             <a href="/groups" class="hover:underline text-lg font-bold">Groups ({{$groupsNormal->count() + $groupsOwner->count()}})</a>
         </li>
 
-        <li class="flex w-1/2 {{ $feed === 'requests' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
+        <li class="flex w-1/3 {{ $feed === 'invites' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
+            <a href="/groups/invites" class="hover:underline text-lg font-bold">Invites</a>
+        </li>
+
+        <li class="flex w-1/3 {{ $feed === 'requests' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
             <a href="/groups/requests" class="hover:underline text-lg font-bold">Group Requests ({{sizeof($requests)}})</a>
         </li>
 </ul>
@@ -59,13 +63,21 @@
         @endif
     @endif
 
-@else
+@elseif ($feed === 'requests')
     @if(sizeof($requests) > 0)
         @for($i = 0; $i < sizeof($requests); $i++)
             @include('partials.group_requests_card', ['request'=> $requests[$i]])
         @endfor
     @else
     <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No requests found.</p>
+    @endif
+@elseif ($feed === 'invites')
+    @if(sizeof($invites) > 0)
+        @foreach($invites as $invite)
+            @include('partials.user_card', ['user' => $invite->user, 'adminView' => false, 'is_group' => false, 'received_invite' => $invite])
+        @endforeach
+    @else
+        <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No invites found.</p>
     @endif
 @endif
 

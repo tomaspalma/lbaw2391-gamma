@@ -20,6 +20,40 @@ use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
 {
+    public function showGroupOwnerGroupInvites() {
+        $user = Auth::user();
+
+        $groupsNormal = $user->groups('normal');
+        $groupsOwner = $user->groups('owner');
+        $requests = $user->groupRequests();
+
+        $invites = $user->groupInvites();
+
+
+        return view('pages.groups', ['feed' => 'invites', 'invites' => $invites, 'groupsNormal' => $groupsNormal, 'groupsOwner' => $groupsOwner, 'requests' => $requests]);
+    }
+
+    public function acceptInvite(int $id, string $username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $group = Group::findOrFail($id);
+
+        $group_invite = GroupInvite::where('user_id', $user->id)
+            ->where('group_id', $group->id)
+            ->where('is_accepted', false)->firstOrFail();
+
+        $group_invite->is_accepted = true;
+        $group_invite->save();
+    }
+
+    public function rejectInvite(int $id, string $username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $group = Group::findOrFail($id);
+        
+        GroupInvite::where('user_id', $user->id)
+            ->where('group_id', $group->id)
+            ->where('is_accepted', false)->delete();
+    }
+
     public function showGroup(Request $request, string $id)
     {
         $group = Group::findOrFail($id);
@@ -491,6 +525,8 @@ class GroupController extends Controller
     {
         $group = Group::find($id);
         $user = User::where('username', $username)->firstOrFail();
+        
+        $this->authorize('invite', [$group, $user]);
 
         GroupInvite::create([
             'owner_id' => Auth::user()->id,

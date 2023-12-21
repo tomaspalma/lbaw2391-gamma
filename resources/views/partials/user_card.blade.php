@@ -56,7 +56,7 @@
 
             @endif
 
-            @if(!isset($pending_invite) && isset($invite) && $invite)
+            @if(!isset($received_invite) && !isset($pending_invite) && isset($invite) && $invite)
             <form data-group-id="{{$group->id}}" data-username="{{$user->username}}" class="invite-form" action="{{ route('group.inviteuser', ['id' => $group->id, 'username' => $user->username]) }}" method="post">
                 @csrf
                 @method('POST')
@@ -71,6 +71,17 @@
                 <div class="flex flex-col items-center space-y-2">
                     <p>Pending</p>
                     <i class="text-blue-400 text-2xl fa-solid fa-circle-info"></i>
+                </div>
+            @endif
+
+            @if(isset($received_invite) && $received_invite)
+                <div class="flex flex-row space-x-2">
+                        <button class="form-button-blue rounded-md p-2">
+                            Accept
+                        </button>
+                        <button class="form-button-red rounded-md p-2">
+                            Reject
+                        </button>
                 </div>
             @endif
 
