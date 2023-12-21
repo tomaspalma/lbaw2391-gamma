@@ -30,7 +30,7 @@ class PostPolicy
     
     public function view(?User $user, Post $post) {
         if($post->group_id === null) {
-            if ($post->is_private || $user->is_private) {
+            if ($post->is_private || $post->owner->is_private) {
                 return $this->canViewPrivatePost($user, $post);
             }
             return Response::allow();
