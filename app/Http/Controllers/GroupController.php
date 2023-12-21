@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\GroupRequestNotification;
+use App\Events\GroupInviteNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -538,11 +539,13 @@ class GroupController extends Controller
         
         $this->authorize('invite', [$group, $user]);
 
-        GroupInvite::create([
+        $groupInvite = GroupInvite::create([
             'owner_id' => Auth::user()->id,
             'user_id' => $user->id,
             'group_id' => $id,
             'is_accepted' => false
         ]);
+
+        event(new GroupInviteNotification($user->id, $groupInvite));
     }
 }

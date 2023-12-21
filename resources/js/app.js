@@ -148,6 +148,11 @@ channel.bind('group-request-notification', function(data){
     }
 })
 
+channel.bind('group-invite-notification', function(data){
+    const message = data.message;
+    console.log(message);
+})
+
 channel.bind('comment-notification', function(data) {
     const message = data.message;
     if (message.user.username !== data.author) {

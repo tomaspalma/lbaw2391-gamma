@@ -24,35 +24,4 @@ class GroupRequestNot extends Model
     {
         return $this->hasOne(GroupRequest::class, 'id', 'group_request_id');
     }
-
-
-    
-
-    /*
-    public function friendRequest(): BelongsTo
-    {
-        return $this->belongsTo(FriendRequest::class, 'friend_request');
-    }
-
-    public function sender()
-    {
-        return $this->friendRequest->sender();
-    }
-
-    public function receiver()
-    {
-        return $this->friendRequest->receiver();
-    }
-
-    public function verb(): string
-    {
-        if ($this->is_accepted === null) {
-            return "sent you a friend request";
-        } else if ($this->is_accepted === true) {
-            return "accepted your friend request";
-        } else {
-            return "declined your friend request";
-        }
-    }
-    */
 }

@@ -38,4 +38,9 @@ class GroupInvite extends Model
     {
         return $this->belongsTo(Group::class);
     }
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
 }
