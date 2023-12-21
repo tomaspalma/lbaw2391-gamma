@@ -39,9 +39,15 @@ function handleFriendRequest(action, username) {
                 }
 
                 if (action === "accept") {
-                    addSnackbar(`You accepted ${username} friend request`, 2000);
+                    addSnackbar(
+                        `You accepted ${username} friend request`,
+                        2000
+                    );
                 } else if (action === "decline") {
-                    addSnackbar(`You declined ${username} friend request`, 2000);
+                    addSnackbar(
+                        `You declined ${username} friend request`,
+                        2000
+                    );
                 }
             }
         })
@@ -50,18 +56,28 @@ function handleFriendRequest(action, username) {
         });
 }
 
-const friendRequestForm = document.getElementById("friendRequestForm");
-if (friendRequestForm) {
-    friendRequestForm.addEventListener("submit", function(event) {
-        event.preventDefault();
-        const username = this.getAttribute("data-username");
-        const action = event.submitter.value;
-        handleFriendRequest(action, username);
-        const requestsTitle = document.getElementById("friend-requests-title");
-        let requestsCount = requestsTitle.textContent
-            .replace("Pending (", "")
-            .replace(")", "");
-        requestsCount = parseInt(requestsCount, 10);
-        requestsTitle.textContent = `Pending (${requestsCount - 1})`;
+export function toggleFriendRequestButtons() {
+    const friendRequestForms = document.querySelectorAll(".friendRequestForm");
+    friendRequestForms.forEach((friendRequestForm) => {
+        friendRequestForm.addEventListener("submit", function (event) {
+            console.log(event);
+            event.preventDefault();
+            const username = this.getAttribute("data-username");
+            const action = event.submitter.value;
+            console.log(username);
+            handleFriendRequest(action, username);
+            const requestsTitle = document.getElementById(
+                "friend-requests-title"
+            );
+            let requestsCount = requestsTitle.textContent
+                .replace("Pending (", "")
+                .replace(")", "");
+            requestsCount = parseInt(requestsCount, 10);
+            requestsCount = requestsCount <= 0 ? 0 : requestsCount - 1;
+            requestsCount < 0 ? (requestsCount = 0) : requestsCount;
+            requestsTitle.textContent = `Pending (${requestsCount})`;
+        });
     });
 }
+
+toggleFriendRequestButtons();
