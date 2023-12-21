@@ -194,6 +194,7 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
 
     Route::controller(FriendController::class)->group(function () {
         Route::get('/users/{username}/friends', 'show_friends')->name('show.friends');
+        Route::get('/users/{username}/friends/requestcards', 'show_friend_request_cards')->name('api.show.friend_request_cards');
     });
 
     Route::controller(FeedController::class)->group(function () {
@@ -215,6 +216,8 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
         Route::get('/group/{group_id}/members/{filter?}', 'showGroupMembers')->name('api.groupMembers');
         Route::get('/group/group_name/{group_name}', 'checkGroupNameExists');
         Route::get('/group/{id}/invite/{query?}', 'searchUsersCanBeInvited');
+        Route::get('/groups_cards', 'showUserGroupsCards');
+        Route::get('/groups/requestscards', 'showGroupRequestCards');
     });
 
     Route::controller(UserController::class)->group(function () {

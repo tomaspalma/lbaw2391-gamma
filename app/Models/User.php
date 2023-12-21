@@ -89,7 +89,7 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         $allRequests = [];
 
         foreach ($groupsOwner as $group) {
-            $requests = $group->requests()->get();
+            $requests = $group->requests()->paginate(10);
             $allRequests = array_merge($allRequests, $requests->all());
         }
 

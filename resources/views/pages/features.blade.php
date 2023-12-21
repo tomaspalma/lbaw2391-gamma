@@ -19,8 +19,8 @@
 
 @include('partials.navbar')
 
-<main class="mx-auto px-4 mt-16">
-    <h1 class="text-2xl font-bold mb-8">Main Features</h1>
+<main class="mx-auto px-4 mt-8">
+    <h1 class="text-2xl font-bold mb-4">Main Features</h1>
 
     <ul class="ml-5">
         <li class="mb-4">

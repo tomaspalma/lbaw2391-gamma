@@ -40,13 +40,13 @@
                     <p class="text-red-500 text-sm">{{ $message }}. Max size is 2mb.</p>
                 @enderror
                 <div class="mb-4">
-                    <label for="display_name" class="text-sm text-gray-600">Display Name</label>
+                    <label for="display_name" class="text-sm text-gray-600">Display Name <span class="required-input">*</span></label>
                     <input type="text" name="display_name" id="display_name" value="{{ $user->display_name }}"
                         class="mt-1 py-2 px-3 border rounded-md w-full">
                 </div>
                 <div class="mb-4">
                     <input type="hidden" id="old-username" value="{{ $user->username }}">
-                    <label for="username" class="text-sm text-gray-600">Username</label>
+                    <label for="username" class="text-sm text-gray-600">Username <span class="required-input">*</span></label>
                     <input type="text" name="username" id="username" value="{{ $user->username }}"
                         class="mt-1 py-2 px-3 border rounded-md w-full">
                     <div id="username-error" class="text-red-700 text-sm"></div>

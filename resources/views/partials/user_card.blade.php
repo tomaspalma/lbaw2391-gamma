@@ -94,6 +94,14 @@
             @endif
 
             @endif
+
+            @if(isset($friendRequest) && $friendRequest) 
+            <form id="friendRequestForm" data-username="{{ $request->sender->username }}" class="flex items-center space-x-4 my-auto" method="post">
+                @csrf
+                <button type="submit" name="action" value="accept" class="form-button-blue font-bold py-2 px-4 rounded">Accept</button>
+                <button type="submit" name="action" value="decline" class="form-button-red font-bold py-2 px-4 rounded">Decline</button>
+            </form>
+            @endif
     </div>
 
     @if(isset($appealView) && $appealView)
@@ -102,5 +110,6 @@
         <p>{{ $appeal->reason }}</p>
     </article>
     @endif
+
 </article>
 

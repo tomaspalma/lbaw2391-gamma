@@ -32,7 +32,6 @@ export async function addPaginationListener(url, content, separator, normalizati
                             }
                         }
 
-
                         page += 1;
                         scrolls = 0;
                         enough = false;

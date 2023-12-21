@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group/group_requests.js', 'resources/js/group/invites.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/post/delete.js', 'resources/js/group_management/scroll.js', 'resources/js/group/group_requests.js', 'resources/js/group/invites.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Your groups</title>
 
@@ -38,29 +38,33 @@
             <a href="/groups/invites" class="hover:underline text-lg font-bold">Invites ({{sizeof($invites)}})</a>
         </li>
 
+        @if(Auth::user()->groups('owner')->count() > 0)
         <li class="flex w-1/3 {{ $feed === 'requests' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
             <a href="/groups/requests" class="hover:underline text-lg font-bold">Group Requests ({{sizeof($requests)}})</a>
         </li>
+        @endif
 </ul>
 
+<div id="content">
 @if($feed === 'groups')
-
     @if($groupsNormal->count() == 0 && $groupsOwner->count() == 0)
         <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No groups found.</p>
 
     @else
+        <div id="groups">
         @if($groupsOwner->count() > 0)
             @for($i = 0; $i < $groupsOwner->count(); $i++)
-                @include('partials.group_card', ['group'=> $groupsOwner->get()[$i], 'owner' => true])
+                @include('partials.group_card', ['group'=> $groupsOwner[$i], 'owner' => true])
             @endfor
         @endif
 
         @if($groupsNormal->count() > 0)
 
             @for($i = 0; $i < $groupsNormal->count(); $i++)
-                @include('partials.group_card', ['group'=> $groupsNormal->get()[$i], 'owner' => false])
+                @include('partials.group_card', ['group'=> $groupsNormal[$i], 'owner' => false])
             @endfor
         @endif
+        </div>
     @endif
 
 @elseif ($feed === 'requests')
@@ -80,6 +84,7 @@
         <p class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700">No invites found.</p>
     @endif
 @endif
+</div>
 
 </main>
 
