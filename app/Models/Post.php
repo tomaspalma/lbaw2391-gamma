@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\FileController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -97,5 +98,10 @@ class Post extends Model
     public function poll(): BelongsTo
     {
         return $this->belongsTo(Poll::class);
+    }
+
+    public function getAttachment(): string
+    {
+        return FileController::get('post', $this->id);
     }
 }

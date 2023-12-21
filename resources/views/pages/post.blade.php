@@ -78,6 +78,12 @@
             @include('partials.post_poll', ['pollOptions' => $pollOptions])
         @endif
 
+        @if($post->attachment)
+        <div>
+            <img src="{{ $post->getAttachment() }}" alt="Attachment" class="center my-8 w-2/3 rounded-md shadow-md">
+        </div>
+        @endif
+
         <div class="post-action-bar mt-4 flex justify-between items-center">
             @php
             $f = function($user, $post) {

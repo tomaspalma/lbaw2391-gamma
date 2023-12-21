@@ -51,7 +51,7 @@ class FileController extends Controller
                 $fileName = User::find($id)->image;
                 break;
             case 'post':
-                $fileName = Post::find($id)->image;
+                $fileName = Post::find($id)->attachment;
                 break;
 
             case 'groupProfile':
@@ -69,7 +69,7 @@ class FileController extends Controller
     }
 
 
-    private static function delete(string $type, int $id)
+    static function delete(string $type, int $id)
     {
         $existingFileName = self::getFileName($type, $id);
         if ($existingFileName) {
@@ -82,7 +82,7 @@ class FileController extends Controller
                     User::find($id)->image = null;
                     break;
                 case 'post':
-                    Post::find($id)->image = null;
+                    Post::find($id)->attachment = null;
                     break;
                 case 'group':
                     Group::find($id)->image = null;
@@ -144,7 +144,7 @@ class FileController extends Controller
             case 'post':
                 $post = Post::findOrFail($id);
                 if ($post) {
-                    $post->image = $fileName;
+                    $post->attachment = $fileName;
                     $post->save();
                 } else {
                     redirect()->back()->with('error', 'Error: Unknown user');
