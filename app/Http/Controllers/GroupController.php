@@ -530,7 +530,7 @@ class GroupController extends Controller
 
         $groupUserIds = $group->users()->pluck('users.id');
         $groupOwnerIds = $group->owners()->pluck('users.id');
-        $groupInviteIds = $group->group_invites()->pluck('user_id');
+        $groupInviteIds = $group->group_invites()->where('is_accepted', false)->pluck('user_id');
         
         $users = null;
 
