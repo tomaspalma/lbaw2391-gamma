@@ -55,7 +55,7 @@
             @endif
         </div>
 
-        <div class="mt-6 prose max-w-full">
+        <div class="mt-6 break-words max-w-full">
             @php
                 $pattern = '/\[\[(.*?)\]\]/';
                 $parts = preg_split($pattern, $post->content, -1, PREG_SPLIT_DELIM_CAPTURE)
