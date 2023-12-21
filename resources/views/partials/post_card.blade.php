@@ -31,7 +31,27 @@
         </h1>
     </header>
     <p class="my-4 w-full break-words">
-        {{ strlen($post->content) <= 400 ? $post->content : substr($post->content, 0, 400) .'...' }}
+        @php
+            $content = strlen($post->content) <= 400 ? $post->content : substr($post->content, 0, 400) .'...';
+            
+            $pattern = '/\[\[(.*?)\]\]/';
+            $parts = preg_split($pattern, $post->content, -1, PREG_SPLIT_DELIM_CAPTURE)
+        @endphp
+
+        
+        @foreach ($parts as $part)
+            @if (!empty($part) && $part[0] === "{")
+                @php
+                    $json = json_decode($part, true);
+                @endphp
+                <a target="_blank" class="text-blue-700" href="{{'/users/' . $json['username']}}">
+                    {{ $json['username'] }}
+                </a>
+            @else
+                {{$part}}
+            @endif
+        @endforeach
+
         @if(strlen($post->content) > 400)
         <a class="text-blue-700" href="{{ route('post.show', ['id' => $post->id]) }}">
             View more

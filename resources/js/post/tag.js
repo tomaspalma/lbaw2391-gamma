@@ -3,56 +3,6 @@ import { getUsername } from '../utils';
 
 const postContent = document.getElementById("content");
 
-// depending on the prefix pattern typed (@/#). See settings below.
-// let friends = [
-//     { value: 800, text: 'randy', title: 'Randy Marsh' },
-//     { value: 900, text: 'Mr. Garrison', title: 'POTUS' },
-//     { value: 1000, text: 'Mr. Mackey', title: "M'Kay" }
-// ];
-//
-
-
-
-var whitelist_1 = [
-    {
-        "value": 300,
-        "id": 2,
-        "username": "alanturing",
-        "email": "alanturing@example.com",
-        "image": null,
-        "academic_status": "Professor",
-        "university": "University of Porto",
-        "description": "A professor in Computer Science",
-        "display_name": "Alan Turing",
-        "is_private": false,
-        "role": 2,
-        "tsvectors": "'alan':2B 'alantur':1A 'ture':3B",
-        "pivot": {
-            "friend1": 1,
-            "friend2": 2
-        }
-    },
-    {
-        "value": 400,
-        "id": 2,
-        "username": "admin",
-        "email": "alanturing@example.com",
-        "image": null,
-        "academic_status": "Professor",
-        "university": "University of Porto",
-        "description": "A professor in Computer Science",
-        "display_name": "Alan Turing",
-        "is_private": false,
-        "role": 2,
-        "tsvectors": "'alan':2B 'alantur':1A 'ture':3B",
-        "pivot": {
-            "friend1": 1,
-            "friend2": 2
-        }
-    },
-
-]
-
 let value = 0;
 fetch(`/api/users/${getUsername()}/friends`).then(async (res) => {
     const friends = await res.json();
@@ -84,13 +34,7 @@ fetch(`/api/users/${getUsername()}/friends`).then(async (res) => {
         }
     })
 
-    // A good place to pull server suggestion list accoring to the prefix/value
-    tagify.on('input', function(e) {
-
-    })
-
     tagify.on('add', function(e) {
-        console.log("Friends: ", friends);
         console.log(e)
     })
 }).catch((e) => console.error(e));

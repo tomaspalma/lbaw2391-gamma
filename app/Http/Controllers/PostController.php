@@ -167,7 +167,7 @@ class PostController extends Controller
             ]);
 
             PostTagNot::create([
-                'post_tag_id' => 1
+                'post_tag_id' => $post_tag->id
             ]);
         }
 

@@ -53,6 +53,7 @@ export default defineConfig({
                 "resources/js/faq.js",
                 "resources/js/group/create.js",
                 "resources/js/group/edit.js",
+                "resources/js/post/tag.js"
             ],
             refresh: true,
         }),

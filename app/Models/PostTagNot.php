@@ -14,6 +14,6 @@ class PostTagNot extends Model
     protected $table = 'post_tag_not';
 
     protected $fillable = [
-        'post_id'
+        'post_tag_id'
     ];
 }
