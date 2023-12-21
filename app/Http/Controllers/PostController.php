@@ -364,7 +364,10 @@ class PostController extends Controller
 
         FileController::delete('post', $post_id);
         
-        DB::table('post_tag_not')->where('post_id', $post_id)->delete();
+        $post_tags = DB::table('post_tag')->where('post_id', $post_id)->get();
+        foreach ($post_tags as $post_tag) {
+            DB::table('post_tag_not')->where('post_tag_id', $post_tag->id)->delete();
+        }
         DB::table('post_tag')->where('post_id', $post_id)->delete();
         DB::table('post')->where('id', $post_id)->delete();
     }

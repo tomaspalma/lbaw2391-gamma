@@ -40,7 +40,7 @@
 
         @if(Auth::user()->groups('owner')->count() > 0)
         <li class="flex w-1/3 {{ $feed === 'requests' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
-            <a href="/groups/requests" class="hover:underline text-lg font-bold">Group Requests ({{<span id="group-requests-counter">sizeof($requests)}}</span>)</a>
+            <a href="/groups/requests" class="hover:underline text-lg font-bold">Group Requests (<span id="group-requests-counter">{{sizeof($requests)}}</span>)</a>
         </li>
         @endif
 </ul>

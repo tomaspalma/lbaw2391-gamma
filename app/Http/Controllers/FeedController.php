@@ -81,8 +81,14 @@ class FeedController extends Controller
         $user = auth()->user();
 
         $raw_posts = Post::withCount('reactions')
-            ->where('is_private', '=', false)
-            ->whereHas('owner', function ($query) {
+            ->where(function ($query) {
+                $query->where('is_private', '=', false)
+                    ->whereHas('owner', function ($query) {
+                        $query->where('is_private', '=', false);
+                    })
+                    ->where('group_id', '=', null);
+            })
+            ->orWhereHas('group', function ($query) {
                 $query->where('is_private', '=', false);
             })
             ->orderBy('reactions_count', 'desc')
