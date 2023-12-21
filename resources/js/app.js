@@ -150,7 +150,15 @@ channel.bind('group-request-notification', function(data){
 
 channel.bind('group-invite-notification', function(data){
     const message = data.message;
-    console.log(message);
+    if (message.user.username !== data.author) {
+        notificationCounter.classList.remove("hidden");
+        const counter = parseInt(notificationCounter.textContent, 10);
+        notificationCounter.textContent = (counter + 1);
+        if (onPage("notifications")) {
+            const notificationsCards = document.getElementById("notification-cards");
+            notificationsCards.insertAdjacentHTML('afterbegin', message.group_invite_not_view);
+        }
+    }
 })
 
 channel.bind('comment-notification', function(data) {

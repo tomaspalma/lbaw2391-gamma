@@ -31,19 +31,17 @@ class GroupInviteNotification implements ShouldBroadcast
         $this->groupInvite = $groupInvite;
         $user = User::findOrFail($user_id);
 
-        //$group_request_not = GroupInviteNot::where('group_request_id', $groupInvite->id)->get();
+        $group_invite_not = GroupInviteNot::where('group_invitation_id', $groupInvite->id)->get();
 
-        /*
-        $group_request_not_view = view('partials.notifications.group_requests_notification', [
-            'notification' => $group_request_not[0],
-            'date' => DateController::format_date($group_request_not[0]->date)
+        $group_invite_not_view = view('partials.notifications.group_invite_notification', [
+            'notification' => $group_invite_not[0],
+            'date' => DateController::format_date($group_invite_not[0]->date)
         ])->render();
-        */
 
         $this->message = [
             'user' => $user,
-            'user_id' => $user_id
-            //'group_request_not_view' => $group_request_not_view
+            'user_id' => $user_id,
+            'group_invite_not_view' => $group_invite_not_view
         ];
 
     }
