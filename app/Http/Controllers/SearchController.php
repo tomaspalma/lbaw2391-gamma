@@ -71,7 +71,7 @@ class SearchController extends Controller
             $groupCards = [];
 
             foreach ($groups as $group) {
-                $groupCards[] = view('partials.group_card', ['group'=> $group, 'owner' => $user === null ? false : $user->is_owner($group->id)])->render();
+                $groupCards[] = view('partials.group_card', ['group' => $group, 'owner' => $user === null ? false : $user->is_owner($group->id)])->render();
             }
 
             return response()->json($groupCards);
@@ -165,12 +165,36 @@ class SearchController extends Controller
         $rawPosts = [];
 
         if ($query === null) {
-            $rawPosts = Post::where('is_private', false)->paginate($this->pagination_limits['posts']);
+            $rawPosts = Post::where('is_private', false)
+                ->where(function ($query) {
+                    $query->whereHas('owner', function ($query) {
+                        $query->where('is_private', '=', false);
+                    })
+                        ->where('group_id', '=', null);
+                })
+                ->orWhereHas('group', function ($query) {
+                    $query->where('is_private', '=', false);
+                })
+                ->paginate($this->pagination_limits['posts']);
+        } else if (auth()->user()->is_admin()) {
+            $rawPosts = Post::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$query])
+                ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
+                ->paginate($this->pagination_limits['posts']);
         } else {
             $rawPosts = Post::whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?) and not is_private', [$query])
+                ->where(function ($query) {
+                    $query->whereHas('owner', function ($query) {
+                        $query->where('is_private', '=', false);
+                    })
+                        ->where('group_id', '=', null);
+                })
+                ->orWhereHas('group', function ($query) {
+                    $query->where('is_private', '=', false);
+                })
                 ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$query])
                 ->paginate($this->pagination_limits['posts']);
         }
+
 
         if ($request->is('api*')) {
             $post_cards = [];
