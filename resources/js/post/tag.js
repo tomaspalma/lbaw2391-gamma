@@ -1,10 +1,11 @@
 import Tagify from '@yaireo/tagify';
+
 import { getUsername } from '../utils';
 
 const postContent = document.getElementById("content");
 
 let value = 0;
-fetch(`/api/users/${getUsername()}/friends`).then(async (res) => {
+fetch(`/api/users/${getUsername()}/friends/json`).then(async (res) => {
     const friends = await res.json();
 
     for (let friend of friends) {

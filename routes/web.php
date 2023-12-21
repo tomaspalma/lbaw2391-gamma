@@ -226,6 +226,7 @@ Route::prefix('/api')->middleware(EnsureUserIsNotAppBanned::class)->group(functi
     Route::controller(FriendController::class)->middleware("auth")->group(function () {
         Route::get('/users/{username}/friends', 'show_friends')->name('show.friends');
         Route::get('/users/{username}/friends/requestcards', 'show_friend_request_cards')->name('api.show.friend_request_cards');
+        Route::get('/users/{username}/friends/json', 'show_friends_json')->name('api.show.friend_request_cards');
     });
 
     Route::controller(FeedController::class)->group(function () {
