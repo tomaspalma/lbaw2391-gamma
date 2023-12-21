@@ -308,8 +308,8 @@ class UserController extends Controller
         DB::table('group_user')->where('user_id', $user_id)->delete();
 
         DB::table('post_tag_not as ptn')
-            ->join('post as p', 'ptn.post_id', '=', 'p.id')
-            ->join('users as u', 'p.author', '=', 'u.id')
+            ->join('post_tag as pt', 'ptn.post_tag_id', '=', 'pt.id') 
+            ->join('users as u', 'pt.user_id', '=', 'u.id')
             ->where('u.id', '=', $user_id)
             ->delete();
 
