@@ -80,7 +80,7 @@
 
         @if($post->attachment)
         <div>
-            <img src="{{ $post->getAttachment() }}" alt="Attachment" class="center my-8 max-h-48 rounded-md shadow-md">
+            <img src="{{ $post->getAttachment() }}" alt="Attachment" class="center my-8 w-2/3 rounded-md shadow-md">
         </div>
         @endif
 
