@@ -70,13 +70,6 @@ class GroupPolicy
         return Response::deny();
     }
 
-    public function edit(User $user, Group $group): Response
-    {
-        return $user->is_owner($group->id)
-            ? Response::allow()
-            : Response::deny("You are not an owner of this group.");
-    }
-
     public function create(?User $user): Response
     {
         return $user !== null

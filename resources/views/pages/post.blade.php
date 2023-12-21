@@ -55,9 +55,24 @@
             @endif
         </div>
 
-        <p class="mt-6 prose max-w-full break-words">
-            {{ $post->content }}
-        </p>
+        <div class="mt-6 prose max-w-full">
+            @php
+                $pattern = '/\[\[(.*?)\]\]/';
+                $parts = preg_split($pattern, $post->content, -1, PREG_SPLIT_DELIM_CAPTURE)
+            @endphp
+            @foreach ($parts as $part)
+                @if (!empty($part) && $part[0] === "{")
+                    @php
+                        $json = json_decode($part, true);
+                    @endphp
+                    <a target="_blank" class="text-blue-700" href="{{'/users/' . $json['username']}}">
+                        {{ $json['username'] }}
+                    </a>
+                @else
+                    {{$part}}
+                @endif
+            @endforeach
+        </div>
 
         @if($post->poll !== null)
             @include('partials.post_poll', ['pollOptions' => $pollOptions])
