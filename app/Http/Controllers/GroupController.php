@@ -352,7 +352,7 @@ class GroupController extends Controller
     {
         $group = Group::findOrFail($id);
 
-        $this->authorize('edit', $group);
+        $this->authorize('can_modify', $group);
 
         return view('pages.edit_group', [
             'group' => $group
@@ -373,7 +373,7 @@ class GroupController extends Controller
 
         $group = Group::findOrFail($id);
 
-        $this->authorize('edit', $group);
+        $this->authorize('can_modify', $group);
 
         $sameName = Group::where('name', $request->input('name'))->get();
 
