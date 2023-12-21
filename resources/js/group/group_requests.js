@@ -9,7 +9,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
 });
 
-function handleForm(card, acceptForm, removeForm) {
+export function handleForm(card, acceptForm, removeForm) {
 
     let acceptButton = acceptForm.getElementsByClassName("accept")[0]
     let removeButton = removeForm.getElementsByClassName("remove")[0]
@@ -28,16 +28,16 @@ function handleForm(card, acceptForm, removeForm) {
 }
 
 function handleButton(card, ButtonAccept, ButtonRemove, form, isAccept) {
-        let methodField = form.attributes["data-method"];
+    let methodField = form.attributes["data-method"];
 
-        fetch(form.action, {
-            method: methodField.value,
-            headers: {
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
-            },
-        })
+    fetch(form.action, {
+        method: methodField.value,
+        headers: {
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+        },
+    })
         .then((response) => {
             console.log(response.status);
             if (response.status === 200) {
@@ -49,14 +49,14 @@ function handleButton(card, ButtonAccept, ButtonRemove, form, isAccept) {
         .then((data) => {
             ButtonAccept.remove();
             ButtonRemove.remove()
-            if(isAccept){
+            if (isAccept) {
                 console.log("entered here")
                 const successMessage = document.createElement('p');
                 successMessage.textContent = 'Added to Group';
                 successMessage.classList.add('text-green-500', 'font-bold', 'mt-2');
                 form.appendChild(successMessage);
             }
-            else{
+            else {
                 const successMessage = document.createElement('p');
                 successMessage.textContent = 'Request Declined';
                 successMessage.classList.add('text-red-500', 'font-bold', 'mt-2');

@@ -31,7 +31,7 @@
         @endif
     </div>
     @if($tab=='friends')
-    <div id="friends">
+    <div id="friends" class="mb-10">
         @forelse($friends as $friend)
         @include('partials.user_card', ['user'=> $friend, 'adminView' => false])
         @empty
@@ -40,10 +40,10 @@
     </div>
     @endif
     @if($tab=='requests')
-    <div id="friend-requests">
+    <div id="friend-requests" class="mb-10">
         @foreach($friendRequests as $request)
         <div id="request-{{$request->sender->username}}">
-        @include('partials.user_card', ['user' =>$request->sender, 'friendRequest' => true, 'adminView' => false])
+            @include('partials.user_card', ['user' =>$request->sender, 'friendRequest' => true, 'adminView' => false])
         </div>
         @endforeach
     <p id="noRequestsMessage" class="text-center align-middle text-2xl font-semibold mt-20 text-gray-700 {{ count($friendRequests) ? 'hidden' : '' }} ">No friend requests found.</p>
