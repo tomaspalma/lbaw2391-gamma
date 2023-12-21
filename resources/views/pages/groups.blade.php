@@ -31,7 +31,7 @@
 @endcan
 <ul class="tab-container center justify-center flex border border-black rounded shadow my-4">
         <li class="flex w-1/3 {{ $feed === 'groups' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
-            <a href="/groups" class="hover:underline text-lg font-bold">Groups ({{$groupsNormal->count() + $groupsOwner->count()}})</a>
+            <a href="/groups" class="hover:underline text-lg font-bold">Groups (<span id="group-counter">{{$groupsNormal->count() + $groupsOwner->count()}}</span>)</a>
         </li>
 
         <li class="flex w-1/3 {{ $feed === 'invites' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
@@ -40,7 +40,7 @@
 
         @if(Auth::user()->groups('owner')->count() > 0)
         <li class="flex w-1/3 {{ $feed === 'requests' ? 'border-t-4 border-black' : '' }} p-2 justify-center">
-            <a href="/groups/requests" class="hover:underline text-lg font-bold">Group Requests ({{sizeof($requests)}})</a>
+            <a href="/groups/requests" class="hover:underline text-lg font-bold">Group Requests ({{<span id="group-requests-counter">sizeof($requests)}}</span>)</a>
         </li>
         @endif
 </ul>
