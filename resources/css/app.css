@@ -152,3 +152,7 @@ input {
 .notification-card {
     @apply w-full md:w-1/2;
 }
+
+.required-input {
+    @apply text-red-500;
+}

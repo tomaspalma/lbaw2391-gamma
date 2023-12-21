@@ -33,7 +33,7 @@
             @csrf
 
             <div class="mb-4 col-span-2">
-                <label for="title" class="block text-sm font-medium text-gray-600">Title:</label>
+                <label for="title" class="block text-sm font-medium text-gray-600">Title: <span class="required-input">*</span></label>
                 <input type="text" name="title" id="title" class="mt-1 p-2 border border-gray-300 rounded-md w-full" value="{{ old('title', $post->title) }}" required>
             </div>
 
@@ -60,7 +60,7 @@
             </div>
 
             <div class="mb-4 col-span-2">
-                <label for="content" class="block text-sm font-medium text-gray-600">Content:</label>
+                <label for="content" class="block text-sm font-medium text-gray-600">Content: <span class="required-input">*</span></label>
                 <textarea name="content" id="content" rows="5" class="mt-1 p-2 border border-gray-300 rounded-md w-full resize-none" required>{{ old('content', $post->content) }}</textarea>
             </div>
 
