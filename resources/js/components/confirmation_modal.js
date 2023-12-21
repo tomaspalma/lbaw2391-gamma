@@ -26,7 +26,6 @@ const callbackTypesAction = {
         window.location.href = "/";
     },
     ban_group_member: (form) => {
-        console.log("Blocked!");
         const username = form.action.split("/")[6];
 
         const userCard = document.querySelector(
@@ -37,7 +36,6 @@ const callbackTypesAction = {
         form.remove();
 
         addSnackbar(`You removed ${username} from the group!`, 2000);
-
     },
     promote_group_member: (form) => {
         const username = form.action.split("/")[6];
@@ -65,7 +63,7 @@ const callbackTypesAction = {
         const appealCounter = document.getElementById("appeal-counter");
         if (parseInt(appealCounter.textContent, 10) === 1) {
             appealCounter.textContent = "0";
-            content.innerHTML = `<p id="no-appeals-found-text" class="text-center">No appeals found.</p>`
+            content.innerHTML = `<p id="no-appeals-found-text" class="text-center">No appeals found.</p>`;
         }
 
         userCard.remove();
@@ -138,6 +136,25 @@ const callbackTypesAction = {
     },
     delete_user_profile: (confirmationForm) => {
         window.location.href = window.location.origin + "/feed";
+    },
+    delete_comment: (confirmationForm) => {
+        const commentId = confirmationForm.action.split("/")[4];
+        // delete hr between comment
+        document
+            .querySelector(`[comment-id="${commentId}"]`)
+            .parentElement.parentElement.parentElement.nextElementSibling.remove();
+        // delete comment from the page
+        document
+            .querySelector(`[comment-id="${commentId}"]`)
+            .parentElement.parentElement.parentElement.remove();
+
+        // if there is no comment left add the no comment message
+        if (document.getElementById("comments").childElementCount == 0) {
+            let p = document.createElement("p");
+            p.setAttribute("id", "no-comment");
+            p.innerText = "No comments yet.";
+            document.getElementById("comments").appendChild(p);
+        }
     },
 };
 
@@ -246,7 +263,6 @@ export function overrideConfirmationForm(
                 } else {
                     await thenCallback(res);
                 }
-
             })
             .catch((e) => {
                 console.error(e);
