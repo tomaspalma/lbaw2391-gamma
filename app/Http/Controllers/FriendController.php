@@ -22,13 +22,12 @@ class FriendController extends Controller
         $friendRequests = $user->received_pending_friend_requests()->get();
 
         if ($request->is("api*")) {
-            // $friendCards = [];
-            // foreach ($friends as $friend) {
-            //     $friendCards[] = view('partials.user_card', ['user' => $friend, 'adminView' => false])->render();
-            // }
-            //
-            // return response()->json($friendCards);
-            return response()->json($user->friends()->get());
+            $friendCards = [];
+            foreach ($friends as $friend) {
+                $friendCards[] = view('partials.user_card', ['user' => $friend, 'adminView' => false])->render();
+            }
+
+            return response()->json($friendCards);
         } else {
             return view('pages.friends', [
                 'user' => $user,
