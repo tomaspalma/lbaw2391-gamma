@@ -1,7 +1,7 @@
 @extends('layouts.head')
 
 <head>
-    @vite(['resources/js/friends/requests.js', 'resources/js/friends/scroll.js'])
+    @vite(['resources/js/friends/scroll.js'])
 
     <title>{{ config('app.name', 'Laravel') }} | Friends</title>
 

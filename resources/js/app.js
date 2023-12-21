@@ -148,7 +148,7 @@ channel.bind('friend-request-notification', function(data) {
                     requestsTitle.textContent = `Pending (${requestsCount + 1})`;
                     const requestsContainer = document.getElementById("friend-requests");
 
-                    toggleFriendRequestButtons();   
+                    toggleFriendRequestButtons(friendRequests.querySelectorAll(".friendRequestForm"));   
                 }
 
         }
