@@ -44,8 +44,9 @@
         @endforeach
     @endif
 
-
+    <br>
 
 </main>
 
 @include('partials.snackbar')
+@include('partials.footer')
